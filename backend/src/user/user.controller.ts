@@ -1,13 +1,13 @@
-import { IUser } from "./user.interface";
-import { v4 as uuidv4 } from "uuid";
-import { User } from "./user.model";
+import { IUser } from "./user.interface"
+import { v4 as uuidv4 } from "uuid"
+import { User } from "./user.model"
 
 export class UserController {
   users: IUser[] = [
     { id: uuidv4(), name: "user1" },
     { id: uuidv4(), name: "user2" },
     { id: uuidv4(), name: "user3" }
-  ];
+  ]
   constructor() {}
 
   /**
@@ -15,11 +15,11 @@ export class UserController {
    * @param id - users id
    */
   async getUserById(id: string): Promise<IUser | undefined> {
-    const users = this.users.filter((e) => e.id === id);
+    const users = this.users.filter((e) => e.id === id)
     if (users.length > 0) {
-      return users[0];
+      return users[0]
     }
-    return undefined;
+    return undefined
   }
 
   /**
@@ -29,15 +29,15 @@ export class UserController {
    */
   async updateUser(id: string, object: any): Promise<IUser | undefined> {
     if (!this.instanceOfUser(object, true) && id != object.id) {
-      return undefined;
+      return undefined
     }
     this.users = this.users.map((e) => {
       if (e.id === id) {
-        return object;
+        return object
       }
-      return e;
-    });
-    return object;
+      return e
+    })
+    return object
   }
 
   /**
@@ -46,9 +46,9 @@ export class UserController {
    * @param withId - should the id property be considered
    */
   instanceOfUser(object: any, withId?: boolean): object is IUser {
-    const id = withId ? "name" in object : true;
-    const name = "name" in object;
-    return name && id;
+    const id = withId ? "name" in object : true
+    const name = "name" in object
+    return name && id
   }
 
   /**
@@ -57,12 +57,12 @@ export class UserController {
    */
   async addUser(object: any): Promise<IUser | undefined> {
     if (!this.instanceOfUser(object)) {
-      return undefined;
+      return undefined
     }
-    const user = new User({ name: object.name });
-    await user.save();
-    console.log("the user is", user);
-    return user;
+    const user = new User({ name: object.name })
+    await user.save()
+    console.log("the user is", user)
+    return user
   }
 
   /**
@@ -70,8 +70,8 @@ export class UserController {
    * @param id - user id
    */
   async deleteUser(id: string): Promise<IUser[]> {
-    this.users = this.users.filter((u) => id !== u.id);
-    return this.users;
+    this.users = this.users.filter((u) => id !== u.id)
+    return this.users
   }
 
   /**
@@ -82,11 +82,11 @@ export class UserController {
       const users = await User.find({})
         .exec()
         .catch((e) => {
-          throw new Error("");
-        });
-      return users;
+          throw new Error("")
+        })
+      return users
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 }

@@ -2,8 +2,8 @@
  * interface describing a user
  */
 export interface IUser {
-  id?: any;
-  name: string;
+  id?: any
+  name: string
 }
 
 /**

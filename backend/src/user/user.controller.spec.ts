@@ -1,12 +1,12 @@
-import { UserController } from "./user.controller";
+import { UserController } from "./user.controller"
 
-let userController: UserController;
+let userController: UserController
 describe("list()", () => {
   beforeEach(() => {
-    userController = new UserController();
-  });
+    userController = new UserController()
+  })
 
   test("should test something", async () => {
-    expect(await (await userController.getUsers()).length).toBe(3);
-  });
-});
+    expect((await userController.getUsers()).length).toBe(3)
+  })
+})

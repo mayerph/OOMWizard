@@ -1,5 +1,5 @@
-import * as mongoose from "mongoose";
-import { IUser, IUserModel } from "./user.interface";
+import * as mongoose from "mongoose"
+import { IUser, IUserModel } from "./user.interface"
 
 /**
  * interface of the mongoose-schema
@@ -16,10 +16,10 @@ interface IUserModelMongoose
     IUserModel {}
 
 const transform = (doc: any, ret: any) => {
-  ret.id = ret._id;
-  delete ret._id;
-  delete ret.__v;
-};
+  ret.id = ret._id
+  delete ret._id
+  delete ret.__v
+}
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -37,9 +37,9 @@ const userSchema = new mongoose.Schema(
       transform
     }
   }
-);
+)
 
 export const User = mongoose.model<IUserMongoose, IUserModelMongoose>(
   "User",
   userSchema
-);
+)
