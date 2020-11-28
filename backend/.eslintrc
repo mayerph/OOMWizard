@@ -1,14 +1,8 @@
 {
     "plugins": [
-      "security",
-      "eslint-plugin-tsdoc",
-      "@typescript-eslint/eslint-plugin",
       "prettier"
     ],
     "extends": [
-      "plugin:security/recommended",
-      "plugin:@typescript-eslint/recommended",
-      "standard-with-typescript",
       "plugin:prettier/recommended"
     ],
     "parser":  "@typescript-eslint/parser",
@@ -16,15 +10,7 @@
         "project": "./tsconfig.json"
     },
     "rules": {
-      "prettier/prettier": "error",
-      "tsdoc/syntax": "warn",
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/restrict-template-expressions": ["error", {"allowNumber": true}], 
-      "@typescript-eslint/no-var-requires": "off",
-      "@typescript-eslint/no-unused-vars": "warn",
-      "security/detect-non-literal-fs-filename": "off",
-      "security/detect-object-injection": "off",
-      "security/detect-child-process": "off"
+      "prettier/prettier": "error"
       }
   }
   

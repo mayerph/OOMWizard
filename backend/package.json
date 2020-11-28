@@ -9,7 +9,8 @@
     "tsc": "./node_modules/.bin/tsc",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint --fix src/**/*.ts",
-    "build": "tsc && cp src/*.json dist/"
+    "build": "tsc && cp src/*.json dist/",
+    "prettier-format": "./node_modules/.bin/prettier --config .prettierrc 'src/**/*.ts' --write"
   },
   "author": "",
   "license": "MIT",
@@ -40,6 +41,7 @@
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-tsdoc": "^0.2.7",
     "jest": "^26.6.3",
+    "prettier": "^2.2.1",
     "ts-jest": "^26.4.4"
   }
 }
