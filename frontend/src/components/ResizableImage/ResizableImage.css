@@ -1,0 +1,13 @@
+
+.resizeable-image-container {
+    background-color: #aaa;
+    position: relative;
+}
+
+.resizeable-image-container-close-button {
+    position: absolute !important;
+    top: 0;
+    right: 0;
+    height: 30px;
+    width: 30px;
+}
