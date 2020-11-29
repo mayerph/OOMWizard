@@ -10,3 +10,4 @@ src/config.json
 .stryker-tmp
 key.pem
 certificate.pem
+.idea/
