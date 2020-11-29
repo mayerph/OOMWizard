@@ -1,14 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './ResizableImage.css';
 import {Rnd} from "react-rnd";
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import {connect} from "react-redux";
 
 
 class ResizableImage extends React.Component {
-    constructor(props) {
-        super(props);
+    handleRemoveImage(image) {
+        this.props.dispatch({type: 'REMOVE_ELEMENT', id: image.props.id})
     }
 
     render() {
@@ -23,9 +23,14 @@ class ResizableImage extends React.Component {
                 }}
                 bounds={this.props.bounds}
             >
-                <IconButton color="secondary" aria-label="close" className="resizeable-image-container-close-button">
+                <IconButton color="secondary"
+                            aria-label="close"
+                            className="resizeable-image-container-close-button"
+                            onClick={() => this.handleRemoveImage(this)}
+                >
                     <CloseIcon/>
                 </IconButton>
+                {this.props.id}
             </Rnd>
         );
     }
@@ -35,4 +40,7 @@ ResizableImage.propTypes = {};
 
 ResizableImage.defaultProps = {};
 
-export default ResizableImage;
+
+
+
+export default connect()(ResizableImage);

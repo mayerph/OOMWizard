@@ -1,6 +1,6 @@
 
 .resizeable-image-container {
-    background-color: #aaa;
+    border: 1px solid black;
     position: relative;
 }
 

@@ -1,21 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './MemeCanvas.css';
 import {Rnd} from "react-rnd";
 import Card from '@material-ui/core/Card';
 import ResizableImage from "../ResizableImage/ResizableImage";
+import {connect} from "react-redux";
 
 class MemeCanvas extends React.Component {
     render() {
-        const memeCanvasId = "meme-canvas"
+        const canvasElements = this.props.canvasElements.map((element) =>
+            <ResizableImage
+                key={element.id}
+                x={element.x}
+                y={element.y}
+                width={element.width}
+                height={element.height}
+                bounds={element.bounds}
+                id={element.id}
+            />
+        )
+
         return (
             <div>
                 <Rnd
-                    id={memeCanvasId}
+                    id="meme-canvas"
                     default={{
                         x: 0,
                         y: 0,
-                        width: 500,
                         height: 500,
 
                     }}
@@ -25,7 +35,7 @@ class MemeCanvas extends React.Component {
                     disableDragging
                 >
                     <Card id="meme-canvas-card">
-                        <ResizableImage x={0} y={0} width={100} height={200} bounds={'#' + memeCanvasId}/>
+                        {canvasElements}
                     </Card>
                 </Rnd>
             </div>
@@ -34,7 +44,13 @@ class MemeCanvas extends React.Component {
 }
 
 MemeCanvas.propTypes = {};
-
 MemeCanvas.defaultProps = {};
 
-export default MemeCanvas;
+function mapStateToProps(state) {
+    return {
+        canvasElements: [...state.canvasElements]
+    }
+}
+
+
+export default connect(mapStateToProps)(MemeCanvas);

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './NavBar.css';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,9 +8,23 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import {connect} from 'react-redux'
+
 
 
 class NavBar extends React.Component {
+    canvasElementCounter = 0
+    handleAddImage() {
+        const element = {
+            x: Math.floor(Math.random() * 200),
+            y: Math.floor(Math.random() * 200),
+            width: Math.floor(Math.random() * 200) + 50,
+            height: Math.floor(Math.random() * 200) + 50,
+            bounds: "#meme-canvas",
+            id: this.canvasElementCounter++
+        }
+        this.props.dispatch({type: 'ADD_ELEMENT', element: element})
+    }
 
     render() {
         return (
@@ -25,6 +38,7 @@ class NavBar extends React.Component {
                             variant="contained"
                             color="secondary"
                             startIcon={<AddIcon/>}
+                            onClick={() => this.handleAddImage()}
                         >
                             Image
                         </Button>
@@ -49,7 +63,7 @@ class NavBar extends React.Component {
 }
 
 NavBar.propTypes = {}
-
 NavBar.defaultProps = {};
 
-export default NavBar;
+
+export default connect()(NavBar);
