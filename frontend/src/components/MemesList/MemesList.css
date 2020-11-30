@@ -1,0 +1,28 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  overflow: hidden;
+  width: 100%;
+}
+
+.gridList {
+  height: 500px;
+}
+
+.title {
+  color: blue;
+}
+
+.MuiGridListTile-imgFullHeight {
+  object-fit: contain;
+  width: 90%;
+}
+
+#tempbutton {
+  background-color: blue;
+  color: white;
+  border-radius: 5px;
+  width: 200px;
+  height: 50px;
+}
