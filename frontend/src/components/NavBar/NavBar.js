@@ -14,17 +14,19 @@ import {connect} from 'react-redux'
 
 class NavBar extends React.Component {
     canvasElementCounter = 0
-    handleAddImage() {
+    handleAddElement(type) {
         const element = {
             x: Math.floor(Math.random() * 200),
             y: Math.floor(Math.random() * 200),
             width: Math.floor(Math.random() * 200) + 50,
             height: Math.floor(Math.random() * 200) + 50,
             bounds: "#meme-canvas",
-            id: this.canvasElementCounter++
+            id: this.canvasElementCounter++,
+            type: type
         }
         this.props.dispatch({type: 'ADD_ELEMENT', element: element})
     }
+
 
     render() {
         return (
@@ -38,9 +40,17 @@ class NavBar extends React.Component {
                             variant="contained"
                             color="secondary"
                             startIcon={<AddIcon/>}
-                            onClick={() => this.handleAddImage()}
+                            onClick={() => this.handleAddElement("image")}
                         >
                             Image
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            startIcon={<AddIcon/>}
+                            onClick={() => this.handleAddElement("text")}
+                        >
+                            Text
                         </Button>
                         <Typography variant="h6" className="navbar-container-title">
                             MemeWizard

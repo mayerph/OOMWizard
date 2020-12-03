@@ -3,21 +3,42 @@ import './MemeCanvas.css';
 import {Rnd} from "react-rnd";
 import Card from '@material-ui/core/Card';
 import ResizableImage from "../ResizableImage/ResizableImage";
+import ResizableText from "../ResizableText/ResizableText";
 import {connect} from "react-redux";
 
 class MemeCanvas extends React.Component {
     render() {
-        const canvasElements = this.props.canvasElements.map((element) =>
-            <ResizableImage
-                key={element.id}
-                x={element.x}
-                y={element.y}
-                width={element.width}
-                height={element.height}
-                bounds={element.bounds}
-                id={element.id}
-            />
-        )
+        const canvasElements = this.props.canvasElements.map(renderElement)
+
+        function renderElement(element){
+            if (element.type === "image"){
+                return(
+                    <ResizableImage
+                        key={element.id}
+                        x={element.x}
+                        y={element.y}
+                        width={element.width}
+                        height={element.height}
+                        bounds={element.bounds}
+                        id={element.id}
+                    />
+                )
+            }
+            if (element.type === "text"){
+                return(
+                    <ResizableText
+                        key={element.id}
+                        x={element.x}
+                        y={element.y}
+                        width={element.width}
+                        height={element.height}
+                        bounds={element.bounds}
+                        id={element.id}
+                    />
+                )
+            }
+
+        }
 
         return (
             <div>

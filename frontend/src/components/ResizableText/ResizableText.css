@@ -1,0 +1,12 @@
+.resizeable-text-container {
+    border: 1px solid black;
+    position: relative;
+}
+
+.resizeable-text-container-close-button {
+    position: absolute !important;
+    top: 0;
+    right: 0;
+    height: 30px;
+    width: 30px;
+}
