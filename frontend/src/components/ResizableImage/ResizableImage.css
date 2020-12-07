@@ -1,13 +1,16 @@
 
 .resizeable-image-container {
-    border: 1px solid black;
+    border: 1px dashed #ccc;
     position: relative;
+    z-index: 39;
 }
 
 .resizeable-image-container-close-button {
     position: absolute !important;
-    top: 0;
-    right: 0;
+    top: -15px;
+    right: -15px;
     height: 30px;
     width: 30px;
+    z-index: 40;
+    background-color: #ffffff40 !important;
 }

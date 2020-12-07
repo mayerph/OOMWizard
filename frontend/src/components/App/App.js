@@ -12,6 +12,7 @@ import { applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import reducers from "../../reducers";
+import TextControl from "../TextControl/TextControl";
 
 class App extends React.Component {
   render() {
@@ -19,6 +20,13 @@ class App extends React.Component {
       <Provider store={createStore(reducers, {}, applyMiddleware(ReduxThunk))}>
         <div className="App">
           <NavBar />
+          <Grid container>
+            <Grid item xs />
+            <Grid item>
+              <TextControl />
+            </Grid>
+            <Grid item xs />
+          </Grid>
           <Grid container>
             <Grid item xs />
             <Grid item id="meme-canvas-container">

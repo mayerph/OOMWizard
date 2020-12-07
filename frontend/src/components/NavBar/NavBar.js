@@ -22,7 +22,8 @@ class NavBar extends React.Component {
             height: Math.floor(Math.random() * 200) + 50,
             bounds: "#meme-canvas",
             id: this.canvasElementCounter++,
-            type: type
+            type: type,
+            imageUrl: process.env.PUBLIC_URL + '/smug_goat.jpg'
         }
         this.props.dispatch({type: 'ADD_ELEMENT', element: element})
     }

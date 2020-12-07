@@ -14,6 +14,9 @@ Project repository for the lecture Online Multimedia (WS2020/21).
 * [react-rnd](https://github.com/bokuweb/react-rnd)
     * A resizable and draggable component for React.
     * MIT License
+* [Draft.js]((https://github.com/bokuweb/react-rnd))
+    * Draft.js is a JavaScript rich text editor framework, built for React and backed by an immutable model.
+    * MIT License
 
 ### 
  

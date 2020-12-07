@@ -17,6 +17,7 @@ class MemeCanvas extends React.Component {
                         key={element.id}
                         x={element.x}
                         y={element.y}
+                        imageUrl={element.imageUrl}
                         width={element.width}
                         height={element.height}
                         bounds={element.bounds}
@@ -30,8 +31,6 @@ class MemeCanvas extends React.Component {
                         key={element.id}
                         x={element.x}
                         y={element.y}
-                        width={element.width}
-                        height={element.height}
                         bounds={element.bounds}
                         id={element.id}
                     />

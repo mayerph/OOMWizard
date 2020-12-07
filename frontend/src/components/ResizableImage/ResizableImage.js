@@ -4,9 +4,18 @@ import {Rnd} from "react-rnd";
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import {connect} from "react-redux";
+import {ContentState, EditorState} from "draft-js";
 
 
 class ResizableImage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            imageWidth: this.props.width,
+            imageHeight: this.props.height
+        };
+    }
+
     handleRemoveImage(image) {
         this.props.dispatch({type: 'REMOVE_ELEMENT', id: image.props.id})
     }
@@ -18,10 +27,14 @@ class ResizableImage extends React.Component {
                 default={{
                     x: this.props.x,
                     y: this.props.y,
-                    width: this.props.width,
-                    height: this.props.height,
                 }}
                 bounds={this.props.bounds}
+                onResize={(e, direction, ref, delta, position) => {
+                    this.setState({
+                        imageWidth: ref.offsetWidth,
+                        imageHeight: ref.offsetHeight,
+                    });
+                }}
             >
                 <IconButton color="secondary"
                             aria-label="close"
@@ -30,7 +43,10 @@ class ResizableImage extends React.Component {
                 >
                     <CloseIcon/>
                 </IconButton>
-                {this.props.id}
+                <img
+                    style={{pointerEvents: 'none', width: this.state.imageWidth, height: this.state.imageHeight}}
+                     src={this.props.imageUrl}
+                />
             </Rnd>
         );
     }

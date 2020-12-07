@@ -8,6 +8,17 @@ export const removeElement = (id) => ({
   id,
 });
 
+export const focusEditorState = (editorStateId, editorState, inlineStyles) => ({
+  type: "FOCUS_EDITOR_STATE",
+  editorStateId,
+  editorState,
+  inlineStyles
+});
+
+export const unfocusText = () => ({
+  type: "UNFOCUS_TEXT",
+});
+
 export const getApi = () => {
   return (dispatch) => {
     fetch("https://api.imgflip.com/get_memes", {
