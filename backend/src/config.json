@@ -1,0 +1,8 @@
+{
+    "database" : {
+        "path" : "mongodb://localhost:27017/meme"
+    },
+    "server" : {
+        "port" : 3000
+    }
+}

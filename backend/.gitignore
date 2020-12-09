@@ -4,7 +4,6 @@ stryker.log
 .stryer-tmp
 *.DS_Store
 dist/
-src/config.json
 .scannerwork
 # stryker temp files
 .stryker-tmp
