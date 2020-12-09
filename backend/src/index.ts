@@ -5,6 +5,7 @@ import * as http from "http"
 import * as bodyParser from "body-parser"
 import * as fs from "fs"
 import { default as userRoutes } from "./user/user.routes"
+import {default as loginRoutes} from "./login/login.routes"
 import * as config from "./config.json"
 import * as mongoose from "mongoose"
 
@@ -35,6 +36,11 @@ app.get("", (req: Request, res: Response, next: NextFunction) => {
  * Route to all users
  */
 app.use("/users", userRoutes)
+
+/**
+ * Route all logins
+ */
+app.use("/login",loginRoutes)
 
 /**
  * Start server on port 3000
