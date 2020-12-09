@@ -1,0 +1,21 @@
+.resizeable-text-container {
+    position: relative;
+    border: 1px dashed #ccc;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    z-index: 41;
+    cursor: auto !important;
+}
+
+.resizeable-text-container-close-button {
+    position: absolute !important;
+    top: -15px;
+    right: -15px;
+    height: 30px;
+    width: 30px;
+    z-index: 42;
+    text-align: center;
+    background-color: #ffffff40 !important;
+}

@@ -9,3 +9,4 @@ dist/
 .stryker-tmp
 key.pem
 certificate.pem
+.idea/

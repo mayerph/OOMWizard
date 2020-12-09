@@ -1,0 +1,10 @@
+.navbar-container {
+    display: flex;
+    flex-grow: 1;
+    margin: 0;
+}
+
+.navbar-container-title {
+    flex-grow: 1;
+    text-align: right;
+}
