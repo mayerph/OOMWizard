@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 
 import { MemesList } from "../MemesList";
+import { MemeSlideShow } from "../MemeSlideShow";
 
 import ReduxThunk from "redux-thunk";
 import { applyMiddleware } from "redux";
@@ -39,8 +40,11 @@ class App extends React.Component {
               </Grid>
             </Grid>
 
-            <Grid item id="memes-list-container">
-              <Grid item xs>
+            <Grid container id="memes-list-container">
+              <Grid item xs={4}>
+                <MemeSlideShow />
+              </Grid>
+              <Grid item xs={8}>
                 <MemesList />
               </Grid>
             </Grid>
