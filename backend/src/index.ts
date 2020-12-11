@@ -46,5 +46,5 @@ app.use("/login",loginRoutes)
  * Start server on port 3000
  */
 app.listen(config.server.port, () => {
-  console.log("backend started")
+  console.log(`backend started with port ${config.server.port}`)
 })
