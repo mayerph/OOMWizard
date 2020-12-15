@@ -29,7 +29,10 @@ class MemesList extends React.Component {
           {this.props.tileData.map((tile) => (
             <GridListTile key={tile.url} cols={tile.cols || 1}>
               <img src={tile.url} alt={tile.name} className="gridImg" />
-              <GridListTileBar title={tile.name} />
+              <GridListTileBar
+                title={tile.name}
+                subtitle={"likes: " + tile.name.length}
+              />
             </GridListTile>
           ))}
         </GridList>

@@ -7,25 +7,42 @@ import "./MemeSlideShow.css";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
+import { FormControlLabel, Checkbox, Paper } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import { getApi } from "../../actions";
+import { getApi, randomize, sortByLikes, autoplay } from "../../actions";
 
 import Carousel from "react-material-ui-carousel";
-import { Paper } from "@material-ui/core";
 
 class MemeSlideShow extends React.Component {
   onApiLoad() {
     this.props.getApi();
   }
+  randomize() {
+    this.props.randomize();
+  }
+  sortByLikes() {
+    this.props.sortByLikes();
+  }
+  autoplay() {
+    this.props.autoplay();
+  }
 
+  ///currently sorting the memes by title length
   render() {
     return (
       <div className="root">
-        {/* <Button onClick={this.onApiLoad.bind(this)} variant="outlined">
-          TempButton: LoadAPI
-        </Button> */}
+        <Button onClick={this.randomize.bind(this)} variant="outlined">
+          Randomize!
+        </Button>
+        <Button onClick={this.sortByLikes.bind(this)} variant="outlined">
+          Sort by Likes!
+        </Button>
 
-        <Carousel interval="10000" navButtonsAlwaysVisible="true">
+        <Carousel
+          interval={this.props.auto}
+          autoPlay="false"
+          navButtonsAlwaysVisible="true"
+        >
           {this.props.tileData.map((tile) => (
             <Paper>
               <h2>{tile.name}</h2>
@@ -33,16 +50,34 @@ class MemeSlideShow extends React.Component {
             </Paper>
           ))}
         </Carousel>
+
+        <FormControlLabel
+          control={
+            <Checkbox
+              onChange={this.autoplay.bind(this)}
+              checked={this.props.auto !== "4000" ? false : true}
+              value="autoplay"
+              color="primary"
+            />
+          }
+          label="Auto-play"
+        />
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => {
-  //console.log(state.api.tileData);
+  console.log(state.api.auto);
   return {
     tileData: state.api.tileData,
+    auto: state.api.auto,
   };
 };
 
-export default connect(mapStateToProps, { getApi })(MemeSlideShow);
+export default connect(mapStateToProps, {
+  getApi,
+  randomize,
+  sortByLikes,
+  autoplay,
+})(MemeSlideShow);

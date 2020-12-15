@@ -12,7 +12,7 @@ export const focusEditorState = (editorStateId, editorState, inlineStyles) => ({
   type: "FOCUS_EDITOR_STATE",
   editorStateId,
   editorState,
-  inlineStyles
+  inlineStyles,
 });
 
 export const unfocusText = () => ({
@@ -32,3 +32,39 @@ export const getApi = () => {
       });
   };
 };
+
+export const randomize = () => {
+  return (dispatch) => {
+    fetch("https://api.imgflip.com/get_memes", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((results) => {
+        var tileData = results.data.memes;
+        //console.log(tileData);
+        dispatch({ type: "RANDOMIZE", payload: tileData });
+      });
+  };
+};
+/* export const randomize = (state) => ({
+  type: "RANDOMIZE",
+  state,
+}); */
+export const sortByLikes = () => {
+  return (dispatch) => {
+    fetch("https://api.imgflip.com/get_memes", {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((results) => {
+        var tileData = results.data.memes;
+        //console.log(tileData);
+        dispatch({ type: "SORTBYLIKES", payload: tileData });
+      });
+  };
+};
+
+export const autoplay = (state) => ({
+  type: "AUTOPLAY",
+  state,
+});
