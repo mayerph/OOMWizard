@@ -14,7 +14,6 @@ import {connect} from "react-redux";
 
 class TextControl extends React.Component {
     applyStyle(style) {
-        console.log(this.props.editorStateId)
         let newInlineStyles = this.props.inlineStyles
         if (typeof newInlineStyles !== 'undefined') {
             if (newInlineStyles.size === newInlineStyles.delete(style).size) {
@@ -32,8 +31,9 @@ class TextControl extends React.Component {
     }
 
     render() {
+        let controlVisibility = this.props.editorState ? 'visible' : 'hidden'
         return (
-            <Card className="text-control-card">
+            <Card style={{visibility: controlVisibility}} className="text-control-card">
                 <div>
                     <IconButton>
                         <AddIcon/>

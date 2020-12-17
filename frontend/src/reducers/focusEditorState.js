@@ -8,8 +8,12 @@ const focusEditorState = (state = [], action) => {
                 editorState: action.editorState,
                 inlineStyles: action.inlineStyles
             }
-        case 'UNFOCUS_TEXT':
-            return null
+        case 'UNFOCUS_EDITOR_STATE':
+            return {
+                editorStateId: undefined,
+                editorState: undefined,
+                inlineStyles: undefined
+            }
         default:
             return state
     }

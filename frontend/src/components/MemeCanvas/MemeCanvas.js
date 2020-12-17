@@ -7,12 +7,18 @@ import ResizableText from "../ResizableText/ResizableText";
 import {connect} from "react-redux";
 
 class MemeCanvas extends React.Component {
+    handleUnfocusText(e) {
+        if (e.target.id === 'meme-canvas-card' || e.target.classList.contains("resizeable-image-container")) {
+            this.props.dispatch({type: 'UNFOCUS_EDITOR_STATE'})
+        }
+    }
+
     render() {
         const canvasElements = this.props.canvasElements.map(renderElement)
 
-        function renderElement(element){
-            if (element.type === "image"){
-                return(
+        function renderElement(element) {
+            if (element.type === "image") {
+                return (
                     <ResizableImage
                         key={element.id}
                         x={element.x}
@@ -25,8 +31,8 @@ class MemeCanvas extends React.Component {
                     />
                 )
             }
-            if (element.type === "text"){
-                return(
+            if (element.type === "text") {
+                return (
                     <ResizableText
                         key={element.id}
                         x={element.x}
@@ -53,6 +59,7 @@ class MemeCanvas extends React.Component {
                     minHeight='500px'
                     bounds='#meme-canvas-container'
                     disableDragging
+                    onClick={(e) => this.handleUnfocusText(e)}
                 >
                     <Card id="meme-canvas-card">
                         {canvasElements}
@@ -68,7 +75,8 @@ MemeCanvas.defaultProps = {};
 
 function mapStateToProps(state) {
     return {
-        canvasElements: [...state.canvasElements]
+        canvasElements: [...state.canvasElements],
+        editorState: state.focusEditorState.editorState,
     }
 }
 

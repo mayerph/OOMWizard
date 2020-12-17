@@ -45,30 +45,35 @@ class ResizableText extends React.Component {
         }
     }
 
-    handleRemoveText(text) {
+    handleRemoveText(e, text) {
         this.props.dispatch({type: 'REMOVE_ELEMENT', id: text.props.id})
+        this.props.dispatch({type: 'UNFOCUS_EDITOR_STATE'})
     }
 
-    changeFocus(editorState) {
-        this.props.dispatch({
-            editorStateId: this.props.id,
-            type: 'FOCUS_EDITOR_STATE',
-            editorState: editorState,
-            inlineStyles: editorState.getCurrentInlineStyle()
-        })
+    changeFocus(e, editorState) {
+        if (e.target.tagName !== 'path' && e.target.tagName !== 'svg') {
+            this.props.dispatch({
+                editorStateId: this.props.id,
+                type: 'FOCUS_EDITOR_STATE',
+                editorState: editorState,
+                inlineStyles: editorState.getCurrentInlineStyle()
+            })
+        }
     }
 
 
     render() {
+        let focusedBorderColor = this.props.id === this.props.editorStateId ? 'red' : 'inherit'
         return (
             <Rnd
+                style={{borderColor: focusedBorderColor}}
                 className="resizeable-text-container"
                 default={{
                     x: this.props.x,
                     y: this.props.y,
                 }}
                 bounds={this.props.bounds}
-                onClick={() => this.changeFocus(this.state.editorState)}
+                onClick={(e) => this.changeFocus(e, this.state.editorState)}
                 disableDragging={false}
             >
                 <Editor
@@ -78,7 +83,7 @@ class ResizableText extends React.Component {
                 <IconButton color="secondary"
                             aria-label="close"
                             className="resizeable-text-container-close-button"
-                            onClick={() => this.handleRemoveText(this)}
+                            onClick={(e) => this.handleRemoveText(e, this)}
                 >
                     <CloseIcon/>
                 </IconButton>
