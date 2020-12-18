@@ -8,6 +8,7 @@ import FormatBoldIcon from "@material-ui/icons/FormatBold";
 import FormatItalicIcon from "@material-ui/icons/FormatItalic";
 import FormatUnderlineIcon from "@material-ui/icons/FormatUnderlined";
 import ColorizeIcon from "@material-ui/icons/Colorize";
+import HelpIcon from "@material-ui/icons/Help";
 import IconButton from "@material-ui/core/IconButton";
 import {connect} from "react-redux";
 import ResizableText from "../ResizableText/ResizableText";
@@ -17,8 +18,10 @@ class TextControl extends React.Component {
         let newInlineStyles = this.props.inlineStyles
         if (typeof newInlineStyles !== 'undefined') {
 
-            // remove all colors to ensure that there is only one color at anytime
-            newInlineStyles = newInlineStyles.filter((s) => !Object.keys(ResizableText.colorStyleMap).includes(s))
+            if (Object.keys(ResizableText.customStyleMap).includes(style)) {
+                // remove all colors to ensure that there is only one color at anytime
+                newInlineStyles = newInlineStyles.filter((s) => !Object.keys(ResizableText.customStyleMap).includes(s))
+            }
 
             if (newInlineStyles.size === newInlineStyles.delete(style).size) {
                 newInlineStyles = newInlineStyles.add(style)
@@ -34,15 +37,33 @@ class TextControl extends React.Component {
         }
     }
 
+    setFontSize(modifier) {
+        const textContainer = document.getElementById("resizeable-text-" + this.props.editorStateId)
+        if (!textContainer.style.fontSize) {
+            textContainer.style.fontSize = getComputedStyle(document.querySelector('.resizeable-text-container')).fontSize
+        }
+        if (modifier === 'INCREASE_FONT') {
+            const newFontSize = parseInt(textContainer.style.fontSize, 10) + 5
+            if (newFontSize <= 65) {
+                textContainer.style.fontSize = newFontSize.toString() + 'px'
+            }
+        } else if (modifier === 'DECREASE_FONT') {
+            const newFontSize = parseInt(textContainer.style.fontSize, 10) - 5
+            if (newFontSize >= 10) {
+                textContainer.style.fontSize = newFontSize.toString() + 'px'
+            }
+        }
+    }
+
     render() {
         let controlVisibility = this.props.editorState ? 'visible' : 'hidden'
         return (
             <Card style={{visibility: controlVisibility}} className="text-control-card">
                 <div>
-                    <IconButton>
+                    <IconButton onClick={() => this.setFontSize('INCREASE_FONT')}>
                         <AddIcon/>
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={() => this.setFontSize('DECREASE_FONT')}>
                         <RemoveIcon/>
                     </IconButton>
                     <IconButton onClick={() => this.applyStyle('BOLD')}>
@@ -55,16 +76,22 @@ class TextControl extends React.Component {
                         <FormatUnderlineIcon/>
                     </IconButton>
                     <IconButton onClick={() => this.applyStyle('black')}>
-                        <ColorizeIcon style={{color: ResizableText.colorStyleMap.black.color}}/>
+                        <ColorizeIcon style={{color: ResizableText.customStyleMap.black.color}}/>
+                    </IconButton>
+                    <IconButton onClick={() => this.applyStyle('white')}>
+                        <ColorizeIcon style={{color: 'rgba(0, 0, 0, 0.2)'}}/>
                     </IconButton>
                     <IconButton onClick={() => this.applyStyle('red')}>
-                        <ColorizeIcon style={{color: ResizableText.colorStyleMap.red.color}}/>
+                        <ColorizeIcon style={{color: ResizableText.customStyleMap.red.color}}/>
                     </IconButton>
                     <IconButton onClick={() => this.applyStyle('green')}>
-                        <ColorizeIcon style={{color: ResizableText.colorStyleMap.green.color}}/>
+                        <ColorizeIcon style={{color: ResizableText.customStyleMap.green.color}}/>
                     </IconButton>
                     <IconButton onClick={() => this.applyStyle('blue')}>
-                        <ColorizeIcon style={{color: ResizableText.colorStyleMap.blue.color}}/>
+                        <ColorizeIcon style={{color: ResizableText.customStyleMap.blue.color}}/>
+                    </IconButton>
+                    <IconButton>
+                        <HelpIcon/>
                     </IconButton>
                 </div>
             </Card>

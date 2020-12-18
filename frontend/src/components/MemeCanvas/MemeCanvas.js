@@ -60,6 +60,12 @@ class MemeCanvas extends React.Component {
                     bounds='#meme-canvas-container'
                     disableDragging
                     onClick={(e) => this.handleUnfocusText(e)}
+                    resizeHandleClasses={{
+                        bottomLeft: 'resize-handle-bottom-left',
+                        bottomRight: 'resize-handle-bottom-right',
+                        topLeft: 'resize-handle-top-left',
+                        topRight: 'resize-handle-top-right',
+                    }}
                 >
                     <Card id="meme-canvas-card">
                         {canvasElements}
