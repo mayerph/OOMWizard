@@ -8,7 +8,19 @@ import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import GetAppIcon from "@material-ui/icons/GetApp";
+
 import { getApi } from "../../actions";
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+} from "react-share";
+import { EmailIcon, FacebookIcon, WhatsappIcon } from "react-share";
 
 //Trying out the Grid List from Material UI (https://github.com/mui-org/material-ui/blob/master/docs/src/pages/components/grid-list/ImageGridList.js)
 //DONE change state system to Redux
@@ -32,6 +44,49 @@ class MemesList extends React.Component {
               <GridListTileBar
                 title={tile.name}
                 subtitle={"likes: " + tile.name.length}
+                actionIcon={
+                  <div className="actionButtons">
+                    <IconButton aria-label="upvote">
+                      <ArrowUpwardIcon
+                        style={{
+                          color: "#fafafa",
+                          fontSize: 15,
+                          backgroundColor: "#388e3c",
+                          borderRadius: 5,
+                          padding: 2,
+                        }}
+                      />
+                    </IconButton>
+                    <IconButton aria-label="downvote">
+                      <ArrowDownwardIcon
+                        style={{
+                          color: "#fafafa",
+                          fontSize: 15,
+                          backgroundColor: "#f4511e",
+                          borderRadius: 5,
+                          padding: 2,
+                        }}
+                      />
+                    </IconButton>
+                    <IconButton aria-label="download" href={tile.url} download>
+                      <GetAppIcon
+                        style={{
+                          color: "#fafafa",
+                          fontSize: 15,
+                          backgroundColor: "#2196f3",
+                          borderRadius: 5,
+                          padding: 2,
+                        }}
+                      />
+                    </IconButton>
+                    <WhatsappShareButton url={tile.url}>
+                      <WhatsappIcon size={20} borderRadius={10} />
+                    </WhatsappShareButton>
+                    {/*                     <FacebookShareButton url={tile.url}>
+                      <FacebookIcon size={35} borderRadius={10} />
+                    </FacebookShareButton> */}
+                  </div>
+                }
               />
             </GridListTile>
           ))}

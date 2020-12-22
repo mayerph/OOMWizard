@@ -26,3 +26,12 @@
   width: 200px;
   height: 50px;
 }
+.MuiGridListTileBar-actionIcon {
+  padding-right: 10px;
+}
+
+.actionButtons {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
