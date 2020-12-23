@@ -4,5 +4,17 @@
     },
     "server" : {
         "port" : 3000
+    },
+    "storage" : {
+        "templates" : {
+            "route" : "/templates",
+            "path" : "/storage/templates/"
+        },
+        "user":{ 
+            "route" : "/user",
+            "path" : "storage/user/"
+        }
+
+
     }
 }

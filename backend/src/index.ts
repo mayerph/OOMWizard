@@ -6,13 +6,20 @@ import * as bodyParser from "body-parser"
 import * as fs from "fs"
 import { default as userRoutes } from "./user/user.routes"
 import { default as loginRoutes } from "./login/login.routes"
+import { default as memesRoutes } from "./meme/meme.routes"
 import * as config from "./config.json"
 import * as mongoose from "mongoose"
+import * as fileUpload from "express-fileupload"
 
 const app = express()
 app.use(cors())
 app.use(bodyParser.json())
 app.use(express.static("storage"))
+app.use(
+  fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 }
+  })
+)
 
 mongoose.connect(
   config.database.path,
@@ -42,6 +49,11 @@ app.use("/users", userRoutes)
  * Route all logins
  */
 app.use("/login", loginRoutes)
+
+/**
+ * Route to all memes
+ */
+app.use("/memes", memesRoutes)
 
 /**
  * Start server on port 3000
