@@ -6,7 +6,6 @@ import { IMemeTemplate } from "./memeTemplate.interface"
 interface IPosition {
   x: number
   y: number
-  z: number
 }
 
 /**

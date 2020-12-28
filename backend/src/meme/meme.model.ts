@@ -26,8 +26,7 @@ const transform = (doc: any, ret: any) => {
  */
 const positionSchema = new Schema({
   x: { type: String, required: true },
-  y: { type: String, required: true },
-  z: { type: String, required: true }
+  y: { type: String, required: true }
 })
 
 /**
