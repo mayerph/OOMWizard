@@ -13,6 +13,15 @@ router.get("", async (req: Request, res: Response, next: NextFunction) => {
 })
 
 /**
+ * route to get a certain meme (template)
+ */
+router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = req.params.id
+  const meme = await memeController.meme(id)
+  res.json(meme)
+})
+
+/**
  * route for uploading meme templates
  */
 router.post(

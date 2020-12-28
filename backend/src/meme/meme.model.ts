@@ -1,6 +1,7 @@
 import { model, Schema, Model, Document } from "mongoose"
 import { IMeme, IMemeModel } from "./meme.interface"
 import * as config from "../config.json"
+import { memeTemplateSchema } from "./memeTemplate.model"
 
 /**
  * interface of the mongoose-schema
@@ -20,35 +21,27 @@ const transform = (doc: any, ret: any) => {
   delete ret._id
   delete ret.__v
 }
-const memeSchema = new Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-      dropDups: true
-    },
-    file: {
-      type: String,
-      required: true,
-      dropDups: true
-    },
-    capture1: {
-      type: String,
-      dropDups: true
-    },
-    capture2: {
-      type: String,
-      dropDups: true
-    }
-  },
-  {
-    toJSON: {
-      transform
-    },
-    toObject: {
-      transform
-    }
-  }
-)
+/**
+ * Mongoose Schema for position
+ */
+const positionSchema = new Schema({
+  x: { type: String, required: true },
+  y: { type: String, required: true },
+  z: { type: String, required: true }
+})
+
+/**
+ * Mongoose Schema for a capture (capture 1 and capture 2)
+ */
+const captureSchema = new Schema({
+  text: { type: String, required: true },
+  position: positionSchema
+})
+
+/**
+ * The meme Schema is a combination of the memeTemplateSchema and the captureSchema
+ */
+const memeSchema = new Schema(memeTemplateSchema)
+memeSchema.add({ capture1: captureSchema, capture2: captureSchema })
 
 export const Meme = model<IMemeMongoose, IMemeModelMongoose>("Meme", memeSchema)
