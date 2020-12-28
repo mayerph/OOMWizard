@@ -17,19 +17,19 @@ export class MemeController {
     const memes_tmp = [
       {
         name: "drake",
-        file: "Drake-Hotline-Bling.jpg"
+        file: config.storage.templates.route + "/Drake-Hotline-Bling.jpg"
       },
       {
         name: "pigeon",
-        file: "Is-This-A-Pigeon.jpg"
+        file: config.storage.templates.route + "/Is-This-A-Pigeon.jpg"
       },
       {
         name: "monkey",
-        file: "Monkey-Puppet.jpg"
+        file: config.storage.templates.route + "/Monkey-Puppet.jpg"
       },
       {
         name: "balloon",
-        file: "Running-Away-Balloon.jpg"
+        file: config.storage.templates.route + "/Running-Away-Balloon.jpg"
       }
     ]
     memes_tmp.forEach((e) => new MemeTemplate(e).save())
@@ -79,7 +79,7 @@ export class MemeController {
           }
           const memeDoc: IMemeTemplate = {
             name: image.name,
-            file: image.name
+            file: config.storage.templates.route + "/" + image.name
           }
           try {
             const meme = await new MemeTemplate(memeDoc).save()
@@ -89,6 +89,67 @@ export class MemeController {
           }
         }
       )
+    })
+  }
+
+  /**
+   * check if object is of type memeTemplate
+   * @param object meme object
+   * @param withId should the id property be considered
+   */
+  instanceOfMemeTemplate(
+    object: any,
+    withId?: boolean
+  ): object is IMemeTemplate {
+    if (typeof object != "object") {
+      return false
+    }
+    const id = withId ? "id" in object : true
+    const name = "name" in object
+    const file = "file" in object
+    return name && id && file
+  }
+
+  /**
+   * update certain meme template
+   * @param id memeTemplate id
+   * @param object memeTemplate object
+   */
+  async updateMemeTemplate(
+    id: string,
+    object: any
+  ): Promise<IMemeTemplate | null> {
+    return new Promise(async (resolve, reject) => {
+      // check if the sent object is of type memeTemplate
+      if (!this.instanceOfMemeTemplate(object, true) && id != object.id) {
+        reject("type error. Object of type memeTemplate is needed")
+        return
+      }
+
+      // query for a template
+      let template = null
+      try {
+        template = await MemeTemplate.findById(id)
+      } catch (err) {
+        reject(`no template with id ${id} found`)
+        return
+      }
+      // check if a template has been found
+      if (!template) {
+        reject(`no template with id ${id} found`)
+        return
+      }
+
+      // update template
+      try {
+        const updatedTemplate = await template.updateOne(object)
+      } catch (err) {
+        reject(`memeTemplate couldn't be updated`)
+        return
+      }
+
+      resolve(template)
+      return
     })
   }
 }

@@ -16,12 +16,20 @@ interface IMemeTemplateModelMongoose
   extends Model<IMemeTemplateMongoose>,
     IMemeTemplateModel {}
 
+/**
+ * renames certain properties and deletes unnecessary properties
+ * @param doc the certain document
+ * @param ret the memeTemplate object
+ */
 const transform = (doc: any, ret: any) => {
   ret.id = ret._id
-  ret.file = config.storage.templates.route + "/" + ret.file
   delete ret._id
   delete ret.__v
 }
+
+/**
+ * mongoose schema for a meme template
+ */
 export const memeTemplateSchema = new Schema(
   {
     name: {
@@ -44,6 +52,10 @@ export const memeTemplateSchema = new Schema(
     }
   }
 )
+
+/**
+ * mongoose model for a meme template
+ */
 
 export const MemeTemplate = model<
   IMemeTemplateMongoose,

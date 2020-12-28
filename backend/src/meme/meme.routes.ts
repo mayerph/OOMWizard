@@ -13,12 +13,26 @@ router.get("", async (req: Request, res: Response, next: NextFunction) => {
 })
 
 /**
- * route to get a certain meme (template)
+ * route to a certain meme template
  */
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
   const meme = await memeController.meme(id)
   res.json(meme)
+})
+
+/**
+ * route for updating a meme template
+ */
+router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
+  const id = req.params.id
+  try {
+    const meme = await memeController.updateMemeTemplate(id, req.body.meme)
+    res.json(meme)
+  } catch (err) {
+    res.status(500)
+    res.json(err)
+  }
 })
 
 /**
@@ -30,12 +44,13 @@ router.post(
     if (!req.files) {
       res.status(500)
     }
-    const result = await memeController
-      .writeMemeTemplate(req.files?.meme)
-      .catch((err) => {
-        res.status(500)
-      })
-    res.send(result)
+    try {
+      const result = await memeController.writeMemeTemplate(req.files?.meme)
+      res.json(result)
+    } catch (err) {
+      res.status(500)
+      res.json(err)
+    }
   }
 )
 

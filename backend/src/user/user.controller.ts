@@ -41,12 +41,12 @@ export class UserController {
   }
 
   /**
-   * add certain user
+   * check if a object is of type user
    * @param object - user object
    * @param withId - should the id property be considered
    */
   instanceOfUser(object: any, withId?: boolean): object is IUser {
-    const id = withId ? "name" in object : true
+    const id = withId ? "id" in object : true
     const name = "name" in object
     return name && id
   }
