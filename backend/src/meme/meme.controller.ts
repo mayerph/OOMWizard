@@ -5,7 +5,8 @@ import { IUser } from "../user/user.interface"
 import * as fs from "fs"
 import * as config from "../config.json"
 import * as Jimp from "jimp"
-import { IMeme } from "./meme.interface"
+import { createCanvas, Image } from "canvas"
+import { ICaption, IMeme } from "./meme.interface"
 
 export class MemeController {
   constructor() {
@@ -149,13 +150,84 @@ export class MemeController {
         reject(`memeTemplate couldn't be updated`)
         return
       }
-      this.createMeme(template)
+
+      this.createMeme({
+        ...template.toJSON(),
+        caption1: {
+          text: "das is caption1",
+          position: {
+            x: 0,
+            y: 0
+          },
+          color: "red",
+          size: 60
+        },
+        caption2: {
+          text: "das ist caption2",
+          position: {
+            x: 100,
+            y: 100
+          },
+          color: "blue",
+          size: 60
+        }
+      })
       resolve(template)
       return
     })
   }
-
   createMeme(meme: IMeme) {
+    fs.readFile(
+      "./" + config.storage.templates.path + meme.name,
+      (err, squid) => {
+        if (err) throw err
+        const img = new Image()
+        img.onload = () => {
+          const canvas = createCanvas(img.width, img.height)
+          const ctx = canvas.getContext("2d")
+          const captions: ICaption[] = []
+          if (meme.caption1) {
+            captions.push(meme.caption1)
+          }
+          if (meme.caption2) {
+            captions.push(meme.caption2)
+          }
+          // for each caption write to file
+          captions.forEach((caption) => {
+            console.log("caption", caption)
+            ctx.font = `${caption.size}pt Impact`
+            ctx.fillStyle = caption.color
+
+            // draw image
+            ctx.drawImage(img, 0, 0)
+
+            // write text
+            const text = caption.text
+            ctx.fillText(
+              text,
+              caption.position.x,
+              caption.position.y + caption.size
+            )
+          })
+
+          fs.writeFileSync(
+            "./" +
+              config.storage.memes.path +
+              new Date().getTime() +
+              "_" +
+              meme.name,
+            canvas.toBuffer()
+          )
+        }
+        img.onerror = (err) => {
+          throw err
+        }
+        img.src = squid
+      }
+    )
+  }
+
+  createMeme_(meme: IMeme) {
     Jimp.read("./" + config.storage.templates.path + meme.name)
       .then(async (image) => {
         // add caption 1

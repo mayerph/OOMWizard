@@ -11,11 +11,11 @@ interface IPosition {
 /**
  * Interface for the caption
  */
-interface ICaption {
+export interface ICaption {
   text: string
   position: IPosition
-  color?: "black" | "white"
-  size?: 8 | 16 | 32 | 64 | 128
+  color: string
+  size: number
 }
 
 /**
