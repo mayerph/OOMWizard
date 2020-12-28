@@ -4,6 +4,8 @@ import { IMemeTemplateMongoose, MemeTemplate } from "./memeTemplate.model"
 import { IUser } from "../user/user.interface"
 import * as fs from "fs"
 import * as config from "../config.json"
+import * as Jimp from "jimp"
+import { IMeme } from "./meme.interface"
 
 export class MemeController {
   constructor() {
@@ -16,19 +18,19 @@ export class MemeController {
     MemeTemplate.deleteMany({}).exec()
     const memes_tmp = [
       {
-        name: "drake",
+        name: "Drake-Hotline-Bling.jpg",
         file: config.storage.templates.route + "/Drake-Hotline-Bling.jpg"
       },
       {
-        name: "pigeon",
+        name: "Is-This-A-Pigeon.jpg",
         file: config.storage.templates.route + "/Is-This-A-Pigeon.jpg"
       },
       {
-        name: "monkey",
+        name: "Monkey-Puppet.jpg",
         file: config.storage.templates.route + "/Monkey-Puppet.jpg"
       },
       {
-        name: "balloon",
+        name: "Running-Away-Balloon.jpg",
         file: config.storage.templates.route + "/Running-Away-Balloon.jpg"
       }
     ]
@@ -147,9 +149,53 @@ export class MemeController {
         reject(`memeTemplate couldn't be updated`)
         return
       }
-
+      this.createMeme(template)
       resolve(template)
       return
     })
+  }
+
+  createMeme(meme: IMeme) {
+    Jimp.read("./" + config.storage.templates.path + meme.name)
+      .then(async (image) => {
+        // add caption 1
+        if (meme.caption1) {
+          const fontType = `FONT_SANS_${
+            meme.caption1.size ? meme.caption1.size : 16
+          }_${(meme.caption1.color
+            ? meme.caption1.color
+            : "black"
+          ).toUpperCase()}`
+          const font = await Jimp.loadFont((Jimp as any)[fontType])
+          image.print(
+            font,
+            meme.caption1.position.x,
+            meme.caption1.position.y,
+            meme.caption1.text
+          )
+        }
+
+        // add caption 2
+        if (meme.caption2) {
+          const fontType = `FONT_SANS_${
+            meme.caption2.size ? meme.caption2.size : 16
+          }_${(meme.caption2.color
+            ? meme.caption2.color
+            : "black"
+          ).toUpperCase()}`
+          const font = await Jimp.loadFont((Jimp as any)[fontType])
+          image.print(
+            font,
+            meme.caption2.position.x,
+            meme.caption2.position.y,
+            meme.caption2.text
+          )
+        }
+        // write to file
+        image.write("./" + config.storage.templates.path + "test.jpg")
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }
 }
