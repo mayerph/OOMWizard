@@ -21,4 +21,18 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   res.json(meme)
 })
 
+/**
+ * route to a add a new meme
+ */
+router.post("", async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log(req.body.meme)
+    const meme = await memeController.addMeme(req.body.meme)
+    res.json(meme)
+  } catch (err) {
+    res.status(500)
+    res.json(err)
+  }
+})
+
 export default router

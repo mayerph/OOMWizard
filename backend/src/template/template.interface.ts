@@ -4,7 +4,7 @@
 export interface ITemplate {
   id?: any
   name: string
-  file: string
+  route: string
 }
 
 export interface ITemplateModel {}

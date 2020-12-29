@@ -34,27 +34,54 @@ export class MemeController {
     const meme = await Meme.findById(id)
     return meme
   }
+  /**
+   * create and add new meme
+   * @param meme metadata of the meme
+   */
+  async addMeme(meme: IMeme): Promise<IMeme> {
+    console.log("1")
+    // create canvas
+    let canvas: Canvas
+    try {
+      canvas = await this.createMemeCanvas(meme)
+    } catch (err) {
+      console.log(err)
+      throw err
+    }
+
+    console.log("2")
+    // write meme to filesystem
+    const fullMeme = await this.writeMemeToFile(canvas, meme)
+    console.log("fullMeme", fullMeme)
+    // write meme to database
+    const result = new Meme(fullMeme)
+    console.log("result", result)
+    return fullMeme
+  }
 
   /**
    * write meme/canvas down to file system
    * @param canvas the image data
    * @param meme metadata of the file
    */
-  writeMemeToFile(canvas: Canvas, meme: IMeme | ITemplate): Promise<boolean> {
+  writeMemeToFile(canvas: Canvas, meme: IMeme): Promise<IMeme> {
     // write to file system
     return new Promise((resolve, reject) => {
+      const filename = new Date().getTime() + "_" + meme.template.name
       fs.writeFile(
-        "./" +
-          config.storage.memes.path +
-          new Date().getTime() +
-          "_" +
-          meme.name,
+        "./" + config.storage.memes.path + filename,
         canvas.toBuffer(),
         (err) => {
           if (err) {
             reject(err)
           }
-          resolve(true)
+          const fullMeme = {
+            name: filename,
+            route: config.storage.memes.route + "/" + filename,
+            template: meme.template,
+            captions: meme.captions
+          }
+          resolve(fullMeme)
         }
       )
     })
@@ -69,11 +96,13 @@ export class MemeController {
       // load template
       let img: Image = new Image()
       try {
-        img = await loadImage("./" + config.storage.templates.path + meme.name)
+        img = await loadImage(
+          "./" + config.storage.templates.path + meme.template.name
+        )
       } catch (err) {
         reject(err)
+        return
       }
-
       const canvas = createCanvas(img.width, img.height)
       const ctx = canvas.getContext("2d")
 
@@ -93,8 +122,8 @@ export class MemeController {
           caption.position.y + caption.size
         )
       })
-
       resolve(canvas)
+      return
     })
   }
 }

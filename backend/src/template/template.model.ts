@@ -37,7 +37,7 @@ export const templateSchema = new Schema(
       required: true,
       dropDups: true
     },
-    file: {
+    route: {
       type: String,
       required: true,
       dropDups: true

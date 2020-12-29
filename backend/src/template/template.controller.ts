@@ -15,19 +15,19 @@ export class TemplateController {
     const memes_tmp = [
       {
         name: "Drake-Hotline-Bling.jpg",
-        file: config.storage.templates.route + "/Drake-Hotline-Bling.jpg"
+        route: config.storage.templates.route + "/Drake-Hotline-Bling.jpg"
       },
       {
         name: "Is-This-A-Pigeon.jpg",
-        file: config.storage.templates.route + "/Is-This-A-Pigeon.jpg"
+        route: config.storage.templates.route + "/Is-This-A-Pigeon.jpg"
       },
       {
         name: "Monkey-Puppet.jpg",
-        file: config.storage.templates.route + "/Monkey-Puppet.jpg"
+        route: config.storage.templates.route + "/Monkey-Puppet.jpg"
       },
       {
         name: "Running-Away-Balloon.jpg",
-        file: config.storage.templates.route + "/Running-Away-Balloon.jpg"
+        route: config.storage.templates.route + "/Running-Away-Balloon.jpg"
       }
     ]
     memes_tmp.forEach((e) => new Template(e).save())
@@ -122,7 +122,7 @@ export class TemplateController {
           }
           const memeDoc: ITemplate = {
             name: image.name,
-            file: config.storage.templates.route + "/" + image.name
+            route: config.storage.templates.route + "/" + image.name
           }
           try {
             const meme = await new Template(memeDoc).save()

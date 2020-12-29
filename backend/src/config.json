@@ -7,16 +7,16 @@
     },
     "storage" : {
         "memes" : {
-            "route" : "",
-            "path" : "/storage/memes/"
+            "route" : "/images/memes",
+            "path" : "/storage/images/memes/"
         },
         "templates" : {
-            "route" : "/templates",
-            "path" : "/storage/templates/"
+            "route" : "/images/templates",
+            "path" : "/storage/images/templates/"
         },
         "user":{ 
             "route" : "/user",
-            "path" : "storage/user/"
+            "path" : "storage/images/user/"
         }
 
 

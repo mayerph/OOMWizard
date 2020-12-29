@@ -21,8 +21,12 @@ export interface ICaption {
 /**
  * Interface for a meme
  */
-export interface IMeme extends ITemplate {
+export interface IMeme {
+  id?: any
+  name?: string
+  route?: string
   captions: ICaption[]
+  template: ITemplate
 }
 
 export interface IMemeModel {}

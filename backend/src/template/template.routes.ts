@@ -8,8 +8,8 @@ const templateController = new TemplateController()
  * route to all available meme templates
  */
 router.get("", async (req: Request, res: Response, next: NextFunction) => {
-  const memes = await templateController.templates()
-  res.json(memes)
+  const templates = await templateController.templates()
+  res.json(templates)
 })
 
 /**
@@ -17,8 +17,8 @@ router.get("", async (req: Request, res: Response, next: NextFunction) => {
  */
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
-  const meme = await templateController.meme(id)
-  res.json(meme)
+  const template = await templateController.meme(id)
+  res.json(template)
 })
 
 /**
@@ -27,8 +27,12 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
   try {
-    const meme = await templateController.updateMemeTemplate(id, req.body.meme)
-    res.json(meme)
+    console.log("update template", req.body.template)
+    const template = await templateController.updateMemeTemplate(
+      id,
+      req.body.template
+    )
+    res.json(template)
   } catch (err) {
     res.status(500)
     res.json(err)
@@ -38,20 +42,19 @@ router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
 /**
  * route for uploading meme templates
  */
-router.post(
-  "/upload",
-  async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.files) {
-      res.status(500)
-    }
-    try {
-      const result = await templateController.writeMemeTemplate(req.files?.meme)
-      res.json(result)
-    } catch (err) {
-      res.status(500)
-      res.json(err)
-    }
+router.post("", async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.files) {
+    res.status(500)
   }
-)
+  try {
+    const result = await templateController.writeMemeTemplate(
+      req.files?.template
+    )
+    res.json(result)
+  } catch (err) {
+    res.status(500)
+    res.json(err)
+  }
+})
 
 export default router
