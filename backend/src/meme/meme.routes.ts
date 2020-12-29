@@ -26,7 +26,6 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
  */
 router.post("", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log(req.body.meme)
     const meme = await memeController.addMeme(req.body.meme)
     res.json(meme)
   } catch (err) {

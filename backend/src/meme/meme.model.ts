@@ -17,7 +17,6 @@ interface IMemeModelMongoose extends Model<IMemeMongoose>, IMemeModel {}
 
 const transform = (doc: any, ret: any) => {
   ret.id = ret._id
-  ret.file = config.storage.templates.route + "/" + ret.file
   delete ret._id
   delete ret.__v
 }

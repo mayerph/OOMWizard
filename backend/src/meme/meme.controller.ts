@@ -39,24 +39,19 @@ export class MemeController {
    * @param meme metadata of the meme
    */
   async addMeme(meme: IMeme): Promise<IMeme> {
-    console.log("1")
-    // create canvas
-    let canvas: Canvas
     try {
-      canvas = await this.createMemeCanvas(meme)
+      // create canvas
+      const canvas = await this.createMemeCanvas(meme)
+
+      // write meme to filesystem
+      const fullMeme = await this.writeMemeToFile(canvas, meme)
+
+      // write meme to database
+      const result = await new Meme(fullMeme).save()
+      return fullMeme
     } catch (err) {
-      console.log(err)
       throw err
     }
-
-    console.log("2")
-    // write meme to filesystem
-    const fullMeme = await this.writeMemeToFile(canvas, meme)
-    console.log("fullMeme", fullMeme)
-    // write meme to database
-    const result = new Meme(fullMeme)
-    console.log("result", result)
-    return fullMeme
   }
 
   /**
