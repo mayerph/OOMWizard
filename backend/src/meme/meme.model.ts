@@ -41,6 +41,6 @@ const captureSchema = new Schema({
  * The meme Schema is a combination of the memeTemplateSchema and the captureSchema
  */
 const memeSchema = new Schema(memeTemplateSchema)
-memeSchema.add({ capture1: captureSchema, capture2: captureSchema })
+memeSchema.add({ captures: { type: [captureSchema] } })
 
 export const Meme = model<IMemeMongoose, IMemeModelMongoose>("Meme", memeSchema)

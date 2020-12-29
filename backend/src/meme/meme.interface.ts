@@ -22,8 +22,7 @@ export interface ICaption {
  * Interface for a meme
  */
 export interface IMeme extends IMemeTemplate {
-  caption1?: ICaption
-  caption2?: ICaption
+  captions: ICaption[]
 }
 
 export interface IMemeModel {}

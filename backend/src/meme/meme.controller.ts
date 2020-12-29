@@ -5,7 +5,7 @@ import { IUser } from "../user/user.interface"
 import * as fs from "fs"
 import * as config from "../config.json"
 import * as Jimp from "jimp"
-import { createCanvas, Image } from "canvas"
+import { Canvas, createCanvas, Image, loadImage } from "canvas"
 import { ICaption, IMeme } from "./meme.interface"
 
 export class MemeController {
@@ -151,123 +151,105 @@ export class MemeController {
         return
       }
 
-      this.createMeme({
+      // create canvas representing the image / meme
+      const canvas = await this.createMemeCanvas({
         ...template.toJSON(),
-        caption1: {
-          text: "das is caption1",
-          position: {
-            x: 0,
-            y: 0
+        captions: [
+          {
+            text: "das is caption1",
+            position: {
+              x: 0,
+              y: 0
+            },
+            color: "red",
+            size: 60
           },
-          color: "red",
-          size: 60
-        },
-        caption2: {
-          text: "das ist caption2",
-          position: {
-            x: 100,
-            y: 100
-          },
-          color: "blue",
-          size: 60
-        }
+          {
+            text: "das ist caption2",
+            position: {
+              x: 100,
+              y: 100
+            },
+            color: "blue",
+            size: 60
+          }
+        ]
       })
+      // write down to file
+      try {
+        const writeResult = await this.writeMemeToFile(canvas, template)
+      } catch (err) {
+        reject(err)
+      }
+
       resolve(template)
       return
     })
   }
-  createMeme(meme: IMeme) {
-    fs.readFile(
-      "./" + config.storage.templates.path + meme.name,
-      (err, squid) => {
-        if (err) throw err
-        const img = new Image()
-        img.onload = () => {
-          const canvas = createCanvas(img.width, img.height)
-          const ctx = canvas.getContext("2d")
-          const captions: ICaption[] = []
-          if (meme.caption1) {
-            captions.push(meme.caption1)
+
+  /**
+   * write meme/canvas down to file system
+   * @param canvas the image data
+   * @param meme metadata of the file
+   */
+  writeMemeToFile(
+    canvas: Canvas,
+    meme: IMeme | IMemeTemplate
+  ): Promise<boolean> {
+    // write to file system
+    return new Promise((resolve, reject) => {
+      fs.writeFile(
+        "./" +
+          config.storage.memes.path +
+          new Date().getTime() +
+          "_" +
+          meme.name,
+        canvas.toBuffer(),
+        (err) => {
+          if (err) {
+            reject(err)
           }
-          if (meme.caption2) {
-            captions.push(meme.caption2)
-          }
-          // for each caption write to file
-          captions.forEach((caption) => {
-            console.log("caption", caption)
-            ctx.font = `${caption.size}pt Impact`
-            ctx.fillStyle = caption.color
-
-            // draw image
-            ctx.drawImage(img, 0, 0)
-
-            // write text
-            const text = caption.text
-            ctx.fillText(
-              text,
-              caption.position.x,
-              caption.position.y + caption.size
-            )
-          })
-
-          fs.writeFileSync(
-            "./" +
-              config.storage.memes.path +
-              new Date().getTime() +
-              "_" +
-              meme.name,
-            canvas.toBuffer()
-          )
+          resolve(true)
         }
-        img.onerror = (err) => {
-          throw err
-        }
-        img.src = squid
-      }
-    )
+      )
+    })
   }
 
-  createMeme_(meme: IMeme) {
-    Jimp.read("./" + config.storage.templates.path + meme.name)
-      .then(async (image) => {
-        // add caption 1
-        if (meme.caption1) {
-          const fontType = `FONT_SANS_${
-            meme.caption1.size ? meme.caption1.size : 16
-          }_${(meme.caption1.color
-            ? meme.caption1.color
-            : "black"
-          ).toUpperCase()}`
-          const font = await Jimp.loadFont((Jimp as any)[fontType])
-          image.print(
-            font,
-            meme.caption1.position.x,
-            meme.caption1.position.y,
-            meme.caption1.text
-          )
-        }
+  /**
+   * creates the meme according to the meme object
+   * @param meme data to generate a meme
+   */
+  createMemeCanvas(meme: IMeme): Promise<Canvas> {
+    return new Promise(async (resolve, reject) => {
+      // load template
+      let img: Image = new Image()
+      try {
+        img = await loadImage("./" + config.storage.templates.path + meme.name)
+      } catch (err) {
+        reject(err)
+      }
 
-        // add caption 2
-        if (meme.caption2) {
-          const fontType = `FONT_SANS_${
-            meme.caption2.size ? meme.caption2.size : 16
-          }_${(meme.caption2.color
-            ? meme.caption2.color
-            : "black"
-          ).toUpperCase()}`
-          const font = await Jimp.loadFont((Jimp as any)[fontType])
-          image.print(
-            font,
-            meme.caption2.position.x,
-            meme.caption2.position.y,
-            meme.caption2.text
-          )
-        }
-        // write to file
-        image.write("./" + config.storage.templates.path + "test.jpg")
+      const canvas = createCanvas(img.width, img.height)
+      const ctx = canvas.getContext("2d")
+
+      // draw image
+      ctx.drawImage(img, 0, 0)
+
+      // for each caption write to file
+      meme.captions.forEach((caption) => {
+        ctx.font = `${caption.size}pt Impact`
+        ctx.fillStyle = caption.color
+
+        // write text
+        const text = caption.text
+        ctx.fillText(
+          text,
+          caption.position.x,
+          caption.position.y + caption.size
+        )
       })
-      .catch((err) => {
-        console.error(err)
-      })
+
+      resolve(canvas)
+    })
   }
 }
