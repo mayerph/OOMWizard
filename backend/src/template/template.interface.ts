@@ -1,10 +1,10 @@
 /**
  * interface for a meme template
  */
-export interface IMemeTemplate {
+export interface ITemplate {
   id?: any
   name: string
   file: string
 }
 
-export interface IMemeTemplateModel {}
+export interface ITemplateModel {}

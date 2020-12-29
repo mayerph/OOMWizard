@@ -1,12 +1,13 @@
-import { IMemeTemplate } from "./memeTemplate.interface"
+import { ITemplate } from "../template/template.interface"
 import { v4 as uuidv4 } from "uuid"
-import { IMemeTemplateMongoose, MemeTemplate } from "./memeTemplate.model"
+import { ITemplateMongoose, Template } from "../template/template.model"
 import { IUser } from "../user/user.interface"
 import * as fs from "fs"
 import * as config from "../config.json"
 import * as Jimp from "jimp"
 import { Canvas, createCanvas, Image, loadImage } from "canvas"
 import { ICaption, IMeme } from "./meme.interface"
+import { Meme } from "./meme.model"
 
 export class MemeController {
   constructor() {
@@ -16,175 +17,22 @@ export class MemeController {
    * initiate test environment with some sample data
    */
   insertTestData() {
-    MemeTemplate.deleteMany({}).exec()
-    const memes_tmp = [
-      {
-        name: "Drake-Hotline-Bling.jpg",
-        file: config.storage.templates.route + "/Drake-Hotline-Bling.jpg"
-      },
-      {
-        name: "Is-This-A-Pigeon.jpg",
-        file: config.storage.templates.route + "/Is-This-A-Pigeon.jpg"
-      },
-      {
-        name: "Monkey-Puppet.jpg",
-        file: config.storage.templates.route + "/Monkey-Puppet.jpg"
-      },
-      {
-        name: "Running-Away-Balloon.jpg",
-        file: config.storage.templates.route + "/Running-Away-Balloon.jpg"
-      }
-    ]
-    memes_tmp.forEach((e) => new MemeTemplate(e).save())
+    Meme.deleteMany({}).exec()
   }
   /**
-   * returns all available meme template
+   * returns all available memes
    */
-  async memes(): Promise<IMemeTemplate[]> {
-    const memes: IMemeTemplate[] = await MemeTemplate.find()
+  async memes(): Promise<IMeme[]> {
+    const memes: IMeme[] = await Meme.find()
     return memes
   }
 
   /**
-   * returns certain meme template
+   * returns certain meme
    */
-  async meme(
-    id: string,
-    caption1?: string,
-    caption2?: string
-  ): Promise<IMemeTemplate | null> {
-    const meme = await MemeTemplate.findById(id)
-
-    if (meme && caption1) {
-      // meme["caption1"] = caption1
-    }
-    if (meme && caption2) {
-      // meme["caption2"] = caption2
-    }
+  async meme(id: string): Promise<IMeme | null> {
+    const meme = await Meme.findById(id)
     return meme
-  }
-
-  /**
-   * write image to file
-   * @param image object with the image (meta)data
-   */
-  writeMemeTemplate(image: any): Promise<IMemeTemplate> {
-    return new Promise((resolve, reject) => {
-      if (!image.data || !image.name) {
-        reject(new Error("no image data"))
-      }
-      fs.writeFile(
-        "./" + config.storage.templates.path + image.name,
-        image.data,
-        async (err) => {
-          if (err) {
-            reject(err)
-          }
-          const memeDoc: IMemeTemplate = {
-            name: image.name,
-            file: config.storage.templates.route + "/" + image.name
-          }
-          try {
-            const meme = await new MemeTemplate(memeDoc).save()
-            resolve(meme)
-          } catch (err) {
-            reject(err)
-          }
-        }
-      )
-    })
-  }
-
-  /**
-   * check if object is of type memeTemplate
-   * @param object meme object
-   * @param withId should the id property be considered
-   */
-  instanceOfMemeTemplate(
-    object: any,
-    withId?: boolean
-  ): object is IMemeTemplate {
-    if (typeof object != "object") {
-      return false
-    }
-    const id = withId ? "id" in object : true
-    const name = "name" in object
-    const file = "file" in object
-    return name && id && file
-  }
-
-  /**
-   * update certain meme template
-   * @param id memeTemplate id
-   * @param object memeTemplate object
-   */
-  async updateMemeTemplate(
-    id: string,
-    object: any
-  ): Promise<IMemeTemplate | null> {
-    return new Promise(async (resolve, reject) => {
-      // check if the sent object is of type memeTemplate
-      if (!this.instanceOfMemeTemplate(object, true) && id != object.id) {
-        reject("type error. Object of type memeTemplate is needed")
-        return
-      }
-
-      // query for a template
-      let template = null
-      try {
-        template = await MemeTemplate.findById(id)
-      } catch (err) {
-        reject(`no template with id ${id} found`)
-        return
-      }
-      // check if a template has been found
-      if (!template) {
-        reject(`no template with id ${id} found`)
-        return
-      }
-
-      // update template
-      try {
-        const updatedTemplate = await template.updateOne(object)
-      } catch (err) {
-        reject(`memeTemplate couldn't be updated`)
-        return
-      }
-
-      // create canvas representing the image / meme
-      const canvas = await this.createMemeCanvas({
-        ...template.toJSON(),
-        captions: [
-          {
-            text: "das is caption1",
-            position: {
-              x: 0,
-              y: 0
-            },
-            color: "red",
-            size: 60
-          },
-          {
-            text: "das ist caption2",
-            position: {
-              x: 100,
-              y: 100
-            },
-            color: "blue",
-            size: 60
-          }
-        ]
-      })
-      // write down to file
-      try {
-        const writeResult = await this.writeMemeToFile(canvas, template)
-      } catch (err) {
-        reject(err)
-      }
-
-      resolve(template)
-      return
-    })
   }
 
   /**
@@ -192,10 +40,7 @@ export class MemeController {
    * @param canvas the image data
    * @param meme metadata of the file
    */
-  writeMemeToFile(
-    canvas: Canvas,
-    meme: IMeme | IMemeTemplate
-  ): Promise<boolean> {
+  writeMemeToFile(canvas: Canvas, meme: IMeme | ITemplate): Promise<boolean> {
     // write to file system
     return new Promise((resolve, reject) => {
       fs.writeFile(

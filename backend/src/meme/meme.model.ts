@@ -1,7 +1,7 @@
 import { model, Schema, Model, Document } from "mongoose"
 import { IMeme, IMemeModel } from "./meme.interface"
 import * as config from "../config.json"
-import { memeTemplateSchema } from "./memeTemplate.model"
+import { templateSchema } from "../template/template.model"
 
 /**
  * interface of the mongoose-schema
@@ -40,7 +40,7 @@ const captureSchema = new Schema({
 /**
  * The meme Schema is a combination of the memeTemplateSchema and the captureSchema
  */
-const memeSchema = new Schema(memeTemplateSchema)
+const memeSchema = new Schema(templateSchema)
 memeSchema.add({ captures: { type: [captureSchema] } })
 
 export const Meme = model<IMemeMongoose, IMemeModelMongoose>("Meme", memeSchema)

@@ -1,4 +1,4 @@
-import { IMemeTemplate } from "./memeTemplate.interface"
+import { ITemplate } from "../template/template.interface"
 
 /**
  * Interface for the position
@@ -21,7 +21,7 @@ export interface ICaption {
 /**
  * Interface for a meme
  */
-export interface IMeme extends IMemeTemplate {
+export interface IMeme extends ITemplate {
   captions: ICaption[]
 }
 

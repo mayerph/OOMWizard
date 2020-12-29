@@ -7,6 +7,7 @@ import * as fs from "fs"
 import { default as userRoutes } from "./user/user.routes"
 import { default as loginRoutes } from "./login/login.routes"
 import { default as memesRoutes } from "./meme/meme.routes"
+import { default as templateRoutes } from "./template/template.routes"
 import * as config from "./config.json"
 import * as mongoose from "mongoose"
 import * as fileUpload from "express-fileupload"
@@ -49,6 +50,11 @@ app.use("/users", userRoutes)
  * Route all logins
  */
 app.use("/login", loginRoutes)
+
+/**
+ * Route to all templates
+ */
+app.use("/templates", templateRoutes)
 
 /**
  * Route to all memes
