@@ -5,9 +5,15 @@ import { IUser } from "../user/user.interface"
 import * as fs from "fs"
 import * as config from "../config.json"
 import * as Jimp from "jimp"
-import { Canvas, createCanvas, Image, loadImage } from "canvas"
+import { Canvas, createCanvas, Image, JPEGStream, loadImage } from "canvas"
 import { ICaption, IMeme } from "./meme.interface"
 import { Meme } from "./meme.model"
+import * as path from "path"
+import { Duplex } from "stream"
+import * as uuid from "uuid"
+import * as archiver from "archiver"
+import { PassThrough } from "stream"
+const Packer = require("zip-stream")
 
 export class MemeController {
   constructor() {
@@ -40,11 +46,21 @@ export class MemeController {
    */
   async addMeme(meme: IMeme): Promise<IMeme> {
     try {
+      // create filename
+      const filename = this.createFilename()
+
       // create canvas
       const canvas = await this.createMemeCanvas(meme)
 
       // write meme to filesystem
-      const fullMeme = await this.writeMemeToFile(canvas, meme)
+      const filepath = await this.writeMemeToFile(canvas.toBuffer(), filename)
+
+      const fullMeme = {
+        name: filename,
+        route: config.storage.memes.route + "/" + filename,
+        template: meme.template,
+        captions: meme.captions
+      }
 
       // write meme to database
       const result = await new Meme(fullMeme).save()
@@ -55,30 +71,113 @@ export class MemeController {
   }
 
   /**
-   * write meme/canvas down to file system
-   * @param canvas the image data
-   * @param meme metadata of the file
+   * converts a buffer to a readstream
+   * @param buffer buffer representing the file
    */
-  writeMemeToFile(canvas: Canvas, meme: IMeme): Promise<IMeme> {
-    // write to file system
-    return new Promise((resolve, reject) => {
-      const filename = new Date().getTime() + "_" + meme.template.name
-      fs.writeFile(
-        "./" + config.storage.memes.path + filename,
-        canvas.toBuffer(),
-        (err) => {
-          if (err) {
-            reject(err)
-          }
+  bufferToStream(buffer: Buffer) {
+    const tmp = new Duplex()
+    tmp.push(buffer)
+    tmp.push(null)
+    return tmp
+  }
+
+  /**
+   * creates a unique filename
+   * @param format format of the file (e.g. png | jpg)
+   */
+  createFilename(format?: string): string {
+    return uuid.v1() + "." + (format ? format : "png")
+  }
+
+  /**
+   * creates a stream to enable downloading
+   * @param meme object representing the image / meme
+   * @param toFS decides if the meme should be written to the filesystem
+   * @param toDS decides if the meme should be written to the database. Only has an impact if toFS is true
+   */
+  async memeFile(
+    meme: IMeme,
+    toFS?: boolean,
+    toDB?: boolean
+  ): Promise<{ stream: Duplex; filename: string }> {
+    try {
+      // create filename
+      const filename = this.createFilename()
+
+      // create canvas
+      const canvas = await this.createMemeCanvas(meme)
+
+      // write meme to filesystem
+      if (toFS) {
+        const filepath = await this.writeMemeToFile(canvas.toBuffer(), filename)
+        // write to db
+        if (toDB) {
           const fullMeme = {
             name: filename,
             route: config.storage.memes.route + "/" + filename,
             template: meme.template,
             captions: meme.captions
           }
-          resolve(fullMeme)
+
+          // write meme to database
+          const result = await new Meme(fullMeme).save()
         }
-      )
+      }
+
+      const stream = this.bufferToStream(canvas.toBuffer())
+
+      return { stream, filename }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  /**
+   * creates a stream to enable downloading
+   * @param meme object representing the image / meme
+   * @param toFS decides if the meme should be written to the filesystem
+   * @param toDS decides if the meme should be written to the database. Only has an impact if toFS is true
+   */
+  async zipFile(
+    memes: IMeme[]
+  ): Promise<{ zip: archiver.Archiver; filename: string }> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const filename = this.createFilename("zip")
+        const zip = new Packer()
+
+        console.log("1")
+        memes.forEach(async (meme) => {
+          console.log("test", meme)
+          const { stream, filename } = await this.memeFile(meme)
+          zip.append(stream.pipe(new PassThrough()), { name: filename })
+        })
+
+        zip.finalize()
+
+        return { zip, filename }
+      } catch (err) {
+        throw err
+      }
+    })
+  }
+
+  /**
+   * write meme/canvas down to file system
+   * @param canvas the image data
+   * @param meme metadata of the file
+   */
+  writeMemeToFile(buffer: Buffer, filename: string): Promise<string> {
+    // write to file system
+    return new Promise((resolve, reject) => {
+      const filepath = "./" + config.storage.memes.path + filename
+      fs.writeFile(filepath, buffer, (err) => {
+        if (err) {
+          reject(err)
+        }
+
+        resolve(filepath)
+      })
     })
   }
 
