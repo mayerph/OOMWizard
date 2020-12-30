@@ -47,7 +47,7 @@ router.post(
         req.body.memes.length == undefined
       ) {
         const { stream, filename } = await memeController.memeFile(
-          req.body.memes
+          [].concat(req.body.memes)[0]
         )
         res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
         res.setHeader("Content-type", "image/png")
@@ -55,16 +55,12 @@ router.post(
       }
       // if multiple memes are part of the body
       else {
-        console.log("kommt hier was an")
         const { zip, filename } = await memeController.zipFile(req.body.memes)
-        console.log("4")
         res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
         res.setHeader("Content-type", "application/zip")
-        console.log("5")
         zip.pipe(res)
       }
     } catch (err) {
-      console.log("ereror", err)
       res.status(500)
       res.json(err)
     }

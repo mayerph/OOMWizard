@@ -13,7 +13,6 @@ import { Duplex } from "stream"
 import * as uuid from "uuid"
 import * as archiver from "archiver"
 import { PassThrough } from "stream"
-const Packer = require("zip-stream")
 
 export class MemeController {
   constructor() {
@@ -144,20 +143,39 @@ export class MemeController {
     return new Promise(async (resolve, reject) => {
       try {
         const filename = this.createFilename("zip")
-        const zip = new Packer()
+        const zip = archiver("zip")
 
-        console.log("1")
-        memes.forEach(async (meme) => {
-          console.log("test", meme)
-          const { stream, filename } = await this.memeFile(meme)
-          zip.append(stream.pipe(new PassThrough()), { name: filename })
+        // create a list of promises
+        const promises = memes.map((meme) => {
+          return new Promise(async (resolve, reject) => {
+            const { stream, filename } = await this.memeFile(meme)
+            // if stream has finished (end) resolve promise
+            stream
+              .on("end", () => {
+                resolve(true)
+                return
+              })
+              .on("close", () => {
+                resolve(true)
+                return
+              })
+              .on("error", (err) => {
+                reject(err)
+                return
+              })
+            // add stream to zip archive
+            zip.append(stream.pipe(new PassThrough()), { name: filename })
+          })
         })
+        // wait until all promises are resolved
+        const result = await Promise.all(promises)
 
+        // build final zip archive
         zip.finalize()
 
-        return { zip, filename }
+        resolve({ zip, filename })
       } catch (err) {
-        throw err
+        reject(err)
       }
     })
   }
