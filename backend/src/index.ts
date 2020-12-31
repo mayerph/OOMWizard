@@ -51,9 +51,9 @@ app.get("", (req: Request, res: Response, next: NextFunction) => {
 app.use("/users", userRoutes)
 
 /**
- * Route all logins
+ * Route all authentication routes
  */
-app.use("/login", loginRoutes)
+app.use("/auth", loginRoutes)
 
 /**
  * Route to all templates

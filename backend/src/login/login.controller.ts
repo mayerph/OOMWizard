@@ -15,7 +15,7 @@ const jwtKey = uuidv4().toString()
 const jwtExpirySeconds = 300
 
 const createAndSetJwtToken = (res: Response, username: String) => {
-  const token = jwt.sign({ username }, jwtKey, {
+  const token = jwt.sign({ username: username }, jwtKey, {
     algorithm: "HS256",
     expiresIn: jwtExpirySeconds
   })
@@ -34,14 +34,15 @@ export class LoginController {
     return (req: Request, res: Response, next: NextFunction) => {
       const token = req.cookies.token
       if (!token) {
-        return res.status(400).end()
+        res.status(401).send("missing jwt cookie token")
+        return res.end()
       }
       try {
         let payload = jwt.verify(token, jwtKey)
         return next()
       } catch (e) {
         if (e instanceof jwt.JsonWebTokenError) {
-          res.redirect("/login")
+          res.redirect("/")
           return res.end()
         }
         return res.status(401).end()
@@ -52,9 +53,10 @@ export class LoginController {
   async signUp(req: Request, res: Response, next: NextFunction) {
     //FIXME care SQLInjection, should be caught by library
     const { username, password } = req.body
+
     const salt = uuidv4()
     if (await Login.findOne({ username: username }).exec()) {
-      return res.status(400).end()
+      return res.status(400).send("User already exists.")
     }
     const login = new Login({
       username: username,
@@ -68,8 +70,8 @@ export class LoginController {
     login.save()
     console.log("created login for:", username)
     userController.addUser({ name: username })
-
     createAndSetJwtToken(res, username)
+
     res.redirect("/")
     return res.end()
   }
@@ -87,7 +89,7 @@ export class LoginController {
           .update(password)
           .digest("hex")
     ) {
-      return res.status(401).end()
+      return res.status(401).send("invalid user password combination")
     }
     createAndSetJwtToken(res, username)
     res.redirect("/")
