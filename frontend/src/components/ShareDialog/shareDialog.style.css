@@ -1,0 +1,17 @@
+.social-link {
+    text-decoration: none;
+    color: black;
+}
+
+.social-list {
+    max-height: 200px;
+    overflow-y: scroll;
+}
+
+.social-dialog {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+.dialog-footer {
+    color: #9e9e9e;
+}

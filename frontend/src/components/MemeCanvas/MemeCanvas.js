@@ -79,6 +79,10 @@ class MemeCanvas extends React.Component {
 MemeCanvas.propTypes = {};
 MemeCanvas.defaultProps = {};
 
+/**
+ * As the first argument passed in to connect, mapStateToProps is used for selecting the part 
+ * of the data from the store that the connected component needs
+ */
 function mapStateToProps(state) {
     return {
         canvasElements: [...state.canvasElements],
