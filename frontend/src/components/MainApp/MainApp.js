@@ -1,5 +1,5 @@
 import React from "react";
-import "./App.css";
+import "./MainApp.css";
 import { NavBar } from "../NavBar";
 import { MemeCanvas } from "../MemeCanvas";
 import Grid from "@material-ui/core/Grid";
@@ -15,7 +15,7 @@ import { createStore } from "redux";
 import reducers from "../../reducers";
 import TextControl from "../TextControl/TextControl";
 
-class App extends React.Component {
+class MainApp extends React.Component {
   render() {
     return (
       <Provider store={createStore(reducers, {}, applyMiddleware(ReduxThunk))}>
@@ -56,6 +56,6 @@ class App extends React.Component {
   }
 }
 
-App.propTypes = {};
+MainApp.propTypes = {};
 
-export default App;
+export default MainApp;
