@@ -104,7 +104,7 @@ class ShareDialog extends React.Component {
         
     
         return (
-                <Dialog className="social-dialog" onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={true} fullWidth={true} maxWidth="xs">
+                <Dialog className="social-dialog" onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={false} fullWidth={true} maxWidth="xs">
                     <DialogTitle id="custom-dialog-title">Share</DialogTitle>
                     <DividerWrapper dividers>
                         <List className="social-list">
