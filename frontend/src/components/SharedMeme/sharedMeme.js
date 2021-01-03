@@ -26,23 +26,24 @@ const SharedMeme = (props) => {
   const MemeImage = () => {
     if (memeState.data && memeState.data.viewedMeme) {
       const meme = memeState.data.viewedMeme
-      return <img src={ "http://localhost:2000" + meme.route } alt={ meme.name }></img>
+      return <img src={ "http://localhost:2000" + meme.route } alt={ meme.name } id="shared-image"></img>
     } else {
       return <span>no image</span>
     }
   }
   return (
+    <div>
     <HelmetProvider>
-      <div>
-        <Helmet>
+      <Helmet>
           <meta property="og:type" content="article" />
           <meta property="og:title" content="When Great Minds Don’t Think Alike" />
           <meta property="og:description" content="How much does culture influence creative thinking?" />
           <meta property="og:image" content="http://static01.nyt.com/images/2015/02/19/arts/international/19iht-btnumbers19A/19iht-btnumbers19A-facebookJumbo-v2.jpg" />
-        </Helmet>
+      </Helmet>
+
         <MemeImage></MemeImage>
-      </div>
     </HelmetProvider>
+    </div>
   )
 }
 

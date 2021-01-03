@@ -1,0 +1,12 @@
+node_modules/
+coverage/
+stryker.log
+.stryer-tmp
+*.DS_Store
+dist/
+.scannerwork
+# stryker temp files
+.stryker-tmp
+key.pem
+certificate.pem
+.idea/
