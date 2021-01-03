@@ -3,12 +3,13 @@ import ReactDOM from 'react-dom';
 import App from './App.js';
 import reportWebVitals from './reportWebVitals';
 import 'fontsource-roboto';
-import {createStore} from 'redux'
 import { Provider } from 'react-redux'
 import rootReducer from './reducers'
 import { BrowserRouter } from "react-router-dom";
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 
-const store = createStore(rootReducer)
+const store = createStore(rootReducer, applyMiddleware(thunk))
 
 ReactDOM.render(
     <React.StrictMode>
