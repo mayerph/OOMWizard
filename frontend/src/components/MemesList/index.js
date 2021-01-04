@@ -1,3 +1,3 @@
-import MemesList from "./MemesList";
+import MemesList from './MemesList'
 
-export { MemesList };
+export { MemesList }

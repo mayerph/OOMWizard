@@ -1,30 +1,30 @@
-import React from "react";
-import { Rnd } from "react-rnd";
-import { connect } from "react-redux";
+import React from 'react'
+import { Rnd } from 'react-rnd'
+import { connect } from 'react-redux'
 
-import "./MemeSlideShow.css";
+import './MemeSlideShow.css'
 
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
-import GridListTileBar from "@material-ui/core/GridListTileBar";
-import { FormControlLabel, Checkbox, Paper } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import { getApi, randomize, sortByLikes, autoplay } from "../../actions";
+import GridList from '@material-ui/core/GridList'
+import GridListTile from '@material-ui/core/GridListTile'
+import GridListTileBar from '@material-ui/core/GridListTileBar'
+import { FormControlLabel, Checkbox, Paper } from '@material-ui/core'
+import Button from '@material-ui/core/Button'
+import { getApi, randomize, sortByLikes, autoplay } from '../../actions'
 
-import Carousel from "react-material-ui-carousel";
+import Carousel from 'react-material-ui-carousel'
 
 class MemeSlideShow extends React.Component {
   onApiLoad() {
-    this.props.getApi();
+    this.props.getApi()
   }
   randomize() {
-    this.props.randomize();
+    this.props.randomize()
   }
   sortByLikes() {
-    this.props.sortByLikes();
+    this.props.sortByLikes()
   }
   autoplay() {
-    this.props.autoplay();
+    this.props.autoplay()
   }
 
   ///currently sorting the memes by title length
@@ -44,7 +44,7 @@ class MemeSlideShow extends React.Component {
           navButtonsAlwaysVisible="true"
         >
           {this.props.tileData.map((tile) => (
-            <Paper>
+            <Paper key="">
               <h2>{tile.name}</h2>
               <img src={tile.url} alt={tile.name} className="slideImage" />
             </Paper>
@@ -55,7 +55,7 @@ class MemeSlideShow extends React.Component {
           control={
             <Checkbox
               onChange={this.autoplay.bind(this)}
-              checked={this.props.auto !== "4000" ? false : true}
+              checked={this.props.auto !== '4000' ? false : true}
               value="autoplay"
               color="primary"
             />
@@ -63,21 +63,21 @@ class MemeSlideShow extends React.Component {
           label="Auto-play"
         />
       </div>
-    );
+    )
   }
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.api.auto);
+  console.log(state.api.auto)
   return {
     tileData: state.api.tileData,
     auto: state.api.auto,
-  };
-};
+  }
+}
 
 export default connect(mapStateToProps, {
   getApi,
   randomize,
   sortByLikes,
   autoplay,
-})(MemeSlideShow);
+})(MemeSlideShow)

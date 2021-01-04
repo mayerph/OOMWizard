@@ -1,3 +1,3 @@
-import ResizableImage from "./ResizableImage";
+import ResizableImage from './ResizableImage'
 
 export { ResizableImage }

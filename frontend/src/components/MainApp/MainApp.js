@@ -1,19 +1,19 @@
-import React from "react";
-import "./MainApp.css";
-import { NavBar } from "../NavBar";
-import { MemeCanvas } from "../MemeCanvas";
-import Grid from "@material-ui/core/Grid";
-import PropTypes from "prop-types";
+import React from 'react'
+import './MainApp.css'
+import { NavBar } from '../NavBar'
+import { MemeCanvas } from '../MemeCanvas'
+import Grid from '@material-ui/core/Grid'
+import PropTypes from 'prop-types'
 
-import { MemesList } from "../MemesList";
-import { MemeSlideShow } from "../MemeSlideShow";
+import { MemesList } from '../MemesList'
+import { MemeSlideShow } from '../MemeSlideShow'
 
-import ReduxThunk from "redux-thunk";
-import { applyMiddleware } from "redux";
-import { Provider } from "react-redux";
-import { createStore } from "redux";
-import reducers from "../../reducers";
-import TextControl from "../TextControl/TextControl";
+import ReduxThunk from 'redux-thunk'
+import { applyMiddleware } from 'redux'
+import { Provider } from 'react-redux'
+import { createStore } from 'redux'
+import reducers from '../../reducers'
+import TextControl from '../TextControl/TextControl'
 
 class MainApp extends React.Component {
   render() {
@@ -52,10 +52,10 @@ class MainApp extends React.Component {
           </Grid>
         </div>
       </Provider>
-    );
+    )
   }
 }
 
-MainApp.propTypes = {};
+MainApp.propTypes = {}
 
-export default MainApp;
+export default MainApp

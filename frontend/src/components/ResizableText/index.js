@@ -1,3 +1,3 @@
-import ResizableText from "./ResizableText";
+import ResizableText from './ResizableText'
 
 export { ResizableText }

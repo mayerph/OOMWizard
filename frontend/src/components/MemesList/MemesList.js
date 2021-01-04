@@ -1,28 +1,28 @@
-import React from "react";
-import { Rnd } from "react-rnd";
-import { connect } from "react-redux";
+import React from 'react'
+import { Rnd } from 'react-rnd'
+import { connect } from 'react-redux'
 
-import "./MemesList.css";
+import './MemesList.css'
 
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
-import GridListTileBar from "@material-ui/core/GridListTileBar";
-import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import ShareIcon from "@material-ui/icons/Share"
+import GridList from '@material-ui/core/GridList'
+import GridListTile from '@material-ui/core/GridListTile'
+import GridListTileBar from '@material-ui/core/GridListTileBar'
+import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
+import GetAppIcon from '@material-ui/icons/GetApp'
+import ShareIcon from '@material-ui/icons/Share'
 
-import { getApi } from "../../actions";
+import { getApi } from '../../actions'
 import {
   EmailShareButton,
   FacebookShareButton,
   TwitterShareButton,
   WhatsappShareButton,
-} from "react-share";
-import { EmailIcon, FacebookIcon, WhatsappIcon } from "react-share";
-import { ShareDialog } from "../ShareDialog";
+} from 'react-share'
+import { EmailIcon, FacebookIcon, WhatsappIcon } from 'react-share'
+import { ShareDialog } from '../ShareDialog'
 
 //Trying out the Grid List from Material UI (https://github.com/mui-org/material-ui/blob/master/docs/src/pages/components/grid-list/ImageGridList.js)
 //DONE change state system to Redux
@@ -31,20 +31,17 @@ import { ShareDialog } from "../ShareDialog";
 class MemesList extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { openDialog : true, memeToShare : undefined }
+    this.state = { openDialog: true, memeToShare: undefined }
   }
   onApiLoad() {
-    this.props.getApi();
+    this.props.getApi()
   }
-
-  
 
   render() {
     let test = 1
 
     return (
       <div className="root">
-        
         <Button onClick={this.onApiLoad.bind(this)} variant="outlined">
           TempButton: LoadAPI
         </Button>
@@ -55,15 +52,15 @@ class MemesList extends React.Component {
               <img src={tile.url} alt={tile.name} className="gridImg" />
               <GridListTileBar
                 title={tile.name}
-                subtitle={"likes: " + tile.name.length}
+                subtitle={'likes: ' + tile.name.length}
                 actionIcon={
                   <div className="actionButtons">
                     <IconButton aria-label="upvote">
                       <ArrowUpwardIcon
                         style={{
-                          color: "#fafafa",
+                          color: '#fafafa',
                           fontSize: 15,
-                          backgroundColor: "#388e3c",
+                          backgroundColor: '#388e3c',
                           borderRadius: 5,
                           padding: 2,
                         }}
@@ -72,9 +69,9 @@ class MemesList extends React.Component {
                     <IconButton aria-label="downvote">
                       <ArrowDownwardIcon
                         style={{
-                          color: "#fafafa",
+                          color: '#fafafa',
                           fontSize: 15,
-                          backgroundColor: "#f4511e",
+                          backgroundColor: '#f4511e',
                           borderRadius: 5,
                           padding: 2,
                         }}
@@ -83,24 +80,31 @@ class MemesList extends React.Component {
                     <IconButton aria-label="download" href={tile.url} download>
                       <GetAppIcon
                         style={{
-                          color: "#fafafa",
+                          color: '#fafafa',
                           fontSize: 15,
-                          backgroundColor: "#2196f3",
+                          backgroundColor: '#2196f3',
                           borderRadius: 5,
                           padding: 2,
                         }}
                       />
                     </IconButton>
-                    <IconButton aria-label="share-btn" onClick={ () => { this.setState({...this.state, memeToShare: "placeholder for meme object " + index}) }}>
-                      <ShareIcon 
+                    <IconButton
+                      aria-label="share-btn"
+                      onClick={() => {
+                        this.setState({
+                          ...this.state,
+                          memeToShare: 'placeholder for meme object ' + index,
+                        })
+                      }}
+                    >
+                      <ShareIcon
                         style={{
-                          color: "#fafafa",
+                          color: '#fafafa',
                           fontSize: 15,
-                          backgroundColor: "#2196f3",
+                          backgroundColor: '#2196f3',
                           borderRadius: 5,
                           padding: 2,
                         }}
-                      
                       />
                     </IconButton>
                   </div>
@@ -109,9 +113,15 @@ class MemesList extends React.Component {
             </GridListTile>
           ))}
         </GridList>
-        <ShareDialog meme={ this.state.memeToShare } open={ this.state.memeToShare ? true : false } onClose={ () => { this.setState({...this.state, memeToShare: undefined })}}></ShareDialog>
+        <ShareDialog
+          meme={this.state.memeToShare}
+          open={this.state.memeToShare ? true : false}
+          onClose={() => {
+            this.setState({ ...this.state, memeToShare: undefined })
+          }}
+        ></ShareDialog>
       </div>
-    );
+    )
   }
 }
 
@@ -119,7 +129,7 @@ const mapStateToProps = (state) => {
   //console.log(state.api.tileData);
   return {
     tileData: state.api.tileData,
-  };
-};
+  }
+}
 
-export default connect(mapStateToProps, { getApi })(MemesList);
+export default connect(mapStateToProps, { getApi })(MemesList)

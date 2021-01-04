@@ -1,3 +1,3 @@
-import MemeSlideShow from "./MemeSlideShow";
+import MemeSlideShow from './MemeSlideShow'
 
-export { MemeSlideShow };
+export { MemeSlideShow }

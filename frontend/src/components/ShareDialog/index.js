@@ -1,3 +1,3 @@
-import ShareDialog from "./shareDialog.component";
+import ShareDialog from './shareDialog.component'
 
-export { ShareDialog };
+export { ShareDialog }

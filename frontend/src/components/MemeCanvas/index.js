@@ -1,3 +1,3 @@
-import MemeCanvas from "./MemeCanvas";
+import MemeCanvas from './MemeCanvas'
 
 export { MemeCanvas }

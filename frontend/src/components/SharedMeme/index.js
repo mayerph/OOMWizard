@@ -1,3 +1,3 @@
-import { SharedMeme } from "./sharedMeme";
+import { SharedMeme } from './sharedMeme'
 
 export { SharedMeme }

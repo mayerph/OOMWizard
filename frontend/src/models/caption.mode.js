@@ -1,33 +1,32 @@
-import { Position } from "./position.model"
+import { Position } from './position.model'
 
 /**
  * represents a caption of meme
  */
 export class Caption {
-    constructor(options) {
-        // optional
-        this.id = options.id ? options.id : undefined
-        
-        // mandatory
-        if (!options.text) {
-            throw new Error("Caption: missing property 'text'")
-        }
-        this.text = options.text
+  constructor(options) {
+    // optional
+    this.id = options.id ? options.id : undefined
 
-        if (!options.position) {
-            throw new Error("Caption: missing property 'position'")
-        }
-        this.position = new Position(options.position)
-
-        if (!options.color) {
-            throw new Error("Caption: missing property 'color'")
-        }
-        this.position = options.color
-
-        if (!options.size) {
-            throw new Error("Caption: missing property 'size'")
-        }
-        this.position = options.size
+    // mandatory
+    if (!options.text) {
+      throw new Error("Caption: missing property 'text'")
     }
-    
+    this.text = options.text
+
+    if (!options.position) {
+      throw new Error("Caption: missing property 'position'")
+    }
+    this.position = new Position(options.position)
+
+    if (!options.color) {
+      throw new Error("Caption: missing property 'color'")
+    }
+    this.position = options.color
+
+    if (!options.size) {
+      throw new Error("Caption: missing property 'size'")
+    }
+    this.position = options.size
   }
+}
