@@ -13,7 +13,6 @@ const destination = `${config.proxy.protocol}://${config.proxy.server}:${config.
 app.use(cors())
 app.use(bodyParser.json())
 app.use(cookieParser())
-app.use(express.static("public"))
 
 /**
  * route to the page which should be server-side rendered using pupperty.
@@ -23,10 +22,8 @@ app.use(express.static("public"))
 app.get(
   "/meme/:id",
   async (req: Request, res: Response, next: NextFunction) => {
-    // console.log("meme | url |", req.url)
     const url = `${destination}${req.url}`
     const { html } = await ssr(url)
-    console.log("-------------------->html", html)
     return res.status(200).send(html)
   }
 )
@@ -35,7 +32,6 @@ app.get(
  * Proxy-route to the frontend
  */
 app.get("*", (req: Request, res: Response, next: NextFunction) => {
-  console.log("* | url |", req.url)
   req
     .pipe(request({ qs: req.query, uri: `${destination}${req.url}` }))
     .pipe(res)

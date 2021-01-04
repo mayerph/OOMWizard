@@ -1,0 +1,7 @@
+{
+    "backend" : {
+        "protocol" : "http",
+        "server" : "localhost",
+        "port" : "2000"
+    }
+}
