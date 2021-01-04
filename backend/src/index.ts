@@ -12,8 +12,7 @@ import * as config from "./config.json"
 import * as mongoose from "mongoose"
 import * as fileUpload from "express-fileupload"
 
-var cookieParser = require('cookie-parser')
-
+var cookieParser = require("cookie-parser")
 
 const app = express()
 app.use(cors())
