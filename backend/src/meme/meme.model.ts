@@ -31,7 +31,7 @@ const positionSchema = new Schema({
 /**
  * Mongoose Schema for a capture (capture 1 and capture 2)
  */
-const captureSchema = new Schema({
+const captionSchema = new Schema({
   text: { type: String, required: true },
   position: positionSchema
 })
@@ -53,7 +53,7 @@ const memeSchema = new Schema(
       type: templateSchema,
       required: true
     },
-    captures: { type: [captureSchema], required: true }
+    captions: { type: [captionSchema], required: true }
   },
   {
     toJSON: {

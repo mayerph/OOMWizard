@@ -18,7 +18,6 @@ router.get("", async (req: Request, res: Response, next: NextFunction) => {
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
   const meme = await memeController.meme(id)
-  console.log("meme", meme, id)
   res.json(meme)
 })
 

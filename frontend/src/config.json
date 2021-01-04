@@ -3,5 +3,16 @@
         "protocol" : "http",
         "server" : "localhost",
         "port" : "2000"
+    },
+    "frontend" : {
+        "proxy" : {
+            "enabled" : false,
+            "protocol" : "http",
+            "server" : "localhost",
+            "port" : "5000"
+        },
+        "protocol" : "http",
+        "server" : "localhost",
+        "port" : "3000"
     }
 }

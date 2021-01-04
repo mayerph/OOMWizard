@@ -5,8 +5,10 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import * as config from "../../config.json"
 
 /**
- * for displaying the rendered image 
- * @param {*} props properties of the the SharedMeme component
+ * single page for sharing a meme.
+ * With the helmet module the sharing meta information are updated at runtime
+ * The sharing works only when the proxy is started, which renders the page on the server-side
+ * @param {*} props properties inclusive url params of the the SharedMeme component. 
  */
 const SharedMeme = (props) => { 
   // url parameter

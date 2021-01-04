@@ -18,10 +18,11 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import "./shareDialog.style.css";
-import { Email } from "@material-ui/icons";
-import { makeStyles } from '@material-ui/core/styles';
+import * as config from "../../config.json"
 
-
+/**
+ * Dialog component for initiating the share of a meme
+ */
 class ShareDialog extends React.Component {
     /**
      * general style settings
@@ -90,6 +91,24 @@ class ShareDialog extends React.Component {
         const DialogTitle = this.dialogTitle
         const DividerWrapper = this.dividerWrapper
         const DialogFooter = this.dialogFooter
+
+        const proxySetting = `${config.frontend.proxy.protocol}://${config.frontend.proxy.server}:${config.frontend.proxy.port}/`
+        const frontendSetting = `${config.frontend.protocol}://${config.frontend.server}:${config.frontend.port}/`
+
+        const destination = config.frontend.proxy.enabled ? proxySetting : frontendSetting
+        const meme = this.props.meme ? this.props.meme : {
+          "name": "6f680440-4dd6-11eb-842a-ff568e1bc1c7.png",
+          "route": "/images/memes/6f680440-4dd6-11eb-842a-ff568e1bc1c7.png",
+          "template": {
+          "name": "Drake-Hotline-Bling.jpg",
+          "route": "/templates/Drake-Hotline-Bling.jpg",
+          "id": "5ff1df6fa28fb193a50f1c65"
+          },
+          "captures": [],
+          "id": "5ff1df6fa28fb193a50f1c64"
+          }
+
+        console.log("the meme is", meme)
         const { open, onClose, onClick, selectedValue } = this.props;
         
 
@@ -104,12 +123,12 @@ class ShareDialog extends React.Component {
         
     
         return (
-                <Dialog className="social-dialog" onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={false} fullWidth={true} maxWidth="xs">
+                <Dialog className="social-dialog" onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={true} fullWidth={true} maxWidth="xs">
                     <DialogTitle id="custom-dialog-title">Share</DialogTitle>
                     <DividerWrapper dividers>
                         <List className="social-list">
                             {this.platforms.map((platform) => (
-                                <a class="social-link" href={platform.source + "www.google.com"} target="_blank" data-action="share/whatsapp/share">
+                                <a className="social-link" href={ platform.source + destination + "meme/" + meme.id } target="_blank" data-action="share/whatsapp/share">
                                     <ListItem button onClick={() => console.log("ich wurde geklickt")} key={platform.name}>
                                         <ListItemAvatar>
                                             <Avatar>
