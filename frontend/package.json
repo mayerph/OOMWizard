@@ -44,8 +44,6 @@
     ]
   },
   "devDependencies": {
-    "@imaginary-cloud/eslint-config-react": "^1.0.1",
-    "@imaginary-cloud/prettier-config": "^1.0.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-import": "^2.22.1",

@@ -28,6 +28,7 @@ const SharedMeme = (props) => {
   // renders image after the response from server has received
   const MemeImage = () => {
     if (memeState.data && memeState.data.viewedMeme) {
+      console.log('hello world', memeState.data.viewedMeme)
       const meme = memeState.data.viewedMeme
       const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
       return (

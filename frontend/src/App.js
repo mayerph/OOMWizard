@@ -1,8 +1,6 @@
 import React from 'react'
 import './App.css'
-import { Switch, Route, NavLink, Redirect } from 'react-router-dom'
-import { Test2 } from './components/Test/test2.component'
-import { Test } from './components/Test/test.component'
+import { Switch, Route } from 'react-router-dom'
 import { SharedMeme } from './components/SharedMeme'
 import { MainApp } from './components/MainApp'
 
