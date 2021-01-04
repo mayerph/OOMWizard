@@ -34,7 +34,7 @@ class MemesList extends React.Component {
     this.state = { openDialog: true, memeToShare: undefined }
   }
   onApiLoad() {
-    this.props.getApi()
+    this.props.getApi('api')
   }
 
   render() {
@@ -48,8 +48,12 @@ class MemesList extends React.Component {
 
         <GridList cellHeight={500} className="gridList" cols={4}>
           {this.props.tileData.map((tile, index) => (
-            <GridListTile key={tile.url} cols={tile.cols || 1}>
-              <img src={tile.url} alt={tile.name} className="gridImg" />
+            <GridListTile key={tile.id} cols={tile.cols || 1}>
+              <img
+                src={'http://localhost:2000/' + tile.route}
+                alt={tile.name}
+                className="gridImg"
+              />
               <GridListTileBar
                 title={tile.name}
                 subtitle={'likes: ' + tile.name.length}
@@ -126,7 +130,7 @@ class MemesList extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  //console.log(state.api.tileData);
+  console.log(state.api.tileData)
   return {
     tileData: state.api.tileData,
   }

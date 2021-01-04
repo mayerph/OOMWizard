@@ -19,16 +19,17 @@ export const unfocusText = () => ({
   type: 'UNFOCUS_EDITOR_STATE',
 })
 
-export const getApi = () => {
+export const getApi = (mode) => {
   return (dispatch) => {
-    fetch('https://api.imgflip.com/get_memes', {
+    fetch('http://localhost:2000/templates/', {
       method: 'GET',
     })
       .then((res) => res.json())
       .then((results) => {
-        var tileData = results.data.memes
-        //console.log(tileData);
-        dispatch({ type: 'GET_API', payload: tileData })
+        var tileData = results
+        console.log(tileData)
+        console.log(mode)
+        dispatch({ type: 'GET_API', payload: tileData, mode: mode })
       })
   }
 }

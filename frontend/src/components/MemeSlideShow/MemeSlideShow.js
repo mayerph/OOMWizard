@@ -15,13 +15,15 @@ import Carousel from 'react-material-ui-carousel'
 
 class MemeSlideShow extends React.Component {
   onApiLoad() {
-    this.props.getApi()
+    this.props.getApi('api')
   }
   randomize() {
-    this.props.randomize()
+    //this.props.randomize()
+    this.props.getApi('random')
   }
   sortByLikes() {
-    this.props.sortByLikes()
+    //this.props.sortByLikes()
+    this.props.getApi('sort')
   }
   autoplay() {
     this.props.autoplay()
@@ -44,9 +46,13 @@ class MemeSlideShow extends React.Component {
           navButtonsAlwaysVisible="true"
         >
           {this.props.tileData.map((tile) => (
-            <Paper key="">
+            <Paper key={tile.id}>
               <h2>{tile.name}</h2>
-              <img src={tile.url} alt={tile.name} className="slideImage" />
+              <img
+                src={'http://localhost:2000/' + tile.route}
+                alt={tile.name}
+                className="slideImage"
+              />
             </Paper>
           ))}
         </Carousel>
