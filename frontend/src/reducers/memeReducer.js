@@ -1,3 +1,4 @@
+import { Meme } from "../models/meme.model"
 const DefaultState = {
     loading: false,
     data: {},
@@ -12,7 +13,7 @@ const memeReducer = (state = DefaultState, action) => {
                 loading: false,
                 data: {
                     ...state.data,
-                    viewedMeme: action.payload
+                    viewedMeme: new Meme(action.payload)
                 }
             };
 

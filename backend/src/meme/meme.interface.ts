@@ -4,6 +4,7 @@ import { ITemplate } from "../template/template.interface"
  * Interface for the position
  */
 interface IPosition {
+  id?: any
   x: number
   y: number
 }
@@ -12,6 +13,7 @@ interface IPosition {
  * Interface for the caption
  */
 export interface ICaption {
+  id?: any
   text: string
   position: IPosition
   color: string

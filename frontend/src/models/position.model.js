@@ -3,6 +3,8 @@
  */
 export class Position {
     constructor(options) {
+        // optional 
+        this.id = options.id ? options.id : undefined
         // mandatory
         if (!options.x) {
             throw new Error("Caption: missing property 'text'")

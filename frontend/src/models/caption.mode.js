@@ -5,6 +5,9 @@ import { Position } from "./position.model"
  */
 export class Caption {
     constructor(options) {
+        // optional
+        this.id = options.id ? options.id : undefined
+        
         // mandatory
         if (!options.text) {
             throw new Error("Caption: missing property 'text'")

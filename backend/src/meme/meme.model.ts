@@ -23,18 +23,38 @@ const transform = (doc: any, ret: any) => {
 /**
  * Mongoose Schema for position
  */
-const positionSchema = new Schema({
-  x: { type: String, required: true },
-  y: { type: String, required: true }
-})
+const positionSchema = new Schema(
+  {
+    x: { type: String, required: true },
+    y: { type: String, required: true }
+  },
+  {
+    toJSON: {
+      transform
+    },
+    toObject: {
+      transform
+    }
+  }
+)
 
 /**
  * Mongoose Schema for a capture (capture 1 and capture 2)
  */
-const captionSchema = new Schema({
-  text: { type: String, required: true },
-  position: positionSchema
-})
+const captionSchema = new Schema(
+  {
+    text: { type: String, required: true },
+    position: positionSchema
+  },
+  {
+    toJSON: {
+      transform
+    },
+    toObject: {
+      transform
+    }
+  }
+)
 
 /**
  * The meme Schema is a combination of the memeTemplateSchema and the captureSchema
