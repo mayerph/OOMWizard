@@ -11,8 +11,6 @@ function App() {
     <div className="App">
       <Switch>
         <Route path={'/'} exact component={MainApp} />
-        <Route path={'/test'} exact component={Test} />
-        <Route path={'/test2'} exact component={Test2} />
         <Route path={'/meme/:id'} exact component={SharedMeme} />
       </Switch>
     </div>
