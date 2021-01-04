@@ -117,19 +117,19 @@ class ShareDialog extends React.Component {
         };
     
         const handleClose = () => {
-            onClose(selectedValue);
+            onClose();
         };
-
+        console.log(meme)
         
     
         return (
-                <Dialog className="social-dialog" onClose={this.handleClose} aria-labelledby="simple-dialog-title" open={true} fullWidth={true} maxWidth="xs">
-                    <DialogTitle id="custom-dialog-title">Share</DialogTitle>
+                <Dialog className="social-dialog" onClose={ onClose } aria-labelledby="simple-dialog-title" open={open} fullWidth={true} maxWidth="xs">
+                    <DialogTitle id="custom-dialog-title" onClose={ onClose }>Share</DialogTitle>
                     <DividerWrapper dividers>
                         <List className="social-list">
                             {this.platforms.map((platform) => (
-                                <a className="social-link" href={ platform.source + destination + "meme/" + meme.id } target="_blank" data-action="share/whatsapp/share">
-                                    <ListItem button onClick={() => console.log("ich wurde geklickt")} key={platform.name}>
+                                <a className="social-link" href={ platform.source + destination + "meme/" + meme.id } target="_blank" rel="noreferrer" >
+                                    <ListItem key={platform.name}>
                                         <ListItemAvatar>
                                             <Avatar>
                                                 { platform.icon}

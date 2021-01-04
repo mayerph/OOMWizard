@@ -22,40 +22,35 @@ import {
   WhatsappShareButton,
 } from "react-share";
 import { EmailIcon, FacebookIcon, WhatsappIcon } from "react-share";
-import { Share } from "../ShareDialog";
+import { ShareDialog } from "../ShareDialog";
 
 //Trying out the Grid List from Material UI (https://github.com/mui-org/material-ui/blob/master/docs/src/pages/components/grid-list/ImageGridList.js)
 //DONE change state system to Redux
 //TODO: remove the buttons, load data from other components/backend?, add passive information, add interaction for each image
 
 class MemesList extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = { openDialog : true, memeToShare : undefined }
+  }
   onApiLoad() {
     this.props.getApi();
   }
 
   
-  
-  render() {
-    function UserGreeting(props) {
-      if (1 > 2) {
-        return  <span>Welcome back!</span>;
-      } else {
-        return <span>Das ist einge Lüge</span>
-      }     
-    }
 
+  render() {
     let test = 1
 
     return (
       <div className="root">
-        <UserGreeting></UserGreeting>
-        <Share email="muste"></Share>
+        
         <Button onClick={this.onApiLoad.bind(this)} variant="outlined">
           TempButton: LoadAPI
         </Button>
 
         <GridList cellHeight={500} className="gridList" cols={4}>
-          {this.props.tileData.map((tile) => (
+          {this.props.tileData.map((tile, index) => (
             <GridListTile key={tile.url} cols={tile.cols || 1}>
               <img src={tile.url} alt={tile.name} className="gridImg" />
               <GridListTileBar
@@ -96,7 +91,7 @@ class MemesList extends React.Component {
                         }}
                       />
                     </IconButton>
-                    <IconButton aria-label="share-btn">
+                    <IconButton aria-label="share-btn" onClick={ () => { this.setState({...this.state, memeToShare: "placeholder for meme object " + index}) }}>
                       <ShareIcon 
                         style={{
                           color: "#fafafa",
@@ -108,18 +103,13 @@ class MemesList extends React.Component {
                       
                       />
                     </IconButton>
-                    <WhatsappShareButton url={tile.url}>
-                      <WhatsappIcon size={20} borderRadius={10} />
-                    </WhatsappShareButton>
-                    {/*                     <FacebookShareButton url={tile.url}>
-                      <FacebookIcon size={35} borderRadius={10} />
-                    </FacebookShareButton> */}
                   </div>
                 }
               />
             </GridListTile>
           ))}
         </GridList>
+        <ShareDialog meme={ this.state.memeToShare } open={ this.state.memeToShare ? true : false } onClose={ () => { this.setState({...this.state, memeToShare: undefined })}}></ShareDialog>
       </div>
     );
   }
