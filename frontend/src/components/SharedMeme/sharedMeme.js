@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getMeme } from '../../actions'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import * as config from '../../config.json'
+import { Meme } from '../../models/meme.model'
 
 /**
  * single page for sharing a meme.
@@ -28,8 +29,7 @@ const SharedMeme = (props) => {
   // renders image after the response from server has received
   const MemeImage = () => {
     if (memeState.data && memeState.data.viewedMeme) {
-      console.log('hello world', memeState.data.viewedMeme)
-      const meme = memeState.data.viewedMeme
+      const meme = new Meme(memeState.data.viewedMeme)
       const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
       return (
         <span>

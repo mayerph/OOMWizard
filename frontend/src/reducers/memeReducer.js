@@ -12,7 +12,7 @@ const memeReducer = (state = DefaultState, action) => {
         loading: false,
         data: {
           ...state.data,
-          viewedMeme: new Meme(action.payload),
+          viewedMeme: Meme.fromJSON(action.payload),
         },
       }
 

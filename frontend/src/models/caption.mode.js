@@ -4,7 +4,14 @@ import { Position } from './position.model'
  * represents a caption of meme
  */
 export class Caption {
+  /**
+   * constructor for a caption object
+   * @param {*} options json object representing a caption
+   */
   constructor(options) {
+    if (!options) {
+      throw new Error('Caption: empty object')
+    }
     // optional
     this.id = options.id ? options.id : undefined
 
@@ -28,5 +35,16 @@ export class Caption {
       throw new Error("Caption: missing property 'size'")
     }
     this.position = options.size
+  }
+
+  /**
+   * transfers an JSON object to a caption object
+   * @param {*} options json object representing a caption
+   */
+  static fromJSON(options) {
+    if (!options) {
+      return null
+    }
+    return new Caption(options)
   }
 }

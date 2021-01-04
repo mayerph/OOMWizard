@@ -125,22 +125,8 @@ class ShareDialog extends React.Component {
       ? proxySetting
       : frontendSetting
     const meme = this.props.meme
-      ? this.props.meme
-      : {
-          name: '6f680440-4dd6-11eb-842a-ff568e1bc1c7.png',
-          route: '/images/memes/6f680440-4dd6-11eb-842a-ff568e1bc1c7.png',
-          template: {
-            name: 'Drake-Hotline-Bling.jpg',
-            route: '/templates/Drake-Hotline-Bling.jpg',
-            id: '5ff1df6fa28fb193a50f1c65',
-          },
-          captures: [],
-          id: '5ff1df6fa28fb193a50f1c64',
-        }
 
-    console.log('the meme is', meme)
-    const { open, onClose, onClick, selectedValue } = this.props
-
+    const { open, onClose } = this.props
     const handleListItemClick = (value) => {
       onClose(value)
     }
