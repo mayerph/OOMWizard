@@ -5,7 +5,7 @@ import { MemeController } from "./meme.controller"
 const router = express.Router()
 const memeController = new MemeController()
 /**
- * route to all available meme templates
+ * route to all available meme
  */
 router.get("", async (req: Request, res: Response, next: NextFunction) => {
   const memes = await memeController.memes()
@@ -13,13 +13,30 @@ router.get("", async (req: Request, res: Response, next: NextFunction) => {
 })
 
 /**
- * route to a certain meme template
+ * route to a certain meme
  */
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
   const meme = await memeController.meme(id)
   res.json(meme)
 })
+
+/**
+ * route for deleting a meme
+ */
+router.delete(
+  "/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    try {
+      const meme = await memeController.deleteMeme(id)
+      res.json(meme)
+    } catch (err) {
+      res.status(500)
+      res.json(err)
+    }
+  }
+)
 
 /**
  * route to a add a new meme

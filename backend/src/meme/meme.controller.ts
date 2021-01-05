@@ -58,6 +58,39 @@ export class MemeController {
     const meme = await Meme.findById(id)
     return meme
   }
+
+  /**
+   * delete certain meme template
+   * @param id memeTemplate id
+   */
+  async deleteMeme(id: string): Promise<IMeme | null> {
+    return new Promise(async (resolve, reject) => {
+      // query for a meme
+      let meme = null
+      try {
+        meme = await Meme.findById(id)
+      } catch (err) {
+        reject(`no meme with id ${id} found`)
+        return
+      }
+      // check if a meme has been found
+      if (!meme) {
+        reject(`no meme with id ${id} found`)
+        return
+      }
+
+      // delete meme
+      try {
+        const result = await meme.deleteOne()
+        resolve(meme)
+        return
+      } catch (err) {
+        reject(`meme couldn't be updated`)
+        return
+      }
+    })
+  }
+
   /**
    * create and add new meme
    * @param meme metadata of the meme

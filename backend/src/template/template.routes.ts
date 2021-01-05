@@ -39,6 +39,23 @@ router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
 })
 
 /**
+ * route for deleting a meme template
+ */
+router.delete(
+  "/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id
+    try {
+      const result = await templateController.deleteMemeTemplate(id)
+      res.json(result)
+    } catch (err) {
+      res.status(500)
+      res.json(err)
+    }
+  }
+)
+
+/**
  * route for uploading meme templates
  */
 router.post("", async (req: Request, res: Response, next: NextFunction) => {

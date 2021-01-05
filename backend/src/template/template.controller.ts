@@ -110,6 +110,38 @@ export class TemplateController {
   }
 
   /**
+   * delete certain meme template
+   * @param id memeTemplate id
+   */
+  async deleteMemeTemplate(id: string): Promise<ITemplate> {
+    return new Promise(async (resolve, reject) => {
+      // query for a template
+      let template = null
+      try {
+        template = await Template.findById(id)
+      } catch (err) {
+        reject(`no template with id ${id} found`)
+        return
+      }
+      // check if a template has been found
+      if (!template) {
+        reject(`no template with id ${id} found`)
+        return
+      }
+
+      // delete template
+      try {
+        const result = await template.deleteOne()
+        resolve(template)
+        return
+      } catch (err) {
+        reject(`memeTemplate couldn't be updated`)
+        return
+      }
+    })
+  }
+
+  /**
    * write image to file
    * @param image object with the image (meta)data
    */
