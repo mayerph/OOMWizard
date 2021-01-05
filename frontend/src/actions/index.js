@@ -80,7 +80,19 @@ export const getMeme = (id) => (dispatch) => {
     console.log('the response is', response)
     const data = await response.json()
     dispatch({
-      type: 'GET_MEME_SUCCESS',
+      type: 'GET_MEME',
+      payload: data,
+    })
+  })
+}
+
+export const getMemes = (id) => (dispatch) => {
+  fetch(`http://localhost:2000/memes/`, {
+    method: 'GET',
+  }).then(async (response) => {
+    const data = await response.json()
+    dispatch({
+      type: 'GET_MEMES',
       payload: data,
     })
   })

@@ -57,7 +57,8 @@ export class MemeController {
 
       // write meme to database
       const result = await new Meme(fullMeme).save()
-      return fullMeme
+
+      return result
     } catch (err) {
       throw err
     }
