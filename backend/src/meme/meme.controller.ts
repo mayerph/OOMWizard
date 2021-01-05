@@ -7,6 +7,7 @@ import { Duplex } from "stream"
 import * as uuid from "uuid"
 import * as archiver from "archiver"
 import { PassThrough } from "stream"
+import * as mongoose from "mongoose"
 
 export class MemeController {
   constructor() {
@@ -17,6 +18,30 @@ export class MemeController {
    */
   insertTestData() {
     Meme.deleteMany({}).exec()
+    const template_tmp = [
+      {
+        name: "d5703be0-4f5c-11eb-af94-1d9a1453b140.png",
+        route: "/images/memes/d5703be0-4f5c-11eb-af94-1d9a1453b140.png",
+        template: {
+          name: "Drake-Hotline-Bling.jpg",
+          route: "/images/templates/Drake-Hotline-Bling.jpg",
+          _id: "5ff46e6a4b03de6df1d420c6"
+        },
+        captions: [
+          {
+            text: "hello world",
+            position: {
+              x: "0",
+              y: "0",
+              _id: "5ff46e6a4b03de6df1d420c8"
+            },
+            _id: "5ff46e6a4b03de6df1d420c7"
+          }
+        ],
+        _id: mongoose.Types.ObjectId("5ff46e6a4b03de6df1d420c5")
+      }
+    ]
+    template_tmp.forEach((e) => new Meme(e).save())
   }
   /**
    * returns all available memes

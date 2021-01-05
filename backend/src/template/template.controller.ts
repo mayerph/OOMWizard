@@ -2,6 +2,7 @@ import { ITemplate } from "./template.interface"
 import { ITemplateMongoose, Template } from "./template.model"
 import * as config from "../config.json"
 import * as fs from "fs"
+import * as mongoose from "mongoose"
 
 export class TemplateController {
   constructor() {
@@ -14,18 +15,22 @@ export class TemplateController {
     Template.deleteMany({}).exec()
     const memes_tmp = [
       {
+        _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfac"),
         name: "Drake-Hotline-Bling.jpg",
         route: config.storage.templates.route + "/Drake-Hotline-Bling.jpg"
       },
       {
+        _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfad"),
         name: "Is-This-A-Pigeon.jpg",
         route: config.storage.templates.route + "/Is-This-A-Pigeon.jpg"
       },
       {
+        _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfae"),
         name: "Monkey-Puppet.jpg",
         route: config.storage.templates.route + "/Monkey-Puppet.jpg"
       },
       {
+        _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfaf"),
         name: "Running-Away-Balloon.jpg",
         route: config.storage.templates.route + "/Running-Away-Balloon.jpg"
       }
@@ -99,7 +104,7 @@ export class TemplateController {
         return
       }
 
-      resolve(template)
+      resolve(object)
       return
     })
   }

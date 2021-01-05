@@ -27,7 +27,6 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
   try {
-    console.log("update template", req.body.template)
     const template = await templateController.updateMemeTemplate(
       id,
       req.body.template
