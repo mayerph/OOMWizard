@@ -60,7 +60,7 @@ export class MemeController {
   }
 
   /**
-   * delete certain meme template
+   * delete certain meme
    * @param id memeTemplate id
    */
   async deleteMeme(id: string): Promise<IMeme | null> {
