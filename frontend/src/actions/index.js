@@ -69,31 +69,3 @@ export const autoplay = (state) => ({
   type: 'AUTOPLAY',
   state,
 })
-
-export const getMeme = (id) => (dispatch) => {
-  /*dispatch({
-        type: "MEME_LOADING"
-    });*/
-  fetch(`http://localhost:2000/memes/${id}`, {
-    method: 'GET',
-  }).then(async (response) => {
-    console.log('the response is', response)
-    const data = await response.json()
-    dispatch({
-      type: 'GET_MEME',
-      payload: data,
-    })
-  })
-}
-
-export const getMemes = (id) => (dispatch) => {
-  fetch(`http://localhost:2000/memes/`, {
-    method: 'GET',
-  }).then(async (response) => {
-    const data = await response.json()
-    dispatch({
-      type: 'GET_MEMES',
-      payload: data,
-    })
-  })
-}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getMeme } from '../../actions'
+import { getMeme } from '../../actions/meme.action'
 import { Helmet, HelmetProvider } from 'react-helmet-async'
 import * as config from '../../config.json'
 import { Meme } from '../../models/meme.model'
