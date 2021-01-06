@@ -12,13 +12,13 @@ const DefaultState = {
 }
 
 /**
- * reducer for a single meme
- * @param {*} state the current state of the of the meme
+ * reducer for a list of all memes
+ * @param {*} state the current state of the of the meme list
  * @param {*} action contains the action type and the new data which overrides the current state
  */
-const memeReducer = (state = DefaultState, action) => {
+const memeListReducer = (state = DefaultState, action) => {
   switch (action.type) {
-    case 'GET_MEME_SUCCESS':
+    case 'GET_MEMES_SUCCESS':
       const newState = {
         ...state,
         loading: false,
@@ -29,14 +29,14 @@ const memeReducer = (state = DefaultState, action) => {
       }
 
       return newState
-    case 'GET_MEME_ERROR':
+    case 'GET_MEMES_ERROR':
       return {
         ...state,
         loading: false,
         error: 'unable to get a meme',
       }
 
-    case 'GET_MEME_LOADING':
+    case 'GET_MEMES_LOADING':
       return {
         ...state,
         loading: true,
@@ -48,4 +48,4 @@ const memeReducer = (state = DefaultState, action) => {
   }
 }
 
-export default memeReducer
+export default memeListReducer

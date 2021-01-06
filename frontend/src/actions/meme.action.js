@@ -8,11 +8,21 @@ const getMeme = (id) => (dispatch) => {
   fetch(`${destination}/memes/${id}`, {
     method: 'GET',
   }).then(async (response) => {
-    const data = await response.json()
     dispatch({
-      type: 'GET_MEME',
-      payload: data,
+      type: 'GET_MEME_LOADING',
     })
+
+    try {
+      const data = await response.json()
+      dispatch({
+        type: 'GET_MEME_SUCCESS',
+        payload: data,
+      })
+    } catch (err) {
+      dispatch({
+        type: 'GET_MEME_ERROR',
+      })
+    }
   })
 }
 
@@ -23,11 +33,20 @@ const getMemes = () => (dispatch) => {
   fetch(`${destination}/memes/`, {
     method: 'GET',
   }).then(async (response) => {
-    const data = await response.json()
     dispatch({
-      type: 'GET_MEMES',
-      payload: data,
+      type: 'GET_MEMES_LOADING',
     })
+    try {
+      const data = await response.json()
+      dispatch({
+        type: 'GET_MEMES_SUCCESS',
+        payload: data,
+      })
+    } catch (err) {
+      dispatch({
+        type: 'GET_MEMES_ERROR',
+      })
+    }
   })
 }
 
