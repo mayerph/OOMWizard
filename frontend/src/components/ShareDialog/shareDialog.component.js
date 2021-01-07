@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import { connect } from 'react-redux'
 
 import Avatar from '@material-ui/core/Avatar'
@@ -9,6 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Dialog from '@material-ui/core/Dialog'
 import AddIcon from '@material-ui/icons/Add'
 import LinkIcon from '@material-ui/icons/Link'
+import { Snackbar } from '@material-ui/core'
 import Typography from '@material-ui/core/Typography'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
@@ -30,6 +31,12 @@ import * as config from '../../config.json'
  * Dialog component for initiating the share of a meme
  */
 class ShareDialog extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      copySnackbar: false,
+    }
+  }
   /**
    * general style settings
    */
@@ -77,7 +84,7 @@ class ShareDialog extends React.Component {
   /**
    * wrapper element for setting a divider
    */
-  dividerWrapper = withStyles((theme) => ({
+  dialogDivider = withStyles((theme) => ({
     root: {
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(2),
@@ -85,6 +92,20 @@ class ShareDialog extends React.Component {
       paddingRight: 0,
     },
   }))(MuiDialogContent)
+
+  componentDidMount() {
+    console.log('hellooooooo')
+  }
+  /**
+   * gets called so the list can gets scrolled through from the top
+   * @param {*} ref dom reference of the social media list
+   */
+  initializeScrollTop(ref) {
+    console.log('initializeScrollTop')
+    if (ref && ref.scrollTop) {
+      // ref.scrollTop = 0
+    }
+  }
 
   /**
    * List consting of all offered social media platforms
@@ -113,9 +134,28 @@ class ShareDialog extends React.Component {
     { name: 'E-Mail', source: 'mailto:?body=', icon: <EmailIcon /> },
   ]
 
+  openSnackbar() {
+    console.log('openSnackbar')
+    this.setState({ ...this.state, copySnackbar: true })
+  }
+
+  closeSnackbar() {
+    console.log('closeSnackbar')
+    this.setState({ ...this.state, copySnackbar: false })
+  }
+
+  setRef() {}
+
+  componentDidMount() {
+    console.log('componentDidMount')
+  }
+
+  /**
+   * renders the component
+   */
   render() {
     const DialogTitle = this.dialogTitle
-    const DividerWrapper = this.dividerWrapper
+    const DialogDivider = this.dialogDivider
     const DialogFooter = this.dialogFooter
 
     const proxySetting = `${config.frontend.proxy.protocol}://${config.frontend.proxy.server}:${config.frontend.proxy.port}/`
@@ -148,63 +188,84 @@ class ShareDialog extends React.Component {
         }
 
     const { open, onClose } = this.props
-    const handleListItemClick = (value) => {
-      onClose(value)
-    }
 
     const handleClose = () => {
       onClose()
     }
-    console.log('das ist ein test', meme)
 
     return (
-      <Dialog
-        className="social-dialog"
-        onClose={onClose}
-        aria-labelledby="simple-dialog-title"
-        open={open}
-        fullWidth={true}
-        maxWidth="xs"
-      >
-        <DialogTitle id="custom-dialog-title" onClose={onClose}>
-          Share
-        </DialogTitle>
-        <DividerWrapper dividers>
-          <List className="social-list">
-            {this.platforms.map((platform) => (
-              <a
-                className="social-link"
-                href={platform.source + destination + 'meme/' + meme.id}
-                target="_blank"
-                rel="noreferrer"
-                key=""
+      <>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          open={this.testen}
+          autoHideDuration={3000}
+          onClose={() => this.closeSnackbar()}
+          message="Note archived"
+          action={
+            <React.Fragment>
+              <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={() => this.closeSnackbar()}
               >
-                <ListItem key={platform.name}>
-                  <ListItemAvatar>
-                    <Avatar>{platform.icon}</Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary={platform.name} />
-                </ListItem>
-              </a>
-            ))}
-            <ListItem
-              autoFocus
-              button
-              onClick={() => handleListItemClick('addAccount')}
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
+        <Dialog
+          className="social-dialog"
+          onClose={handleClose}
+          aria-labelledby="simple-dialog-title"
+          open={open}
+          fullWidth={true}
+          maxWidth="xs"
+        >
+          <DialogTitle id="custom-dialog-title" onClose={handleClose}>
+            Share
+          </DialogTitle>
+          <DialogDivider className="dialog-content" dividers>
+            <div
+              className="social-list-wrapper"
+              ref={(ref) => this.initializeScrollTop(ref)}
             >
-              <ListItemAvatar>
-                <Avatar>
-                  <LinkIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary="Link kopieren" />
-            </ListItem>
-          </List>
-        </DividerWrapper>
-        <DialogFooter className="dialog-footer">
-          Choose a share option. The link will open the platform in a new tab.
-        </DialogFooter>
-      </Dialog>
+              <List className="social-list">
+                {this.platforms.map((platform) => (
+                  <a
+                    className="social-link"
+                    href={platform.source + destination + 'meme/' + meme.id}
+                    target="_blank"
+                    rel="noreferrer"
+                    key={'link' + platform.name}
+                  >
+                    <ListItem key={platform.name}>
+                      <ListItemAvatar>
+                        <Avatar>{platform.icon}</Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={platform.name} />
+                    </ListItem>
+                  </a>
+                ))}
+                <ListItem autoFocus button onClick={() => this.openSnackbar()}>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <LinkIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary="Link kopieren" />
+                </ListItem>
+              </List>
+            </div>
+          </DialogDivider>
+          <DialogFooter className="dialog-footer">
+            Choose a share option. The link will open the platform in a new tab.
+          </DialogFooter>
+        </Dialog>
+      </>
     )
   }
 }
