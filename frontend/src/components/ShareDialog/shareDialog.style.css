@@ -8,11 +8,9 @@
 
 .social-list {
   overflow: none;
-  scroll-snap-align: start none;
 }
 
 .social-list-wrapper {
-  scroll-snap-type: y mandatory;
   overflow-y: scroll;
   max-height: 250px;
 }
