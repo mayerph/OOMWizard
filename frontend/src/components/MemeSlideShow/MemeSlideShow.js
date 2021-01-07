@@ -9,7 +9,13 @@ import GridListTile from '@material-ui/core/GridListTile'
 import GridListTileBar from '@material-ui/core/GridListTileBar'
 import { FormControlLabel, Checkbox, Paper } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
-import { getApi, randomize, sortByLikes, autoplay } from '../../actions'
+import {
+  getApi,
+  getApiImgFlip,
+  randomize,
+  sortByLikes,
+  autoplay,
+} from '../../actions'
 
 import Carousel from 'react-material-ui-carousel'
 
@@ -48,11 +54,7 @@ class MemeSlideShow extends React.Component {
           {this.props.tileData.map((tile) => (
             <Paper key={tile.id}>
               <h2>{tile.name}</h2>
-              <img
-                src={'http://localhost:2000/' + tile.route}
-                alt={tile.name}
-                className="slideImage"
-              />
+              <img src={tile.url} alt={tile.name} className="slideImage" />
             </Paper>
           ))}
         </Carousel>

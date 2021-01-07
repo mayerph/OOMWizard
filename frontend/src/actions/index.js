@@ -28,7 +28,25 @@ export const getApi = (mode) => {
       .then((results) => {
         var tileData = results
         console.log(tileData)
-        console.log(mode)
+        for (var i = 0; i < tileData.length; i++) {
+          console.log(tileData[i])
+          tileData[i].route = 'http://localhost:2000' + tileData[i].route
+          tileData[i].url = tileData[i].route
+        }
+        console.log(tileData)
+        dispatch({ type: 'GET_API', payload: tileData, mode: mode })
+      })
+  }
+}
+export const getApiImgFlip = (mode) => {
+  return (dispatch) => {
+    fetch('https://api.imgflip.com/get_memes', {
+      method: 'GET',
+    })
+      .then((res) => res.json())
+      .then((results) => {
+        var tileData = results.data.memes
+        console.log(tileData)
         dispatch({ type: 'GET_API', payload: tileData, mode: mode })
       })
   }

@@ -14,7 +14,7 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import GetAppIcon from '@material-ui/icons/GetApp'
 import ShareIcon from '@material-ui/icons/Share'
 
-import { getApi } from '../../actions'
+import { getApi, getApiImgFlip } from '../../actions'
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -36,6 +36,9 @@ class MemesList extends React.Component {
   onApiLoad() {
     this.props.getApi('api')
   }
+  onApiIMGFlipLoad() {
+    this.props.getApiImgFlip('api')
+  }
 
   render() {
     let test = 1
@@ -45,15 +48,14 @@ class MemesList extends React.Component {
         <Button onClick={this.onApiLoad.bind(this)} variant="outlined">
           TempButton: LoadAPI
         </Button>
+        <Button onClick={this.onApiIMGFlipLoad.bind(this)} variant="outlined">
+          TempButton: LoadAPI IMGFlip
+        </Button>
 
         <GridList cellHeight={500} className="gridList" cols={4}>
           {this.props.tileData.map((tile, index) => (
             <GridListTile key={tile.id} cols={tile.cols || 1}>
-              <img
-                src={'http://localhost:2000/' + tile.route}
-                alt={tile.name}
-                className="gridImg"
-              />
+              <img src={tile.url} alt={tile.name} className="gridImg" />
               <GridListTileBar
                 title={tile.name}
                 subtitle={'likes: ' + tile.name.length}
@@ -136,4 +138,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { getApi })(MemesList)
+export default connect(mapStateToProps, { getApi, getApiImgFlip })(MemesList)

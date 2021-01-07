@@ -11,7 +11,8 @@ const apiGetter = (state = [], action) => {
     case 'GET_API':
       console.log(action.mode)
       if (action.mode === 'api') {
-        //console.log('in api')
+        console.log('in api')
+        console.log(action.payload)
         return { ...state, tileData: action.payload }
       } else if (action.mode === 'random') {
         //console.log('in random')
@@ -33,6 +34,7 @@ const apiGetter = (state = [], action) => {
         })
         return { ...state, tileData: st }
       } else {
+        console.log('in else')
         return { ...state, tileData: action.payload }
       }
       return { ...state, tileData: action.payload }
