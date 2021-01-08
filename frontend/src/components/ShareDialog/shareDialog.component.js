@@ -4,6 +4,7 @@ import React, {
   useRef,
   useCallback,
   useState,
+  useLayoutEffect,
 } from 'react'
 import { connect } from 'react-redux'
 
@@ -38,9 +39,29 @@ import * as config from '../../config.json'
  */
 const ShareDialog = (props) => {
   const [openedSnack, setOpenedSnack] = useState(false)
+  const changedToOpen = useRef(false)
+  const urlRef = useRef(undefined)
+
+  /**
+   * gets called everytime the open property get changed.
+   * if the dialog gets opened changedToOpen gets set to true.
+   * if its true, the javascript controlled scroll up is initiated.
+   * For this see socialLinksRef
+   */
+  useEffect(() => {
+    if (props.open) {
+      changedToOpen.current = true
+    }
+  }, [props.open])
+
+  /**
+   * Reference to the .social-list-wrapper dom element
+   * scrolls up so the list starts with the first element
+   */
   const socialLinksRef = useCallback((node) => {
-    if (node !== null) {
+    if (node && node != '' && changedToOpen.current) {
       node.scrollTop = 0
+      changedToOpen.current = false
     }
   }, [])
 
@@ -101,17 +122,6 @@ const ShareDialog = (props) => {
   }))(MuiDialogContent)
 
   /**
-   * gets called so the list can gets scrolled through from the top
-   * @param {*} ref dom reference of the social media list
-   */
-  const initializeScrollTop = (ref) => {
-    console.log('initializeScrollTop')
-    if (ref && ref.scrollTop) {
-      // ref.scrollTop = 0
-    }
-  }
-
-  /**
    * List consting of all offered social media platforms
    */
   const platforms = [
@@ -132,61 +142,75 @@ const ShareDialog = (props) => {
     },
     {
       name: 'Twitter',
-      source: 'https://api.whatsapp.com/send?text=',
+      source: 'https://twitter.com/intent/tweet?text=',
       icon: <TwitterIcon />,
     },
     { name: 'E-Mail', source: 'mailto:?body=', icon: <EmailIcon /> },
   ]
 
+  /**
+   * opens snackbar which indicates that the url has been copied
+   */
   const openSnackbar = () => {
-    console.log('openSnackbar')
+    if (urlRef.current) {
+      console.log('url ref is', urlRef.current)
+      urlRef.current.select()
+    }
+
+    document.execCommand('copy')
+    console.log('copied')
     setOpenedSnack(true)
   }
 
+  /**
+   * closes the snackbar which indicates that the url has been copied
+   */
   const closeSnackbar = () => {
     console.log('closeSnackbar')
     setOpenedSnack(false)
   }
 
+  /**
+   * location of the sharedable memes
+   */
   const proxySetting = `${config.frontend.proxy.protocol}://${config.frontend.proxy.server}:${config.frontend.proxy.port}/`
   const frontendSetting = `${config.frontend.protocol}://${config.frontend.server}:${config.frontend.port}/`
 
   const destination = config.frontend.proxy.enabled
     ? proxySetting
     : frontendSetting
-  const meme = props.meme
-    ? props.meme
-    : {
-        name: '06220ac0-4e95-11eb-b7d3-334230f5957c.png',
-        route: '/images/memes/06220ac0-4e95-11eb-b7d3-334230f5957c.png',
-        template: {
-          id: '5ff1df51a28fb193a50f1c60',
-          name: 'Drake-Hotline-Bling.jpg',
-          route: '/templates/Drake-Hotline-Bling.jpg',
-        },
-        captions: [
-          {
-            text: 'hello world',
-            position: {
-              x: 0,
-              y: 0,
-            },
-            color: 'green',
-            size: 60,
+
+  /**
+   * meme which should be shared
+   */
+  const meme =
+    props.meme && props.meme.id
+      ? props.meme
+      : {
+          id: '5ff46e6a4b03de6df1d420c5',
+          name: '06220ac0-4e95-11eb-b7d3-334230f5957c.png',
+          route: '/images/memes/06220ac0-4e95-11eb-b7d3-334230f5957c.png',
+          template: {
+            id: '5ff1df51a28fb193a50f1c60',
+            name: 'Drake-Hotline-Bling.jpg',
+            route: '/templates/Drake-Hotline-Bling.jpg',
           },
-        ],
-      }
+          captions: [
+            {
+              text: 'hello world',
+              position: {
+                x: 0,
+                y: 0,
+              },
+              color: 'green',
+              size: 60,
+            },
+          ],
+        }
+
+  console.log('meme', meme.id)
 
   const { open, onClose } = props
-
-  const handleClose = () => {
-    onClose()
-  }
-
-  useEffect(() => {
-    // 3) access a ref, for example 0
-    //console.log('useEffect', observed())
-  })
 
   return (
     <>
@@ -198,7 +222,7 @@ const ShareDialog = (props) => {
         open={openedSnack}
         autoHideDuration={3000}
         onClose={() => closeSnackbar()}
-        message="Note archived"
+        message="Link copied to clipboard"
         action={
           <React.Fragment>
             <IconButton
@@ -214,13 +238,13 @@ const ShareDialog = (props) => {
       />
       <Dialog
         className="social-dialog"
-        onClose={handleClose}
+        onClose={onClose}
         aria-labelledby="simple-dialog-title"
         open={open}
         fullWidth={true}
         maxWidth="xs"
       >
-        <DialogTitle id="custom-dialog-title" onClose={handleClose}>
+        <DialogTitle id="custom-dialog-title" onClose={onClose}>
           Share
         </DialogTitle>
         <DialogDivider className="dialog-content" dividers>
@@ -249,6 +273,12 @@ const ShareDialog = (props) => {
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText primary="Link kopieren" />
+                <input
+                  className="url-input"
+                  ref={urlRef}
+                  value={destination + 'meme/' + meme.id}
+                  readOnly
+                ></input>
               </ListItem>
             </List>
           </div>

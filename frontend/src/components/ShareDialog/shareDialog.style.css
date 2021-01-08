@@ -26,3 +26,12 @@
 li:hover {
   background-color: #f7f7f7;
 }
+
+.url-input {
+  color: white;
+  height: 1px;
+  width: 1px;
+  padding: 0;
+  border: none;
+  margin: 0;
+}
