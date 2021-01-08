@@ -23,6 +23,7 @@ import {
 } from 'react-share'
 import { EmailIcon, FacebookIcon, WhatsappIcon } from 'react-share'
 import { ShareDialog } from '../ShareDialog'
+import { DownloadDialog } from '../DownloadDialog'
 
 //Trying out the Grid List from Material UI (https://github.com/mui-org/material-ui/blob/master/docs/src/pages/components/grid-list/ImageGridList.js)
 //DONE change state system to Redux
@@ -31,7 +32,7 @@ import { ShareDialog } from '../ShareDialog'
 class MemesList extends React.Component {
   constructor(props) {
     super(props)
-    this.state = { openDialog: true, memeToShare: undefined }
+    this.state = { memeToShare: undefined, memeToDownload: undefined }
   }
   onApiLoad() {
     this.props.getApi('api')
@@ -83,7 +84,17 @@ class MemesList extends React.Component {
                         }}
                       />
                     </IconButton>
-                    <IconButton aria-label="download" href={tile.url} download>
+                    <IconButton
+                      aria-label="download"
+                      onClick={() => {
+                        this.setState({
+                          ...this.state,
+                          memeToDownload:
+                            'placeholder for meme object ' + index,
+                        })
+                      }}
+                      download
+                    >
                       <GetAppIcon
                         style={{
                           color: '#fafafa',
@@ -126,6 +137,13 @@ class MemesList extends React.Component {
             this.setState({ ...this.state, memeToShare: undefined })
           }}
         ></ShareDialog>
+        <DownloadDialog
+          meme={this.state.memeToDownload}
+          open={this.state.memeToDownload ? true : false}
+          onClose={() => {
+            this.setState({ ...this.state, memeToDownload: undefined })
+          }}
+        ></DownloadDialog>
       </div>
     )
   }

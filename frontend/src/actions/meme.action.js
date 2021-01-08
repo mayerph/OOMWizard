@@ -1,4 +1,5 @@
 import * as config from '../config.json'
+
 const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 /**
  * action to request a certain meme
@@ -50,4 +51,33 @@ const getMemes = () => (dispatch) => {
   })
 }
 
-export { getMeme, getMemes }
+/**
+ * sends a request to the server to generate meme
+ * @param {*} meme object representing a meme image
+ */
+const generateMeme = (meme) => {
+  console.log('the meme is', meme)
+  return new Promise((resolve, reject) => {
+    fetch(`${destination}/memes/file`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        memes: [meme],
+      }),
+    })
+      .then((res) => {
+        res.arrayBuffer()
+      })
+      .then((meme) => {
+        console.log('buffer', meme)
+        resolve(meme)
+        return
+      })
+      .catch((err) => {
+        reject(err)
+        return
+      })
+  })
+}
+
+export { getMeme, getMemes, generateMeme }

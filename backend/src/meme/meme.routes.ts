@@ -66,6 +66,7 @@ router.post(
         const { stream, filename } = await memeController.memeFile(
           [].concat(req.body.memes)[0]
         )
+        res.attachment(`${filename}`)
         res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
         res.setHeader("Content-type", "image/png")
         stream.pipe(res)
@@ -73,6 +74,7 @@ router.post(
       // if multiple memes are part of the body
       else {
         const { zip, filename } = await memeController.zipFile(req.body.memes)
+        res.attachment(`${filename}`)
         res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
         res.setHeader("Content-type", "application/zip")
         zip.pipe(res)
