@@ -42,8 +42,7 @@ export class LoginController {
         return next()
       } catch (e) {
         if (e instanceof jwt.JsonWebTokenError) {
-          res.redirect("/")
-          return res.end()
+          return res.status(200).end()
         }
         return res.status(401).end()
       }
@@ -72,8 +71,7 @@ export class LoginController {
     userController.addUser({ name: username })
     createAndSetJwtToken(res, username)
 
-    res.redirect("/")
-    return res.end()
+    return res.status(200).end()
   }
 
   async signIn(req: Request, res: Response, next: NextFunction) {
@@ -92,7 +90,6 @@ export class LoginController {
       return res.status(401).send("invalid user password combination")
     }
     createAndSetJwtToken(res, username)
-    res.redirect("/")
-    return res.end()
+    return res.status(200).end()
   }
 }

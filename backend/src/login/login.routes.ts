@@ -1,9 +1,12 @@
 import * as express from "express"
 import { Router, Request, NextFunction, Response } from "express"
 import { LoginController } from "./login.controller"
+var cors = require('cors')
 
 const router = express.Router()
 const loginController = new LoginController()
+
+router.use(cors())
 
 router.get("/testverify", loginController.verifyLogin())
 

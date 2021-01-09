@@ -18,6 +18,7 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import reducers from '../../reducers'
 import TextControl from '../TextControl/TextControl'
+import { AuthForm } from '../Auth'
 
 class MainApp extends React.Component {
   render() {
