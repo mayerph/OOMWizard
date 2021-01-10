@@ -52,6 +52,23 @@ export const getApiImgFlip = (mode) => {
   }
 }
 
+export const uploadTemplate = (img) => {
+  console.log(img)
+  var newtemplate = { template: img }
+  return (dispatch) => {
+    fetch('http://localhost:2000/templates/', {
+      method: 'POST',
+      body: newtemplate,
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+      .then((res) => res.json())
+      .then((results) => {
+        console.log(newtemplate)
+        console.log(results)
+      })
+  }
+}
+
 export const randomize = () => {
   return (dispatch) => {
     fetch('https://api.imgflip.com/get_memes', {

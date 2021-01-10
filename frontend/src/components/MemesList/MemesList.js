@@ -73,6 +73,7 @@ class MemesList extends React.Component {
                         }}
                       />
                     </IconButton>
+
                     <IconButton aria-label="downvote">
                       <ArrowDownwardIcon
                         style={{
@@ -156,4 +157,7 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, { getApi, getApiImgFlip })(MemesList)
+export default connect(mapStateToProps, {
+  getApi,
+  getApiImgFlip,
+})(MemesList)
