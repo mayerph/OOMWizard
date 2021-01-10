@@ -9,6 +9,7 @@
     "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.2.2",
+    "axios": "^0.21.1",
     "draft-js": "^0.11.7",
     "fontsource-roboto": "^3.0.3",
     "react": "^17.0.1",

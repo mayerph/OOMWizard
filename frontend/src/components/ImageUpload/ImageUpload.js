@@ -1,17 +1,27 @@
 import React from 'react'
 import { Rnd } from 'react-rnd'
 import { connect } from 'react-redux'
-import { uploadTemplate } from '../../actions'
+import axios from 'axios'
+import { getApi } from '../../actions'
 
 class ImageUpload extends React.Component {
-  uploadTemplate(img) {
+  uploadTemplate() {
     const container = document.getElementById('templateUpload')
     const file = container.querySelector('input[type="file"]').files[0]
     console.log(file)
     var fd = new FormData()
-    fd.append('file', file)
-    console.log(fd.get('file'))
-    this.props.uploadTemplate(fd.get('file'))
+    fd.append('template', file)
+    axios
+      .post('http://localhost:2000/templates/', fd, {})
+      .then((res) => {
+        console.log(res.statusText)
+      })
+      .then((result) => {
+        this.onApiLoad()
+      })
+  }
+  onApiLoad() {
+    this.props.getApi('api')
   }
 
   render() {
@@ -34,4 +44,4 @@ const mapStateToProps = (state) => {
   return {}
 }
 
-export default connect(mapStateToProps, { uploadTemplate })(ImageUpload)
+export default connect(mapStateToProps, { getApi })(ImageUpload)
