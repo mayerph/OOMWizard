@@ -10,6 +10,9 @@
             "route" : "/images/memes",
             "path" : "/storage/images/memes/"
         },
+        "temp" : {
+            "path" : "/storage/images/temp/"
+        },
         "templates" : {
             "route" : "/images/templates",
             "path" : "/storage/images/templates/"

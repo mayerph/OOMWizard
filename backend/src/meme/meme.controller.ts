@@ -104,7 +104,11 @@ export class MemeController {
       const canvas = await this.createMemeCanvas(meme)
 
       // write meme to filesystem
-      const filepath = await this.writeMemeToFile(canvas.toBuffer(), filename)
+      const filepath = await this.writeMemeToFile(
+        canvas.toBuffer(),
+        filename,
+        false
+      )
 
       const fullMeme = {
         name: filename,
@@ -142,6 +146,32 @@ export class MemeController {
   }
 
   /**
+   * writes the meme temporarily to file
+   * @param meme object representing the image / meme
+   */
+  async singleFile(
+    meme: IMeme
+  ): Promise<{ filepath: string; filename: string }> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { stream, filename } = await this.memeFile(meme)
+        const filepath = "." + config.storage.temp.path + filename
+        const writeStream = fs.createWriteStream(filepath)
+        stream
+          .pipe(writeStream)
+          .on("close", () => {
+            resolve({ filepath, filename })
+          })
+          .on("error", (err) => {
+            reject(err)
+          })
+      } catch (err) {
+        reject(err)
+      }
+    })
+  }
+
+  /**
    * creates a stream to enable downloading
    * @param meme object representing the image / meme
    * @param toFS decides if the meme should be written to the filesystem
@@ -159,9 +189,13 @@ export class MemeController {
       // create canvas
       const canvas = await this.createMemeCanvas(meme)
 
-      // write meme to filesystem
+      // write permanent meme to filesystem
       if (toFS) {
-        const filepath = await this.writeMemeToFile(canvas.toBuffer(), filename)
+        const filepath = await this.writeMemeToFile(
+          canvas.toBuffer(),
+          filename,
+          false
+        )
         // write to db
         if (toDB) {
           const fullMeme = {
@@ -175,6 +209,13 @@ export class MemeController {
           const result = await new Meme(fullMeme).save()
         }
       }
+
+      // write temporary to file
+      /*const filepath = await this.writeMemeToFile(
+        canvas.toBuffer(),
+        filename,
+        true
+      )*/
 
       const stream = this.bufferToStream(canvas.toBuffer())
 
@@ -238,10 +279,18 @@ export class MemeController {
    * @param canvas the image data
    * @param meme metadata of the file
    */
-  writeMemeToFile(buffer: Buffer, filename: string): Promise<string> {
+  writeMemeToFile(
+    buffer: Buffer,
+    filename: string,
+    temp: boolean
+  ): Promise<string> {
     // write to file system
     return new Promise((resolve, reject) => {
-      const filepath = "./" + config.storage.memes.path + filename
+      const filepath =
+        "./" +
+        (temp ? config.storage.temp.path : config.storage.memes.path) +
+        filename
+
       fs.writeFile(filepath, buffer, (err) => {
         if (err) {
           reject(err)

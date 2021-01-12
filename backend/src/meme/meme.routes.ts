@@ -1,6 +1,7 @@
 import * as express from "express"
 import { Router, Request, NextFunction, Response } from "express"
 import { MemeController } from "./meme.controller"
+const resolve = require("path").resolve
 
 const router = express.Router()
 const memeController = new MemeController()
@@ -10,6 +11,45 @@ const memeController = new MemeController()
 router.get("", async (req: Request, res: Response, next: NextFunction) => {
   const memes = await memeController.memes()
   res.json(memes)
+})
+
+/**
+ * route to a add a new meme and return the file
+ */
+router.get("/file", async (req: Request, res: Response, next: NextFunction) => {
+  console.log("was geht", req.query)
+  res.send("hi")
+  return
+  try {
+    console.log("hello world my friend", req.body)
+    // if only one meme is part of the body
+    if (
+      (req.body.memes && (req.body.memes as any[]).length == 1) ||
+      req.body.memes.length == undefined
+    ) {
+      const { filepath, filename } = await memeController.singleFile(
+        [].concat(req.body.memes)[0]
+      )
+      res.attachment(`${filename}`)
+      res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
+      res.setHeader("Content-type", "image/png")
+
+      res.download(filepath)
+      //stream.pipe(res)
+    }
+    // if multiple memes are part of the body
+    else {
+      const { zip, filename } = await memeController.zipFile(req.body.memes)
+      res.attachment(`${filename}`)
+      res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
+      res.setHeader("Content-type", "application/zip")
+
+      zip.pipe(res)
+    }
+  } catch (err) {
+    res.status(500)
+    res.json(err)
+  }
 })
 
 /**
@@ -50,40 +90,5 @@ router.post("", async (req: Request, res: Response, next: NextFunction) => {
     res.json(err)
   }
 })
-
-/**
- * route to a add a new meme and return the file
- */
-router.post(
-  "/file",
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      // if only one meme is part of the body
-      if (
-        (req.body.memes && (req.body.memes as any[]).length == 1) ||
-        req.body.memes.length == undefined
-      ) {
-        const { stream, filename } = await memeController.memeFile(
-          [].concat(req.body.memes)[0]
-        )
-        res.attachment(`${filename}`)
-        res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
-        res.setHeader("Content-type", "image/png")
-        stream.pipe(res)
-      }
-      // if multiple memes are part of the body
-      else {
-        const { zip, filename } = await memeController.zipFile(req.body.memes)
-        res.attachment(`${filename}`)
-        res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
-        res.setHeader("Content-type", "application/zip")
-        zip.pipe(res)
-      }
-    } catch (err) {
-      res.status(500)
-      res.json(err)
-    }
-  }
-)
 
 export default router
