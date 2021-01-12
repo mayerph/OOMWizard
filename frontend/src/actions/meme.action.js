@@ -1,4 +1,5 @@
 import * as config from '../config.json'
+import * as download from 'downloadjs'
 
 const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 /**
@@ -65,12 +66,10 @@ const generateMeme = (meme) => {
         memes: [meme],
       }),
     })
-      .then((res) => {
-        res.arrayBuffer()
-      })
-      .then((meme) => {
-        console.log('buffer', meme)
-        resolve(meme)
+      .then(async (res) => {
+        const meme = await res.blob()
+        download(meme, 'test.png', 'image/png')
+        resolve('meme')
         return
       })
       .catch((err) => {
