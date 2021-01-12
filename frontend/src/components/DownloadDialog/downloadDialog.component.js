@@ -120,6 +120,7 @@ const DownloadDialog = (props) => {
    * opens snackbar which indicates that the url has been copied
    */
   const openSnackbar = () => {
+    console.log('memeurl', memeUrl())
     if (urlRef.current) {
       console.log('url ref is', urlRef.current)
       urlRef.current.select()
@@ -184,6 +185,10 @@ const DownloadDialog = (props) => {
 
   console.log('meme', meme.id)
 
+  const memeUrl = () => {
+    return new URLSearchParams(meme).toString()
+  }
+
   const { open, onClose } = props
 
   return (
@@ -224,18 +229,22 @@ const DownloadDialog = (props) => {
         <DialogDivider className="dialog-content" dividers>
           <div className="download-list-wrapper" ref={downloadLinksRef}>
             <List className="download-list">
-              <ListItem
-                autoFocus
-                button
-                onClick={() => serverSideGeneration(meme)}
+              <a
+                href={`${config.backend.protocol}://${config.backend.server}:${
+                  config.backend.port
+                }/memes/file/?${memeUrl()}`}
+                target="_blank"
+                rel="noreferrer"
               >
-                <ListItemAvatar>
-                  <Avatar>
-                    <CloudQueue />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary="server-side generation" />
-              </ListItem>
+                <ListItem autoFocus button>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <CloudQueue />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary="server-side generation" />
+                </ListItem>
+              </a>
               <ListItem autoFocus button onClick={() => openSnackbar()}>
                 <ListItemAvatar>
                   <Avatar>
