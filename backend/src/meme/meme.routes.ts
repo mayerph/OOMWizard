@@ -69,6 +69,7 @@ router.post(
         res.attachment(`${filename}`)
         res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
         res.setHeader("Content-type", "image/png")
+        res.setHeader("Filename", filename)
         stream.pipe(res)
       }
       // if multiple memes are part of the body
@@ -77,6 +78,7 @@ router.post(
         res.attachment(`${filename}`)
         res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
         res.setHeader("Content-type", "application/zip")
+
         zip.pipe(res)
       }
     } catch (err) {

@@ -58,17 +58,19 @@ const getMemes = () => (dispatch) => {
  */
 const generateMeme = (meme) => {
   console.log('the meme is', meme)
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     fetch(`${destination}/memes/file`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Filename: '' },
       body: JSON.stringify({
         memes: [meme],
       }),
     })
       .then(async (res) => {
+        const filename = res.headers.get('filename')
+        const mimeType = res.headers.get('content-type')
         const meme = await res.blob()
-        download(meme, 'test.png', 'image/png')
+        download(meme, filename, mimeType)
         resolve('meme')
         return
       })

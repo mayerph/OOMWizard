@@ -15,7 +15,7 @@ import * as fileUpload from "express-fileupload"
 var cookieParser = require("cookie-parser")
 
 const app = express()
-app.use(cors())
+app.use(cors({ exposedHeaders: ["Filename"] }))
 app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(express.static("storage"))
