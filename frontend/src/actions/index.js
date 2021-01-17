@@ -52,6 +52,13 @@ export const getApiImgFlip = (mode) => {
       })
   }
 }
+export const uploadUrl = (url) => {
+  fetch(url)
+    .then((res) => res.blob())
+    .then((blob) => {
+      console.log(blob)
+    })
+}
 
 export const randomize = () => {
   return (dispatch) => {

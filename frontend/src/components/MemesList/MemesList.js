@@ -13,8 +13,9 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import GetAppIcon from '@material-ui/icons/GetApp'
 import ShareIcon from '@material-ui/icons/Share'
+import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 
-import { getApi, getApiImgFlip } from '../../actions'
+import { getApi, getApiImgFlip, uploadUrl } from '../../actions'
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -24,6 +25,7 @@ import {
 import { EmailIcon, FacebookIcon, WhatsappIcon } from 'react-share'
 import { ShareDialog } from '../ShareDialog'
 import { DownloadDialog } from '../DownloadDialog'
+import axios from 'axios'
 
 //Trying out the Grid List from Material UI (https://github.com/mui-org/material-ui/blob/master/docs/src/pages/components/grid-list/ImageGridList.js)
 //DONE change state system to Redux
@@ -39,6 +41,9 @@ class MemesList extends React.Component {
   }
   onApiIMGFlipLoad() {
     this.props.getApiImgFlip('api')
+  }
+  uploadUrl() {
+    this.props.uploadUrl('')
   }
 
   render() {
@@ -62,8 +67,31 @@ class MemesList extends React.Component {
                 subtitle={'likes: ' + tile.name.length}
                 actionIcon={
                   <div className="actionButtons">
-                    <IconButton aria-label="upvote">
-                      <ArrowUpwardIcon
+                    <IconButton
+                      aria-label="upvote"
+                      onClick={() => {
+                        fetch(tile.url)
+                          .then((res) => res.blob())
+                          .then((blob) => {
+                            console.log(blob)
+                            var newfile = new File([blob], tile.name + '.jpg', {
+                              type: blob.type,
+                            })
+                            console.log(newfile)
+                            var fd = new FormData()
+                            fd.append('template', newfile)
+                            axios
+                              .post('http://localhost:2000/templates/', fd, {})
+                              .then((res) => {
+                                console.log(res.statusText)
+                              })
+                              .then((result) => {
+                                //this.onApiLoad()
+                              })
+                          })
+                      }}
+                    >
+                      <CloudUploadIcon
                         style={{
                           color: '#fafafa',
                           fontSize: 15,
