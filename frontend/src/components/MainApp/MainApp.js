@@ -8,6 +8,7 @@ import PropTypes from 'prop-types'
 import { MemesList } from '../MemesList'
 import { MemeSlideShow } from '../MemeSlideShow'
 import { ImageUpload } from '../ImageUpload'
+import { MemePhotoCapture } from '../MemePhotoCapture'
 
 import ReduxThunk from 'redux-thunk'
 import { applyMiddleware } from 'redux'
@@ -50,6 +51,7 @@ class MainApp extends React.Component {
               </Grid>
               <Grid item xs={4}>
                 <ImageUpload />
+                <MemePhotoCapture />
               </Grid>
             </Grid>
             <Grid item xs />

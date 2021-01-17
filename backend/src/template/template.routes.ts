@@ -59,8 +59,8 @@ router.delete(
  * route for uploading meme templates
  */
 router.post("", async (req: Request, res: Response, next: NextFunction) => {
-  //console.log(req.files)
-  //console.log(req.files?.template)
+  console.log(req.files)
+  console.log(req.files?.template)
   if (!req.files) {
     res.status(500)
   }
