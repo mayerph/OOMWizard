@@ -108,7 +108,7 @@ export class MemeController {
 
       const fullMeme = {
         name: filename,
-        route: config.storage.memes.route + "/" + filename,
+        route: config.storage.images.memes.route + "/" + filename,
         template: meme.template,
         captions: meme.captions
       }
@@ -166,7 +166,7 @@ export class MemeController {
         if (toDB) {
           const fullMeme = {
             name: filename,
-            route: config.storage.memes.route + "/" + filename,
+            route: config.storage.images.memes.route + "/" + filename,
             template: meme.template,
             captions: meme.captions
           }
@@ -241,7 +241,7 @@ export class MemeController {
   writeMemeToFile(buffer: Buffer, filename: string): Promise<string> {
     // write to file system
     return new Promise((resolve, reject) => {
-      const filepath = "./" + config.storage.memes.path + filename
+      const filepath = "./" + config.storage.images.memes.path + filename
       fs.writeFile(filepath, buffer, (err) => {
         if (err) {
           reject(err)
@@ -262,7 +262,7 @@ export class MemeController {
       let img: Image = new Image()
       try {
         img = await loadImage(
-          "./" + config.storage.templates.path + meme.template.name
+          "./" + config.storage.images.templates.path + meme.template.name
         )
       } catch (err) {
         reject(err)

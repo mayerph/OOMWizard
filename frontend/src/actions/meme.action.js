@@ -57,7 +57,6 @@ const getMemes = () => (dispatch) => {
  * @param {*} meme object representing a meme image
  */
 const generateMeme = (meme) => {
-  console.log('the meme is', meme)
   return new Promise(async (resolve, reject) => {
     fetch(`${destination}/memes/file`, {
       method: 'POST',

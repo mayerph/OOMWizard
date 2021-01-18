@@ -6,19 +6,19 @@
         "port" : 2000
     },
     "storage" : {
-        "memes" : {
-            "route" : "/images/memes",
-            "path" : "/storage/images/memes/"
-        },
-        "templates" : {
-            "route" : "/images/templates",
-            "path" : "/storage/images/templates/"
-        },
-        "user":{ 
-            "route" : "/user",
-            "path" : "storage/images/user/"
+        "images": {
+            "memes" : {
+                "route" : "/images/memes",
+                "path" : "/storage/images/memes/"
+            },
+            "templates" : {
+                "route" : "/images/templates",
+                "path" : "/storage/images/templates/"
+            },
+            "user":{ 
+                "route" : "/user",
+                "path" : "storage/images/user/"
+            }
         }
-
-
     }
 }

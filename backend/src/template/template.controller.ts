@@ -17,22 +17,24 @@ export class TemplateController {
       {
         _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfac"),
         name: "Drake-Hotline-Bling.jpg",
-        route: config.storage.templates.route + "/Drake-Hotline-Bling.jpg"
+        route:
+          config.storage.images.templates.route + "/Drake-Hotline-Bling.jpg"
       },
       {
         _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfad"),
         name: "Is-This-A-Pigeon.jpg",
-        route: config.storage.templates.route + "/Is-This-A-Pigeon.jpg"
+        route: config.storage.images.templates.route + "/Is-This-A-Pigeon.jpg"
       },
       {
         _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfae"),
         name: "Monkey-Puppet.jpg",
-        route: config.storage.templates.route + "/Monkey-Puppet.jpg"
+        route: config.storage.images.templates.route + "/Monkey-Puppet.jpg"
       },
       {
         _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfaf"),
         name: "Running-Away-Balloon.jpg",
-        route: config.storage.templates.route + "/Running-Away-Balloon.jpg"
+        route:
+          config.storage.images.templates.route + "/Running-Away-Balloon.jpg"
       }
     ]
     memes_tmp.forEach((e) => new Template(e).save())
@@ -151,7 +153,7 @@ export class TemplateController {
         reject(new Error("no image data"))
       }
       fs.writeFile(
-        "./" + config.storage.templates.path + image.name,
+        "./" + config.storage.images.templates.path + image.name,
         image.data,
         async (err) => {
           if (err) {
@@ -159,7 +161,7 @@ export class TemplateController {
           }
           const memeDoc: ITemplate = {
             name: image.name,
-            route: config.storage.templates.route + "/" + image.name
+            route: config.storage.images.templates.route + "/" + image.name
           }
           try {
             const meme = await new Template(memeDoc).save()
