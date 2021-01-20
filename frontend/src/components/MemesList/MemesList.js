@@ -70,25 +70,39 @@ class MemesList extends React.Component {
                     <IconButton
                       aria-label="upvote"
                       onClick={() => {
-                        fetch(tile.url)
-                          .then((res) => res.blob())
-                          .then((blob) => {
-                            console.log(blob)
-                            var newfile = new File([blob], tile.name + '.jpg', {
-                              type: blob.type,
+                        if (tile.url.split('.')[1] == 'imgflip') {
+                          fetch(tile.url)
+                            .then((res) => res.blob())
+                            .then((blob) => {
+                              console.log(blob)
+                              var newfile = new File(
+                                [blob],
+                                tile.name + '.jpg',
+                                {
+                                  type: blob.type,
+                                },
+                              )
+                              console.log(newfile)
+                              var fd = new FormData()
+                              fd.append('template', newfile)
+                              axios
+                                .post(
+                                  'http://localhost:2000/templates/',
+                                  fd,
+                                  {},
+                                )
+                                .then((res) => {
+                                  console.log(res.statusText)
+                                })
+                                .then((result) => {
+                                  //this.onApiLoad()
+                                })
                             })
-                            console.log(newfile)
-                            var fd = new FormData()
-                            fd.append('template', newfile)
-                            axios
-                              .post('http://localhost:2000/templates/', fd, {})
-                              .then((res) => {
-                                console.log(res.statusText)
-                              })
-                              .then((result) => {
-                                //this.onApiLoad()
-                              })
-                          })
+                        } else {
+                          alert(
+                            'feature can only be used on the imgflip images',
+                          )
+                        }
                       }}
                     >
                       <CloudUploadIcon

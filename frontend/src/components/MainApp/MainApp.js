@@ -9,6 +9,7 @@ import { MemesList } from '../MemesList'
 import { MemeSlideShow } from '../MemeSlideShow'
 import { ImageUpload } from '../ImageUpload'
 import { ImageUrlUpload } from '../ImageUrlUpload'
+import { ImagePainter } from '../ImagePainter'
 import { MemePhotoCapture } from '../MemePhotoCapture'
 
 import ReduxThunk from 'redux-thunk'
@@ -54,6 +55,7 @@ class MainApp extends React.Component {
                 <ImageUpload />
                 <ImageUrlUpload />
                 <MemePhotoCapture />
+                <ImagePainter />
               </Grid>
             </Grid>
             <Grid item xs />

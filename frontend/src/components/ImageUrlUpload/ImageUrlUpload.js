@@ -60,7 +60,7 @@ class ImageUrlUpload extends React.Component {
 
   render() {
     return (
-      <div className="templateUpload" id="templateUpload">
+      <div className="urlUpload" id="urlUpload">
         <input type="text" id="urlinput" />
         <input type="text" id="nameinput" />
         <button
