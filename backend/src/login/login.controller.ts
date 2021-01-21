@@ -48,6 +48,15 @@ export class LoginController {
       }
     }
   }
+  
+  async logOut(req: Request, res: Response, next: NextFunction) {
+    const token = jwt.sign({username: ''}, jwtKey, {
+      algorithm: "HS256",
+      expiresIn: 0
+    })
+    res.cookie("token", token, { maxAge: 0})
+    return res.status(200).end()
+  }
 
   async signUp(req: Request, res: Response, next: NextFunction) {
     //FIXME care SQLInjection, should be caught by library
@@ -78,9 +87,11 @@ export class LoginController {
         .digest("hex")
     })
     login.save()
-    console.log("created login for:", username)
+    console.log("Created User:", username)
+
     userController.addUser({ name: username })
     createAndSetJwtToken(res, username)
+    console.log("Logged in user:", username)
 
     return res.status(200).end()
   }
@@ -109,6 +120,7 @@ export class LoginController {
       return res.status(401).send("invalid user password combination")
     }
     createAndSetJwtToken(res, username)
+    console.log("Logged in user:", username)
     return res.status(200).end()
   }
 }

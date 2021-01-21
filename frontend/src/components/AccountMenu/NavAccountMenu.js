@@ -10,7 +10,7 @@ import {
   account_menu_open,
   account_menu_close,
 } from '../../actions/nav.actions'
-import { open_prompt } from '../../actions/auth.actions'
+import { open_prompt, logout } from '../../actions/auth.actions'
 
 class NavAccountMenu extends React.Component {
   renderItemsLoggedOut() {
@@ -28,10 +28,15 @@ class NavAccountMenu extends React.Component {
         <MenuItem onClick={this.closeMenu.bind(this)}>
           Hello {this.props.username}!
         </MenuItem>
-        <MenuItem>Logout</MenuItem>
+        <MenuItem onClick={this.logout.bind(this)}>Logout</MenuItem>
       </>
     )
   }
+  logout() {
+    this.props.logout()
+    this.closeMenu()
+  }
+
   show_login_prompt() {
     this.closeMenu()
     this.props.open_prompt()
@@ -89,4 +94,5 @@ export default connect(mapStateToProps, {
   account_menu_close,
   account_menu_open,
   open_prompt,
+  logout,
 })(NavAccountMenu)

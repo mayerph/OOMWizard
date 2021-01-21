@@ -32,6 +32,8 @@ const auth = (state = INITIAL_STATE, action) => {
         prompt: false,
       }
       return new_state
+    case 'LOGGED_OUT':
+      return { ...state, username: false }
     default:
       return { ...state }
   }

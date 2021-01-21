@@ -11,6 +11,13 @@ router.use(cors())
 router.get("/testverify", loginController.verifyLogin())
 
 router.post(
+  "/logout",
+  async (req: Request, res: Response, next: NextFunction) => {
+    return await loginController.logOut(req, res, next)
+  }
+)
+
+router.post(
   "/signIn",
   async (req: Request, res: Response, next: NextFunction) => {
     return await loginController.signIn(req, res, next)

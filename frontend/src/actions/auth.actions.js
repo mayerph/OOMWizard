@@ -42,6 +42,13 @@ export const close_prompt = () => (dispatch) => {
   dispatch({ type: 'CLOSE_PROMPT' })
 }
 
+export const logout = () => (dispatch) => {
+  fetch(`${backend_uri}/auth/logout`, { method: 'POST' }).then(
+    async (res) => dispatch({ type: 'LOGGED_OUT' }),
+    async (error) => dispatch({ type: 'LOGGED_OUT' }),
+  )
+}
+
 export const signIn = (form) => (dispatch) => {
   var formData = new FormData(form)
   var username = formData.get('username')
