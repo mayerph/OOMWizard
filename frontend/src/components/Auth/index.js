@@ -1,3 +1,3 @@
-import AuthForm from './AuthForm'
+import AuthDialog from './AuthFormDialog'
 
-export { AuthForm }
+export { AuthDialog }

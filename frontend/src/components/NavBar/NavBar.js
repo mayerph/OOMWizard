@@ -10,6 +10,8 @@ import Button from '@material-ui/core/Button'
 import AddIcon from '@material-ui/icons/Add'
 import { connect } from 'react-redux'
 
+import NavAccountMenu from '../AccountMenu'
+
 class NavBar extends React.Component {
   canvasElementCounter = 0
   handleAddElement(type) {
@@ -54,14 +56,7 @@ class NavBar extends React.Component {
               MemeWizard
             </Typography>
             <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
+              <NavAccountMenu />
             </div>
           </Toolbar>
         </AppBar>

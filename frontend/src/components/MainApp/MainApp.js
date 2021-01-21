@@ -18,7 +18,7 @@ import { Provider } from 'react-redux'
 import { createStore } from 'redux'
 import reducers from '../../reducers'
 import TextControl from '../TextControl/TextControl'
-import { AuthForm } from '../Auth'
+import { AuthDialog } from '../Auth'
 
 class MainApp extends React.Component {
   render() {
@@ -61,6 +61,7 @@ class MainApp extends React.Component {
             </Grid>
             <Grid item xs />
           </Grid>
+          <AuthDialog />
         </div>
       </Provider>
     )

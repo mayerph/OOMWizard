@@ -34,6 +34,14 @@ function authenticate(dispatch, form, new_user) {
   )
 }
 
+export const open_prompt = () => (dispatch) => {
+  dispatch({ type: 'OPEN_PROMPT' })
+}
+
+export const close_prompt = () => (dispatch) => {
+  dispatch({ type: 'CLOSE_PROMPT' })
+}
+
 export const signIn = (form) => (dispatch) => {
   var formData = new FormData(form)
   var username = formData.get('username')
@@ -65,6 +73,10 @@ export const signUp = (form) => (dispatch) => {
         dispatch({ type: 'AUTH_FAILURE', payload: { auth_err_msg: msg } })
       }
     },
-    (err_reason) => console.log(err_reason),
+    (err_reason) =>
+      dispatch({
+        type: 'AUTH_FAILURE',
+        payload: { auth_err_msg: error_reason },
+      }),
   )
 }
