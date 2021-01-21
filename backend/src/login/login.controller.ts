@@ -53,6 +53,17 @@ export class LoginController {
     //FIXME care SQLInjection, should be caught by library
     const { username, password } = req.body
 
+    if (username == null || username === ''){
+      return res.status(400).send("Username may not be empty!")
+    }
+    if (password == null || password === ''){
+      return res.status(400).send("Password may not be empty!")
+    }
+    if(password.length < 8){
+      return res.status(400).send("Password must contain at least 8 letters.")
+    }
+
+
     const salt = uuidv4()
     if (await Login.findOne({ username: username }).exec()) {
       return res.status(400).send("User already exists.")
@@ -76,6 +87,14 @@ export class LoginController {
 
   async signIn(req: Request, res: Response, next: NextFunction) {
     const { username, password } = req.body
+
+    if (username == null || username === ''){
+      return res.status(400).send("Username may not be empty!")
+    }
+    if (password == null || password === ''){
+      return res.status(400).send("Password may not be empty!")
+    }
+
     const user = await Login.findOne({ username: username })
     if (
       !user ||
