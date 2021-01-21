@@ -27,10 +27,6 @@ import { ShareDialog } from '../ShareDialog'
 import { DownloadDialog } from '../DownloadDialog'
 import axios from 'axios'
 
-//Trying out the Grid List from Material UI (https://github.com/mui-org/material-ui/blob/master/docs/src/pages/components/grid-list/ImageGridList.js)
-//DONE change state system to Redux
-//TODO: remove the buttons, load data from other components/backend?, add passive information, add interaction for each image
-
 class MemesList extends React.Component {
   constructor(props) {
     super(props)
