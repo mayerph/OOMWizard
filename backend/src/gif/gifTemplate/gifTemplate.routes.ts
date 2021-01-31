@@ -1,34 +1,33 @@
 import * as express from "express"
 import { Router, Request, NextFunction, Response } from "express"
-import { IGifMeme } from "../gif/gifMeme/gifMeme.interface"
-import { TemplateController } from "./template.controller"
+import { GifTemplateController } from "./gifTemplate.controller"
 
 const router = express.Router()
-const templateController = new TemplateController()
+const gifTemplateController = new GifTemplateController()
 /**
- * route to all available meme templates
+ * route to all available gif templates
  */
 router.get("", async (req: Request, res: Response, next: NextFunction) => {
-  const templates = await templateController.templates()
+  const templates = await gifTemplateController.gifTemplates()
   res.json(templates)
 })
 
 /**
- * route to a certain meme template
+ * route to a certain gif template
  */
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
-  const template = await templateController.template(id)
+  const template = await gifTemplateController.gifTemplate(id)
   res.json(template)
 })
 
 /**
- * route for updating a meme template
+ * route for updating a gif template
  */
 router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
   try {
-    const template = await templateController.updateMemeTemplate(
+    const template = await gifTemplateController.updateGifTemplate(
       id,
       req.body.template
     )
@@ -40,14 +39,14 @@ router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
 })
 
 /**
- * route for deleting a meme template
+ * route for deleting a gif template
  */
 router.delete(
   "/:id",
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
     try {
-      const result = await templateController.deleteMemeTemplate(id)
+      const result = await gifTemplateController.deleteGifTemplate(id)
       res.json(result)
     } catch (err) {
       res.status(500)
@@ -57,7 +56,7 @@ router.delete(
 )
 
 /**
- * route for uploading meme templates
+ * route for uploading gif templates
  */
 router.post("", async (req: Request, res: Response, next: NextFunction) => {
   console.log(req.files)
@@ -66,7 +65,7 @@ router.post("", async (req: Request, res: Response, next: NextFunction) => {
     res.status(500)
   }
   try {
-    const result = await templateController.writeMemeTemplate(
+    const result = await gifTemplateController.writeGifTemplate(
       req.files?.template
     )
     res.json(result)

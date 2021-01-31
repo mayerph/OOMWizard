@@ -50,7 +50,7 @@ export class TemplateController {
   /**
    * returns certain meme template
    */
-  async meme(id: string): Promise<ITemplate | null> {
+  async template(id: string): Promise<ITemplate | null> {
     const template = await Template.findById(id)
 
     return template

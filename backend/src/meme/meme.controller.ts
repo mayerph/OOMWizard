@@ -1,7 +1,7 @@
 import * as fs from "fs"
 import * as config from "../config.json"
 import { Canvas, createCanvas, Image, loadImage } from "canvas"
-import { IMeme } from "./meme.interface"
+import { ICaption, IMeme } from "./meme.interface"
 import { Meme } from "./meme.model"
 import { Duplex } from "stream"
 import * as uuid from "uuid"
@@ -10,13 +10,15 @@ import { PassThrough } from "stream"
 import * as mongoose from "mongoose"
 
 export class MemeController {
-  constructor() {
-    this.insertTestData()
+  constructor(insert: boolean) {
+    if (insert) {
+      this.insertTestData()
+    }
   }
   /**
    * initiate test environment with some sample data
    */
-  insertTestData() {
+  async insertTestData() {
     Meme.deleteMany({}).exec()
     const template_tmp = [
       {
@@ -101,7 +103,10 @@ export class MemeController {
       const filename = this.createFilename()
 
       // create canvas
-      const canvas = await this.createMemeCanvas(meme)
+      const canvas = await this.createMemeCanvas(
+        meme.captions,
+        meme.template.name
+      )
 
       // write meme to filesystem
       const filepath = await this.writeMemeToFile(canvas.toBuffer(), filename)
@@ -157,7 +162,10 @@ export class MemeController {
       const filename = this.createFilename()
 
       // create canvas
-      const canvas = await this.createMemeCanvas(meme)
+      const canvas = await this.createMemeCanvas(
+        meme.captions,
+        meme.template.name
+      )
 
       // write meme to filesystem
       if (toFS) {
@@ -256,13 +264,17 @@ export class MemeController {
    * creates the meme according to the meme object
    * @param meme data to generate a meme
    */
-  createMemeCanvas(meme: IMeme): Promise<Canvas> {
+  createMemeCanvas(
+    captions: ICaption[],
+    name: string,
+    fullpath?: boolean
+  ): Promise<Canvas> {
     return new Promise(async (resolve, reject) => {
       // load template
       let img: Image = new Image()
       try {
         img = await loadImage(
-          "./" + config.storage.images.templates.path + meme.template.name
+          (!fullpath ? "./" + config.storage.images.templates.path : "") + name
         )
       } catch (err) {
         reject(err)
@@ -275,7 +287,7 @@ export class MemeController {
       ctx.drawImage(img, 0, 0)
 
       // for each caption write to file
-      meme.captions.forEach((caption) => {
+      captions.forEach((caption) => {
         ctx.font = `${caption.size}pt Impact`
         ctx.fillStyle = caption.color
 

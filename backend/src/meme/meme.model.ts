@@ -41,7 +41,7 @@ const positionSchema = new Schema(
 /**
  * Mongoose Schema for a capture (capture 1 and capture 2)
  */
-const captionSchema = new Schema(
+export const captionSchema = new Schema(
   {
     text: { type: String, required: true },
     position: positionSchema

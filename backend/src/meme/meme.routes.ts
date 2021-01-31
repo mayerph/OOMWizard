@@ -3,7 +3,7 @@ import { Router, Request, NextFunction, Response } from "express"
 import { MemeController } from "./meme.controller"
 
 const router = express.Router()
-const memeController = new MemeController()
+const memeController = new MemeController(true)
 /**
  * route to all available meme
  */

@@ -3,7 +3,7 @@ import { ITemplate } from "../template/template.interface"
 /**
  * Interface for the position
  */
-interface IPosition {
+export interface IPosition {
   id?: any
   x: number
   y: number

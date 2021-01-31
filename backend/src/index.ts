@@ -8,12 +8,12 @@ import { default as userRoutes } from "./user/user.routes"
 import { default as loginRoutes } from "./login/login.routes"
 import { default as memesRoutes } from "./meme/meme.routes"
 import { default as templateRoutes } from "./template/template.routes"
+import { default as gifRoutes } from "./gif"
 import * as config from "./config.json"
 import * as mongoose from "mongoose"
 import * as fileUpload from "express-fileupload"
 
 var cookieParser = require("cookie-parser")
-
 const app = express()
 app.use(cors({ exposedHeaders: ["Filename"] }))
 app.use(bodyParser.json())
@@ -63,6 +63,11 @@ app.use("/templates", templateRoutes)
  * Route to all memes
  */
 app.use("/memes", memesRoutes)
+
+/**
+ * Route to the gif routes
+ */
+app.use("/gif", gifRoutes)
 
 /**
  * Start server on port 3000

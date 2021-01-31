@@ -19,6 +19,16 @@
                 "route" : "/user",
                 "path" : "storage/images/user/"
             }
+        },
+        "gifs" : {
+            "templates" : {
+                "route" : "/gifs/templates",
+                "path" : "/storage/gifs/templates/"
+            },
+            "memes" : {
+                "route" : "/gifs/memes",
+                "path" : "/storage/gifs/memes"
+            }
         }
     }
 }
