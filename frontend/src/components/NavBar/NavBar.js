@@ -11,6 +11,7 @@ import AddIcon from '@material-ui/icons/Add'
 import { connect } from 'react-redux'
 
 import NavAccountMenu from '../AccountMenu'
+import { AuthDialog } from '../Auth'
 
 class NavBar extends React.Component {
   canvasElementCounter = 0
@@ -60,6 +61,7 @@ class NavBar extends React.Component {
             </div>
           </Toolbar>
         </AppBar>
+        <AuthDialog />
       </div>
     )
   }
