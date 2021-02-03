@@ -9,11 +9,12 @@ const tileDataBackup = [
 const apiGetter = (state = [], action) => {
   switch (action.type) {
     case 'GET_API':
+      console.log(action.apitype)
       console.log(action.mode)
       if (action.mode === 'api') {
-        console.log('in api')
-        console.log(action.payload)
-        return { ...state, tileData: action.payload }
+        //console.log('in api')
+        //console.log(action.payload)
+        return { ...state, tileData: action.payload, apitype: action.apitype }
       } else if (action.mode === 'random') {
         //console.log('in random')
         //var rt = state.tileData;
@@ -23,7 +24,7 @@ const apiGetter = (state = [], action) => {
           ;[rt[i], rt[j]] = [rt[j], rt[i]]
         }
         //console.log(rt);
-        return { ...state, tileData: rt }
+        return { ...state, tileData: rt, apitype: action.apitype }
       } else if (action.mode === 'sort') {
         //console.log('in sort')
         //console.log(action.payload)
@@ -32,12 +33,12 @@ const apiGetter = (state = [], action) => {
           //console.log(b)
           return b.name.length - a.name.length
         })
-        return { ...state, tileData: st }
+        return { ...state, tileData: st, apitype: action.apitype }
       } else {
-        console.log('in else')
-        return { ...state, tileData: action.payload }
+        //console.log('in else')
+        return { ...state, tileData: action.payload, apitype: action.apitype }
       }
-      return { ...state, tileData: action.payload }
+      return { ...state, tileData: action.payload, apitype: action.apitype }
 
     case 'RANDOMIZE':
       //var rt = state.tileData;
@@ -47,19 +48,19 @@ const apiGetter = (state = [], action) => {
         ;[rt[i], rt[j]] = [rt[j], rt[i]]
       }
       //console.log(rt);
-      return { ...state, tileData: rt }
+      return { ...state, tileData: rt, apitype: action.apitype }
 
     case 'SORTBYLIKES':
       var st = action.payload.sort(function (a, b) {
         return b.name.length - a.name.length
       })
-      return { ...state, tileData: st }
+      return { ...state, tileData: st, apitype: action.apitype }
 
     case 'AUTOPLAY':
       if (state.auto == '4000') {
-        return { ...state, auto: '1000000000' }
+        return { ...state, auto: '1000000000', apitype: action.apitype }
       } else {
-        return { ...state, auto: '4000' }
+        return { ...state, auto: '4000', apitype: action.apitype }
       }
 
     default:
@@ -68,7 +69,12 @@ const apiGetter = (state = [], action) => {
       if (state.length !== 0) {
         return { ...state }
       }
-      return { ...state, tileData: tileDataBackup, auto: '1000000000' }
+      return {
+        ...state,
+        tileData: tileDataBackup,
+        auto: '1000000000',
+        apitype: 'default',
+      }
   }
 }
 

@@ -23,7 +23,7 @@
     "crypto": "^1.0.1",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.0",
-    "gifEndecoder": "https://github.com/mayerph/gifEndecoder.git",
+    "gifEndecoder": "https://github.com/mayerph/gifEndecoder",
     "gifencoder": "^2.0.1",
     "gifshot": "^0.4.5",
     "jest-html-reporters": "^2.1.1",

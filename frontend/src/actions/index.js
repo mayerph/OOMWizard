@@ -20,26 +20,37 @@ export const unfocusText = () => ({
   type: 'UNFOCUS_EDITOR_STATE',
 })
 
-export const getApi = (mode) => {
+export const getApi = (mode, apitype) => {
+  let apiurl = null
+  if (apitype === 'template') {
+    apiurl = 'http://localhost:2000/templates/'
+  } else if (apitype === 'meme') {
+    apiurl = 'http://localhost:2000/memes/'
+  }
   return (dispatch) => {
-    fetch('http://localhost:2000/templates/', {
+    fetch(apiurl, {
       method: 'GET',
     })
       .then((res) => res.json())
       .then((results) => {
         var tileData = results
-        console.log(tileData)
+        //console.log(tileData)
         for (var i = 0; i < tileData.length; i++) {
-          console.log(tileData[i])
+          //console.log(tileData[i])
           tileData[i].route = 'http://localhost:2000' + tileData[i].route
           tileData[i].url = tileData[i].route
         }
-        console.log(tileData)
-        dispatch({ type: 'GET_API', payload: tileData, mode: mode })
+        //console.log(tileData)
+        dispatch({
+          type: 'GET_API',
+          payload: tileData,
+          mode: mode,
+          apitype: apitype,
+        })
       })
   }
 }
-export const getApiImgFlip = (mode) => {
+export const getApiImgFlip = (mode, apitype) => {
   return (dispatch) => {
     fetch('https://api.imgflip.com/get_memes', {
       method: 'GET',
@@ -47,8 +58,13 @@ export const getApiImgFlip = (mode) => {
       .then((res) => res.json())
       .then((results) => {
         var tileData = results.data.memes
-        console.log(tileData)
-        dispatch({ type: 'GET_API', payload: tileData, mode: mode })
+        //console.log(tileData)
+        dispatch({
+          type: 'GET_API',
+          payload: tileData,
+          mode: mode,
+          apitype: apitype,
+        })
       })
   }
 }
@@ -56,7 +72,7 @@ export const uploadUrl = (url) => {
   fetch(url)
     .then((res) => res.blob())
     .then((blob) => {
-      console.log(blob)
+      //console.log(blob)
     })
 }
 

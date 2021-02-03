@@ -3,6 +3,9 @@ import { Rnd } from 'react-rnd'
 import { connect } from 'react-redux'
 import axios from 'axios'
 import { getApi } from '../../actions'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import './ImageUrlUpload.css'
 
 class ImageUrlUpload extends React.Component {
   //check if url is legit, regex from https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
@@ -62,15 +65,38 @@ class ImageUrlUpload extends React.Component {
   render() {
     return (
       <div className="urlUpload" id="urlUpload">
-        <input type="text" id="urlinput" />
-        <input type="text" id="nameinput" />
-        <button
+        {/*         <input type="text" id="urlinput" placeholder="Image Url" />
+        <input type="text" id="nameinput" placeholder="Image Name" /> */}
+        <TextField
+          required
+          id="urlinput"
+          label="Image Url"
+          variant="outlined"
+        />
+        <TextField
+          required
+          id="nameinput"
+          label="Image Name"
+          variant="outlined"
+        />
+        {/*         <button
           id="uploadButtonFile"
           type="submit"
           onClick={this.uploadTemplate.bind(this)}
         >
           Upload File
-        </button>
+        </button> */}
+
+        <Button
+          variant="contained"
+          color="primary"
+          component="span"
+          id="uploadButtonFile"
+          type="submit"
+          onClick={this.uploadTemplate.bind(this)}
+        >
+          Upload File
+        </Button>
       </div>
     )
   }

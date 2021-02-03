@@ -3,6 +3,9 @@ import { Rnd } from 'react-rnd'
 import { connect } from 'react-redux'
 import axios from 'axios'
 import { getApi } from '../../actions'
+import Button from '@material-ui/core/Button'
+import './ImageUpload.css'
+import Input from '@material-ui/core/Input'
 
 class ImageUpload extends React.Component {
   uploadTemplate() {
@@ -27,14 +30,29 @@ class ImageUpload extends React.Component {
   render() {
     return (
       <div className="templateUpload" id="templateUpload">
-        <input type="file" accept="image/png, image/jpeg, image/jpg" />
-        <button
+        <Input
+          type="file"
+          accept="image/png, image/jpeg, image/jpg"
+          id="fileupload"
+        />
+
+        {/*         <button
           id="uploadButtonFile"
           type="submit"
           onClick={this.uploadTemplate.bind(this)}
         >
           Upload File
-        </button>
+        </button> */}
+        <Button
+          variant="contained"
+          color="primary"
+          component="span"
+          id="uploadButtonFile"
+          type="submit"
+          onClick={this.uploadTemplate.bind(this)}
+        >
+          Upload File
+        </Button>
       </div>
     )
   }

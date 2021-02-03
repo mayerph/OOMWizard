@@ -45,6 +45,7 @@ class MainApp extends React.Component {
               <Tab label="Draw Image" />
               <Tab label="Gif Templates" />
               <Tab label="Video Templates" />
+              {/*               <Tab label="Created Memes" /> */}
             </Tabs>
           </Paper>
           <div hidden={this.state.newValue !== 0}>
@@ -53,7 +54,7 @@ class MainApp extends React.Component {
                 <MemeSlideShow />
               </Grid>
               <Grid item xs={8}>
-                <MemesList />
+                <MemesList type="template" />
               </Grid>
             </Grid>
           </div>
@@ -83,6 +84,24 @@ class MainApp extends React.Component {
             </Link>
           </div>
           <div hidden={this.state.newValue !== 6}>Video templates</div>
+          <div hidden={this.state.newValue !== 7}>
+            <Link
+              to={{
+                pathname: '/memeslist',
+                state: {
+                  tileData: {
+                    route: '/images/templates/Drake-Hotline-Bling.jpg',
+                    name: 'Image',
+                    author: ' author',
+                  },
+                  apitype: 'default',
+                  type: 'meme',
+                },
+              }}
+            >
+              To list of created Memes
+            </Link>
+          </div>
         </div>
       </div>
     )

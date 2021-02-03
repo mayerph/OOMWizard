@@ -26,33 +26,37 @@ import { EmailIcon, FacebookIcon, WhatsappIcon } from 'react-share'
 import { ShareDialog } from '../ShareDialog'
 import { DownloadDialog } from '../DownloadDialog'
 import axios from 'axios'
+import { useEffect } from 'react'
 
 class MemesList extends React.Component {
   constructor(props) {
     super(props)
     this.state = { memeToShare: undefined, memeToDownload: undefined }
+    props.getApi('api', props.type)
   }
+
   onApiLoad() {
-    this.props.getApi('api')
+    this.props.getApi('api', this.props.type)
   }
   onApiIMGFlipLoad() {
-    this.props.getApiImgFlip('api')
+    this.props.getApiImgFlip('api', this.props.type)
   }
   uploadUrl() {
     this.props.uploadUrl('')
   }
-
   render() {
-    let test = 1
-
     return (
       <div className="root">
-        <Button onClick={this.onApiLoad.bind(this)} variant="outlined">
-          TempButton: LoadAPI
-        </Button>
-        <Button onClick={this.onApiIMGFlipLoad.bind(this)} variant="outlined">
-          TempButton: LoadAPI IMGFlip
-        </Button>
+        {this.props.type === 'template' ? (
+          <Button onClick={this.onApiLoad.bind(this)} variant="outlined">
+            Load OOMWizard Templates
+          </Button>
+        ) : null}
+        {this.props.type === 'template' ? (
+          <Button onClick={this.onApiIMGFlipLoad.bind(this)} variant="outlined">
+            Load IMGFlip Templates
+          </Button>
+        ) : null}
 
         <GridList cellHeight={500} className="gridList" cols={4}>
           {this.props.tileData.map((tile, index) => (
@@ -188,10 +192,17 @@ class MemesList extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   console.log(state.api.tileData)
-  return {
-    tileData: state.api.tileData,
+  console.log(state.api.apitype)
+  console.log(ownProps.type)
+  console.log(ownProps)
+  if (state.api.apitype === ownProps.type || state.api.apitype === 'default') {
+    console.log('in here')
+    console.log(state.api.tileData)
+    return {
+      tileData: state.api.tileData,
+    }
   }
 }
 
