@@ -8,6 +8,7 @@ import { Provider } from 'react-redux'
 import { applyMiddleware, createStore } from 'redux'
 import reducers from './reducers'
 import ReduxThunk from 'redux-thunk'
+import MemeCanvas from './components/MemeCanvas/MemeCanvas'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Switch>
           <Route path={'/'} exact component={MainApp} />
           <Route path={'/meme/:id'} exact component={SharedMeme} />
+          <Route path={'/imagememe/'} exact component={MemeCanvas} />
           <Redirect to="/" />
         </Switch>
       </div>

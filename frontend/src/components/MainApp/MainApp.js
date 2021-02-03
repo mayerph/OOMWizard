@@ -12,6 +12,7 @@ import { MemePhotoCapture } from '../MemePhotoCapture'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Paper from '@material-ui/core/Paper'
+import { Link } from 'react-router-dom'
 
 class MainApp extends React.Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class MainApp extends React.Component {
             <Tabs
               value={this.state.newValue}
               onChange={this.handleChange}
-              aria-label="simple tabs example"
+              aria-label="tabs"
               centered
             >
               <Tab label="Image Templates" />
@@ -43,7 +44,7 @@ class MainApp extends React.Component {
               <Tab label="Take Picture" />
               <Tab label="Draw Image" />
               <Tab label="Gif Templates" />
-              <Tab label="Image Templates" />
+              <Tab label="Video Templates" />
             </Tabs>
           </Paper>
           <div hidden={this.state.newValue !== 0}>
@@ -68,7 +69,19 @@ class MainApp extends React.Component {
           <div hidden={this.state.newValue !== 4}>
             <ImagePainter />
           </div>
-          <div hidden={this.state.newValue !== 5}>Gif templates</div>
+          <div hidden={this.state.newValue !== 5}>
+            <Link
+              to={{
+                pathname: '/imagememe',
+                state: {
+                  imageUrl:
+                    'https://i.kym-cdn.com/photos/images/newsfeed/001/733/354/be4.jpg',
+                },
+              }}
+            >
+              to meme canvas
+            </Link>
+          </div>
           <div hidden={this.state.newValue !== 6}>Video templates</div>
         </div>
       </div>

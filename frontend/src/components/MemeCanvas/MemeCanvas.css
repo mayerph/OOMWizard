@@ -1,10 +1,21 @@
 #meme-canvas {
     background-color: #aaa;
+    width: 500px;
 }
 
 #meme-canvas-card {
     height: 100%;
 }
+
+#meme-canvas-container {
+    margin: 0 50px 50px 50px;
+    height: 85vh;
+}
+
+#meme-canvas-text-control-container{
+    margin-left: 50px;
+}
+
 
 .resize-handle-bottom-right {
     resize: both;

@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import './TextControl.css'
 import Card from '@material-ui/core/Card'
 import AddIcon from '@material-ui/icons/Add'
@@ -8,12 +7,27 @@ import FormatBoldIcon from '@material-ui/icons/FormatBold'
 import FormatItalicIcon from '@material-ui/icons/FormatItalic'
 import FormatUnderlineIcon from '@material-ui/icons/FormatUnderlined'
 import ColorizeIcon from '@material-ui/icons/Colorize'
-import HelpIcon from '@material-ui/icons/Help'
 import IconButton from '@material-ui/core/IconButton'
 import { connect } from 'react-redux'
 import ResizableText from '../ResizableText/ResizableText'
+import Button from '@material-ui/core/Button'
 
 class TextControl extends React.Component {
+  canvasElementCounter = 0
+  handleAddElement(type, url) {
+    const element = {
+      x: Math.floor(Math.random() * 200),
+      y: Math.floor(Math.random() * 200),
+      width: Math.floor(Math.random() * 200) + 50,
+      height: Math.floor(Math.random() * 200) + 50,
+      bounds: '#meme-canvas',
+      id: this.canvasElementCounter++,
+      type: type,
+      imageUrl: url,
+    }
+    this.props.dispatch({ type: 'ADD_ELEMENT', element: element })
+  }
+
   applyStyle(style) {
     let newInlineStyles = this.props.inlineStyles
     if (typeof newInlineStyles !== 'undefined') {
@@ -61,56 +75,108 @@ class TextControl extends React.Component {
   }
 
   render() {
-    let controlVisibility = this.props.editorState ? 'visible' : 'hidden'
+    if (this.props.initialImage && this.canvasElementCounter < 1) {
+      this.handleAddElement('image', this.props.initialImage)
+    }
+
+    let controlVisibility = this.props.editorState ? 1 : 0.2
+    let isDisabled = !this.props.editorState
+
     return (
-      <Card
-        style={{ visibility: controlVisibility }}
-        className="text-control-card"
-      >
-        <div>
-          <IconButton onClick={() => this.setFontSize('INCREASE_FONT')}>
-            <AddIcon />
-          </IconButton>
-          <IconButton onClick={() => this.setFontSize('DECREASE_FONT')}>
-            <RemoveIcon />
-          </IconButton>
-          <IconButton onClick={() => this.applyStyle('BOLD')}>
-            <FormatBoldIcon />
-          </IconButton>
-          <IconButton onClick={() => this.applyStyle('ITALIC')}>
-            <FormatItalicIcon />
-          </IconButton>
-          <IconButton onClick={() => this.applyStyle('UNDERLINE')}>
-            <FormatUnderlineIcon />
-          </IconButton>
-          <IconButton onClick={() => this.applyStyle('black')}>
-            <ColorizeIcon
-              style={{ color: ResizableText.customStyleMap.black.color }}
-            />
-          </IconButton>
-          <IconButton onClick={() => this.applyStyle('white')}>
-            <ColorizeIcon style={{ color: 'rgba(0, 0, 0, 0.2)' }} />
-          </IconButton>
-          <IconButton onClick={() => this.applyStyle('red')}>
-            <ColorizeIcon
-              style={{ color: ResizableText.customStyleMap.red.color }}
-            />
-          </IconButton>
-          <IconButton onClick={() => this.applyStyle('green')}>
-            <ColorizeIcon
-              style={{ color: ResizableText.customStyleMap.green.color }}
-            />
-          </IconButton>
-          <IconButton onClick={() => this.applyStyle('blue')}>
-            <ColorizeIcon
-              style={{ color: ResizableText.customStyleMap.blue.color }}
-            />
-          </IconButton>
-          <IconButton>
-            <HelpIcon />
-          </IconButton>
-        </div>
-      </Card>
+      <div>
+        <Card className="text-control-card">
+          <div style={{ opacity: controlVisibility }}>
+            <IconButton
+              disabled={isDisabled}
+              onClick={() => this.setFontSize('INCREASE_FONT')}
+            >
+              <AddIcon />
+            </IconButton>
+            <IconButton
+              disabled={isDisabled}
+              onClick={() => this.setFontSize('DECREASE_FONT')}
+            >
+              <RemoveIcon />
+            </IconButton>
+            <IconButton
+              disabled={isDisabled}
+              onClick={() => this.applyStyle('BOLD')}
+            >
+              <FormatBoldIcon />
+            </IconButton>
+            <IconButton
+              disabled={isDisabled}
+              onClick={() => this.applyStyle('ITALIC')}
+            >
+              <FormatItalicIcon />
+            </IconButton>
+            <IconButton
+              disabled={isDisabled}
+              onClick={() => this.applyStyle('UNDERLINE')}
+            >
+              <FormatUnderlineIcon />
+            </IconButton>
+            <IconButton
+              disabled={isDisabled}
+              onClick={() => this.applyStyle('black')}
+            >
+              <ColorizeIcon
+                style={{ color: ResizableText.customStyleMap.black.color }}
+              />
+            </IconButton>
+            <IconButton
+              disabled={isDisabled}
+              onClick={() => this.applyStyle('white')}
+            >
+              <ColorizeIcon style={{ color: 'rgba(0, 0, 0, 0.2)' }} />
+            </IconButton>
+            <IconButton
+              disabled={isDisabled}
+              onClick={() => this.applyStyle('red')}
+            >
+              <ColorizeIcon
+                style={{ color: ResizableText.customStyleMap.red.color }}
+              />
+            </IconButton>
+            <IconButton
+              disabled={isDisabled}
+              onClick={() => this.applyStyle('green')}
+            >
+              <ColorizeIcon
+                style={{ color: ResizableText.customStyleMap.green.color }}
+              />
+            </IconButton>
+            <IconButton
+              disabled={isDisabled}
+              onClick={() => this.applyStyle('blue')}
+            >
+              <ColorizeIcon
+                style={{ color: ResizableText.customStyleMap.blue.color }}
+              />
+            </IconButton>
+          </div>
+          <div>
+            <Button
+              style={{ margin: 5 }}
+              variant="contained"
+              color="secondary"
+              startIcon={<AddIcon />}
+              onClick={() => this.handleAddElement('image')}
+            >
+              Image
+            </Button>
+            <Button
+              style={{ margin: 5 }}
+              variant="contained"
+              color="secondary"
+              startIcon={<AddIcon />}
+              onClick={() => this.handleAddElement('text')}
+            >
+              Text
+            </Button>
+          </div>
+        </Card>
+      </div>
     )
   }
 }
