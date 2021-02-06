@@ -9,6 +9,7 @@ import { default as loginRoutes } from "./login/login.routes"
 import { default as memesRoutes } from "./meme/meme.routes"
 import { default as templateRoutes } from "./template/template.routes"
 import { default as gifRoutes } from "./gif"
+import { default as videoRoutes } from "./video"
 import * as config from "./config.json"
 import * as mongoose from "mongoose"
 import * as fileUpload from "express-fileupload"
@@ -68,6 +69,11 @@ app.use("/memes", memesRoutes)
  * Route to the gif routes
  */
 app.use("/gif", gifRoutes)
+
+/**
+ * Route to the video routes
+ */
+app.use("/video", videoRoutes)
 
 /**
  * Start server on port 3000

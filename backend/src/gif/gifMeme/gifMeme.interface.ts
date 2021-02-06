@@ -1,6 +1,6 @@
 import { IGifTemplate } from "../gifTemplate/gifTemplate.interface"
 import { IPosition, ICaption } from "../../meme/meme.interface"
-import { IFrame } from "../gifTemplate/gifTemplate.interface"
+import { IFrame } from "../../imageVector/imageVector.interface"
 
 /**
  * Interface for the frames

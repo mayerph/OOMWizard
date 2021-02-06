@@ -1,22 +1,19 @@
 import { model, Schema, Model, Document } from "mongoose"
-import { IGifTemplate, IGifTemplateModel } from "./gifTemplate.interface"
-
-import { IDelay, IFrame } from "../../imageVector/imageVector.interface"
-import * as config from "../../config.json"
+import { IImageVector, ImageVectorModel } from "./imageVector.interface"
 
 /**
  * interface of the mongoose-schema
  * can be used to define properties and non-static methods
  */
-export interface IGifTemplateMongoose extends IGifTemplate, Document {}
+export interface ImageVectorMongoose extends IImageVector, Document {}
 
 /**
  * interface of the mongoose-model
  * can be used defining static methods
  */
-interface IGifTemplateModelMongoose
-  extends Model<IGifTemplateMongoose>,
-    IGifTemplateModel {}
+interface ImageVectorModelMongoose
+  extends Model<ImageVectorMongoose>,
+    ImageVectorModel {}
 
 const transform = (doc: any, ret: any) => {
   ret.id = ret._id
@@ -62,9 +59,9 @@ export const frameSchema = new Schema(
 )
 
 /**
- * The gifTemplate Schema for mongoose
+ * The imageVector Schema for mongoose
  */
-export const gifTemplateSchema = new Schema(
+export const imageVectorSchema = new Schema(
   {
     file: { type: String, required: true },
     route: { type: String, required: true },
@@ -80,7 +77,7 @@ export const gifTemplateSchema = new Schema(
   }
 )
 
-export const GifTemplate = model<
-  IGifTemplateMongoose,
-  IGifTemplateModelMongoose
->("GifTemplate", gifTemplateSchema)
+export const ImageVector = model<ImageVectorMongoose, ImageVectorModelMongoose>(
+  "ImageVector",
+  imageVectorSchema
+)
