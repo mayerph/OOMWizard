@@ -85,7 +85,7 @@ class MainApp extends React.Component {
           </div>
           <div hidden={this.state.newValue !== 6}>Video templates</div>
           <div hidden={this.state.newValue !== 7}>
-            <Link
+            {/* <Link
               to={{
                 pathname: '/memeslist',
                 state: {
@@ -100,7 +100,15 @@ class MainApp extends React.Component {
               }}
             >
               To list of created Memes
-            </Link>
+            </Link> */}
+            <Grid container id="memes-list-container">
+              <Grid item xs={4}>
+                <MemeSlideShow type="meme" />
+              </Grid>
+              <Grid item xs={8}>
+                <MemesList type="meme" />
+              </Grid>
+            </Grid>
           </div>
         </div>
       </div>
