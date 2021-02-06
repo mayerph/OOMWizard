@@ -193,15 +193,17 @@ class MemesList extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state.api.tileData)
-  console.log(state.api.apitype)
   console.log(ownProps.type)
-  console.log(ownProps)
-  if (state.api.apitype === ownProps.type || state.api.apitype === 'default') {
-    console.log('in here')
-    console.log(state.api.tileData)
+  console.log(state.api.tileData)
+  if (ownProps.type == 'template') {
     return {
+      ...state,
       tileData: state.api.tileData,
+    }
+  } else if (ownProps.type == 'meme') {
+    return {
+      ...state,
+      tileData: state.api.tileDataMeme,
     }
   }
 }

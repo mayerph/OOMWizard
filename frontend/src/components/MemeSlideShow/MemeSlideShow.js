@@ -20,16 +20,20 @@ import {
 import Carousel from 'react-material-ui-carousel'
 
 class MemeSlideShow extends React.Component {
+  constructor(props) {
+    super(props)
+    props.getApi('api', props.type)
+  }
   onApiLoad() {
-    this.props.getApi('api')
+    this.props.getApi('api', this.props.type)
   }
   randomize() {
     //this.props.randomize()
-    this.props.getApi('random')
+    this.props.getApi('random', this.props.type)
   }
   sortByLikes() {
     //this.props.sortByLikes()
-    this.props.getApi('sort')
+    this.props.getApi('sort', this.props.type)
   }
   autoplay() {
     this.props.autoplay()
@@ -75,11 +79,21 @@ class MemeSlideShow extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  console.log(state.api.auto)
-  return {
-    tileData: state.api.tileData,
-    auto: state.api.auto,
+const mapStateToProps = (state, ownProps) => {
+  console.log(ownProps.type)
+  console.log(state.api.tileData)
+  if (ownProps.type == 'template') {
+    return {
+      ...state,
+      tileData: state.api.tileData,
+      auto: state.api.auto,
+    }
+  } else if (ownProps.type == 'meme') {
+    return {
+      ...state,
+      tileData: state.api.tileDataMeme,
+      auto: state.api.auto,
+    }
   }
 }
 

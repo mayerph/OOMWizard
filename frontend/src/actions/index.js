@@ -22,10 +22,12 @@ export const unfocusText = () => ({
 
 export const getApi = (mode, apitype) => {
   let apiurl = null
+  let atype = 'GET_API'
   if (apitype === 'template') {
     apiurl = 'http://localhost:2000/templates/'
   } else if (apitype === 'meme') {
     apiurl = 'http://localhost:2000/memes/'
+    atype = 'GET_API_MEME'
   }
   return (dispatch) => {
     fetch(apiurl, {
@@ -42,7 +44,7 @@ export const getApi = (mode, apitype) => {
         }
         //console.log(tileData)
         dispatch({
-          type: 'GET_API',
+          type: atype,
           payload: tileData,
           mode: mode,
           apitype: apitype,

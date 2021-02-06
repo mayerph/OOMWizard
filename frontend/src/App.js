@@ -10,6 +10,8 @@ import reducers from './reducers'
 import ReduxThunk from 'redux-thunk'
 import MemeCanvas from './components/MemeCanvas/MemeCanvas'
 import MemesList from './components/MemesList/MemesList'
+import MemeSlideShow from './components/MemeSlideShow/MemeSlideShow'
+import Grid from '@material-ui/core/Grid'
 
 function App() {
   return (
@@ -22,7 +24,16 @@ function App() {
           <Route path={'/imagememe/'} exact component={MemeCanvas} />
           <Route
             path={'/memeslist/'}
-            render={(props) => <MemesList {...props} type="meme" />}
+            render={(props) => (
+              <Grid container id="memes-list-container">
+                <Grid item xs={4}>
+                  <MemeSlideShow {...props} type="meme" />
+                </Grid>
+                <Grid item xs={8}>
+                  <MemesList {...props} type="meme" />
+                </Grid>
+              </Grid>
+            )}
           />
           <Redirect to="/" />
         </Switch>

@@ -45,13 +45,13 @@ class MainApp extends React.Component {
               <Tab label="Draw Image" />
               <Tab label="Gif Templates" />
               <Tab label="Video Templates" />
-              {/*               <Tab label="Created Memes" /> */}
+              <Tab label="Created Memes" />
             </Tabs>
           </Paper>
           <div hidden={this.state.newValue !== 0}>
             <Grid container id="memes-list-container">
               <Grid item xs={4}>
-                <MemeSlideShow />
+                <MemeSlideShow type="template" />
               </Grid>
               <Grid item xs={8}>
                 <MemesList type="template" />
