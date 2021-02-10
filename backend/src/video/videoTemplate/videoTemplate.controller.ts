@@ -1,5 +1,6 @@
 import {
   IFrameVector,
+  IFrameVectorT,
   IVideoFrame,
   IVideoTemplate
 } from "./videoTemplate.interface"
@@ -27,7 +28,7 @@ export class VideoTemplateController {
    */
   createNecessaryDirectories(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const path1 = path.resolve(`./${config.storage.videos.templates.path}`)
+      const path1 = path.resolve(`${config.storage.videos.templates.path}`)
       const paths = [path1]
       const pathPromises = paths.map((path) => {
         return new Promise(async (resolve, reject) => {
@@ -88,7 +89,7 @@ export class VideoTemplateController {
   ): Promise<IVideoTemplate | null> {
     return new Promise(async (resolve, reject) => {
       // check if the sent object is of type memeTemplate
-      if (!this.instanceOfGifTemplate(object, true) && id != object.id) {
+      if (!this.instanceOfVideoTemplate(object, true) && id != object.id) {
         reject("type error. Object of type gifTemplate is needed")
         return
       }
@@ -121,11 +122,11 @@ export class VideoTemplateController {
   }
 
   /**
-   * check if object is of type GifTemplate
-   * @param object gifTemplate object
+   * check if object is of type VideoTemplate
+   * @param object videoTemplate object
    * @param withId should the id property be considered
    */
-  instanceOfGifTemplate(
+  instanceOfVideoTemplate(
     object: any,
     withId?: boolean
   ): object is IVideoTemplate {
@@ -140,37 +141,37 @@ export class VideoTemplateController {
 
   /**
    * delete certain gif template
-   * @param id gifTemplate id
+   * @param id videoTemplate id
    */
-  async deleteGifTemplate(id: string): Promise<IVideoTemplate> {
+  async deleteVideoTemplate(id: string): Promise<IVideoTemplate> {
     return new Promise(async (resolve, reject) => {
-      // query for a gifTemplate
-      let gifTemplate = null
+      // query for a videoTemplate
+      let videoTemplate = null
       try {
-        gifTemplate = await VideoTemplate.findById(id)
+        videoTemplate = await VideoTemplate.findById(id)
       } catch (err) {
         reject(`no gifTemplate with id ${id} found`)
         return
       }
-      // check if a gifTemplate has been found
-      if (!gifTemplate) {
+      // check if a videoTemplate has been found
+      if (!videoTemplate) {
         reject(`no gifTemplate with id ${id} found`)
         return
       }
-      // delete gifTemplate in storage
-      const filepath =
-        "./" + config.storage.gifs.templates.path + gifTemplate.id + "/"
+      // delete videoTemplate in storage
+      const filepath = `${config.storage.videos.templates.path}/${videoTemplate.id}`
+
       if (fs.existsSync(filepath)) {
         fs.rmdirSync(filepath, { recursive: true })
       }
 
-      // delete gifTemplate
+      // delete videoTemplate
       try {
-        const result = await gifTemplate.deleteOne()
-        resolve(gifTemplate)
+        const result = await videoTemplate.deleteOne()
+        resolve(videoTemplate)
         return
       } catch (err) {
-        reject(`gifTemplate couldn't be updated`)
+        reject(`videoTemplate couldn't be updated`)
         return
       }
     })
@@ -199,9 +200,8 @@ export class VideoTemplateController {
 
         const videoTemplate = new VideoTemplate(videoTemplateDoc)
 
-        // create directory for gif template
-        const filepath =
-          "./" + config.storage.videos.templates.path + videoTemplate.id
+        // create directory for video template
+        const filepath = `${config.storage.videos.templates.path}/${videoTemplate.id}`
         fs.mkdirSync(filepath)
         // create directory for frames
         const frameDstDirectory = filepath + "/frames"
@@ -223,10 +223,14 @@ export class VideoTemplateController {
         )
 
         videoTemplate.frames = frames
-        videoTemplate.audio = this.audioFileName
+        videoTemplate.audio = `${config.storage.videos.templates.path}/${videoTemplate.id}/audio/${this.audioFileName}`
         videoTemplate.file = video.name
         videoTemplate.route = `${config.storage.videos.templates.route}/${videoTemplate.id}/${video.name}`
-
+        console.log(
+          "videoTemplate.audio",
+          videoTemplate.audio,
+          config.storage.videos.templates.path
+        )
         await videoTemplate.save()
         resolve(videoTemplate)
       } catch (err) {
@@ -256,7 +260,7 @@ export class VideoTemplateController {
     frameDestination: string,
     audioDestination: string,
     id: string
-  ): Promise<IFrameVector> {
+  ): Promise<IFrameVectorT> {
     return new Promise((resolve, reject) => {
       // general information
       const sourcePath = path.resolve(source)
@@ -312,7 +316,7 @@ export class VideoTemplateController {
               entries.forEach((elm) => {
                 if (!elm.isDirectory()) {
                   frames.push({
-                    file: elm.name,
+                    file: `${config.storage.videos.templates.path}/${id}/frames/${elm.name}`,
                     route: `${config.storage.videos.templates.route}/${id}/frames/${elm.name}`
                   })
                 }

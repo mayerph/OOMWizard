@@ -13,11 +13,11 @@
         "videos" : {
             "templates" : {
                 "route" : "/videos/templates",
-                "path" : "/storage/videos/templates/"
+                "path" : "./storage/videos/templates"
             },
             "memes" : {
                 "route" : "/videos/memes",
-                "path" : "/storage/videos/memes"
+                "path" : "./storage/videos/memes"
             }
         },
         "images": {

@@ -128,7 +128,7 @@ export class GifMemeController {
   }
   encodeGif(gifMeta: any, filename: string) {
     return new Promise((resolve, reject) => {
-      gif.encodeGif(gifMeta, filename, true, 30, (err: any, result: any) => {
+      gif.encodeVideo(gifMeta, filename, true, 30, (err: any, result: any) => {
         if (err) return reject(err)
         resolve(result)
       })

@@ -46,7 +46,7 @@ router.delete(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
     try {
-      const result = await videoTemplateController.deleteGifTemplate(id)
+      const result = await videoTemplateController.deleteVideoTemplate(id)
       res.json(result)
     } catch (err) {
       res.status(500)
