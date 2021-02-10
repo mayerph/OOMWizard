@@ -48,8 +48,8 @@ export class VideoMemeController {
    */
   createNecessaryDirectories(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const path1 = path.resolve(`./${config.storage.videos.memes.path}/temp`)
-      const path2 = path.resolve(`./${config.storage.videos.memes.path}/result`)
+      const path1 = path.resolve(`${config.storage.videos.memes.path}/temp`)
+      const path2 = path.resolve(`${config.storage.videos.memes.path}/result`)
       const paths = [path1, path2]
       const pathPromises = paths.map((path) => {
         return new Promise(async (resolve, reject) => {
@@ -89,18 +89,20 @@ export class VideoMemeController {
   async addVideoMeme(meme: IVideoMeme): Promise<any> {
     //console.log("the meme is", meme)
     return new Promise(async (resolve, reject) => {
-      // create filepath to the modified frames
-      const id = uuid.v4()
-
-      const filepathToFrames = path.resolve(
-        `./${config.storage.videos.memes.path}/temp/${id}`
-      )
-
-      const result = await this.createDirectory(filepathToFrames)
-
       try {
+        // create filepath to the modified frames
+        const id = uuid.v4()
+
+        const pathToFrames = path.resolve(
+          `${config.storage.videos.memes.path}/temp/${id}`
+        )
+
+        const pathToAudio = path.resolve(`${meme?.audio || ""}`)
+
+        await this.createDirectory(pathToFrames)
+
         // wait until all files are written down to file system
-        const modFrames = await this.writeFramesToFile(meme, filepathToFrames)
+        const modFrames = await this.writeFramesToFile(meme, pathToFrames)
         const videoMeta = {
           file: "",
           frames: modFrames as any
@@ -111,21 +113,21 @@ export class VideoMemeController {
         )
         const newMeme = new VideoMeme({ file: "", route: "" })
         const filename = `${newMeme.id}.mp4`
-        const filepath = `${destinationPath}/${filename}`
+        const pathToMeme = `${destinationPath}/${filename}`
 
         await this.encodeVideo(
-          filepathToFrames,
-          path.resolve(`${meme?.audio || ""}`),
+          pathToFrames,
+          pathToAudio,
           meme.frames?.fps || "",
-          filepath
+          pathToMeme
         )
 
-        newMeme.file = filepath
+        newMeme.file = pathToMeme
         newMeme.route = `${config.storage.videos.memes.route}/result/${filename}`
-        const final = await newMeme.save()
+        await newMeme.save()
 
         // remove the saved files
-        fs.rmdir(filepathToFrames, { recursive: true }, (err) => {})
+        fs.rmdir(pathToFrames, { recursive: true }, (err) => {})
 
         resolve(newMeme)
       } catch (err) {
