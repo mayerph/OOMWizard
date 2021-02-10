@@ -8,7 +8,15 @@ import * as uuid from "uuid"
 import { GifMeme } from "./gifMeme.model"
 
 export class GifMemeController {
+  /**
+   * meme controller for canvas funtionality
+   */
   memeController: MemeController
+  /**
+   * constructor for GifMemeController
+   * create a memeController object for the canvas functionality
+   * creates all necessary directories
+   */
   constructor() {
     GifMeme.deleteMany({}).exec()
     this.memeController = new MemeController(false)
@@ -126,6 +134,12 @@ export class GifMemeController {
       }
     })
   }
+
+  /**
+   * encodes a gif file
+   * @param gifMeta object containing all necessary gif information
+   * @param filename name of the gif file
+   */
   encodeGif(gifMeta: any, filename: string) {
     return new Promise((resolve, reject) => {
       gif.encodeGif(gifMeta, filename, true, 30, (err: any, result: any) => {
@@ -135,6 +149,11 @@ export class GifMemeController {
     })
   }
 
+  /**
+   * write all modified frames to the file system
+   * @param meme object representing a meme
+   * @param filepathToFrames path to the frames
+   */
   writeFramesToFile(meme: IGifMeme, filepathToFrames: string) {
     return new Promise((resolve, reject) => {
       if (!meme.frames) {

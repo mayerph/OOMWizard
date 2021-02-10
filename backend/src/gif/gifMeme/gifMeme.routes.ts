@@ -6,6 +6,10 @@ import { IGifMeme } from "./gifMeme.interface"
 const router = express.Router()
 const gifMemeController = new GifMemeController()
 
+/**
+ * helper route to generate a caption
+ * only for testing
+ */
 router.post(
   "/gencaption",
   async (req: Request, res: Response, next: NextFunction) => {
@@ -29,7 +33,7 @@ router.post(
 )
 
 /**
- * route to a add a new meme
+ * route to a add a new gif meme
  */
 router.post("", async (req: Request, res: Response, next: NextFunction) => {
   try {

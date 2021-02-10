@@ -12,7 +12,19 @@ import { MemePhotoCapture } from '../MemePhotoCapture'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Paper from '@material-ui/core/Paper'
-import { Link } from 'react-router-dom'
+
+import {
+  Movie,
+  InsertPhoto,
+  CameraAlt,
+  Brush,
+  Gif,
+  PhotoLibrary,
+  VideoLibrary,
+  CollectionsBookmark,
+  Upload,
+} from '@material-ui/icons'
+import Link from '@material-ui/icons/Link'
 
 class MainApp extends React.Component {
   constructor(props) {
@@ -38,14 +50,16 @@ class MainApp extends React.Component {
               aria-label="tabs"
               centered
             >
-              <Tab label="Image Templates" />
-              <Tab label="Upload Image" />
-              <Tab label="Link Image" />
-              <Tab label="Take Picture" />
-              <Tab label="Draw Image" />
-              <Tab label="Gif Templates" />
-              <Tab label="Video Templates" />
-              <Tab label="Created Memes" />
+              <Tab label="Image Templates" icon={<InsertPhoto />} />
+              <Tab label="Upload Image" icon={<Upload />} />
+              <Tab label="Link Image" icon={<Link />} />
+              <Tab label="Take Picture" icon={<CameraAlt />} />
+              <Tab label="Draw Image" icon={<Brush />} />
+              <Tab label="Gif Templates" icon={<Gif />} />
+              <Tab label="Video Templates" icon={<Movie />} />
+              <Tab label="Image Memes" icon={<PhotoLibrary />} />
+              <Tab label="Video Memes" icon={<VideoLibrary />} />
+              <Tab label="Gif Memes" icon={<CollectionsBookmark />} />
             </Tabs>
           </Paper>
           <div hidden={this.state.newValue !== 0}>
@@ -110,6 +124,8 @@ class MainApp extends React.Component {
               </Grid>
             </Grid>
           </div>
+          <div hidden={this.state.newValue !== 8}>Video Memes</div>
+          <div hidden={this.state.newValue !== 9}>Gif Memes</div>
         </div>
       </div>
     )
