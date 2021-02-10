@@ -22,7 +22,7 @@ import {
   PhotoLibrary,
   VideoLibrary,
   CollectionsBookmark,
-  Upload,
+  CloudUpload,
 } from '@material-ui/icons'
 import Link from '@material-ui/icons/Link'
 
@@ -51,7 +51,7 @@ class MainApp extends React.Component {
               centered
             >
               <Tab label="Image Templates" icon={<InsertPhoto />} />
-              <Tab label="Upload Image" icon={<Upload />} />
+              <Tab label="Upload Image" icon={<CloudUpload />} />
               <Tab label="Link Image" icon={<Link />} />
               <Tab label="Take Picture" icon={<CameraAlt />} />
               <Tab label="Draw Image" icon={<Brush />} />
