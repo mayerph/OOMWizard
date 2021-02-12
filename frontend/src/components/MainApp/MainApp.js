@@ -25,6 +25,8 @@ import {
   CloudUpload,
 } from '@material-ui/icons'
 import Link from '@material-ui/icons/Link'
+import { VideoTemplates } from '../VideoTemplates'
+import { VideoMemes } from '../VideoMemes'
 
 class MainApp extends React.Component {
   constructor(props) {
@@ -97,7 +99,9 @@ class MainApp extends React.Component {
               to meme canvas
             </Link>
           </div>
-          <div hidden={this.state.newValue !== 6}>Video templates</div>
+          <div hidden={this.state.newValue !== 6}>
+            <VideoTemplates></VideoTemplates>
+          </div>
           <div hidden={this.state.newValue !== 7}>
             {/* <Link
               to={{
@@ -124,7 +128,9 @@ class MainApp extends React.Component {
               </Grid>
             </Grid>
           </div>
-          <div hidden={this.state.newValue !== 8}>Video Memes</div>
+          <div hidden={this.state.newValue !== 8}>
+            <VideoMemes></VideoMemes>
+          </div>
           <div hidden={this.state.newValue !== 9}>Gif Memes</div>
         </div>
       </div>

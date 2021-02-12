@@ -1,0 +1,25 @@
+.test {
+  background-color: red !important;
+}
+
+canvas {
+  border: none;
+}
+
+.caption-card {
+  width: 600px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  border: 5px solid white;
+}
+.meme-generator-body {
+  padding: 10px;
+}
+
+.caption-input {
+  width: 100%;
+}
+
+.active-item {
+  border: 5px solid #3f51b5;
+}
