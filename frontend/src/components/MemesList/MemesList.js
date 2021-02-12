@@ -130,11 +130,23 @@ class MemesList extends React.Component {
                     <IconButton
                       aria-label="download"
                       onClick={() => {
-                        this.setState({
-                          ...this.state,
-                          memeToDownload:
-                            'placeholder for meme object ' + index,
-                        })
+                        if (this.props.type == 'template') {
+                          this.setState({
+                            ...this.state,
+                            memeToDownload: {
+                              id: tile.id,
+                              name: tile.name,
+                              route: tile.route,
+                              template: tile,
+                              captions: [],
+                            },
+                          })
+                        } else {
+                          this.setState({
+                            ...this.state,
+                            memeToDownload: tile,
+                          })
+                        }
                       }}
                       download
                     >
@@ -151,10 +163,23 @@ class MemesList extends React.Component {
                     <IconButton
                       aria-label="share-btn"
                       onClick={() => {
-                        this.setState({
-                          ...this.state,
-                          memeToShare: 'placeholder for meme object ' + index,
-                        })
+                        if (this.props.type == 'template') {
+                          this.setState({
+                            ...this.state,
+                            memeToShare: {
+                              id: tile.id,
+                              name: tile.name,
+                              route: tile.route,
+                              template: tile,
+                              captions: [],
+                            },
+                          })
+                        } else {
+                          this.setState({
+                            ...this.state,
+                            memeToShare: tile,
+                          })
+                        }
                       }}
                     >
                       <ShareIcon
