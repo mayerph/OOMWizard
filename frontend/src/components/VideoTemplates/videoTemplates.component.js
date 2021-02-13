@@ -252,11 +252,10 @@ const VideoTemplates = (props) => {
 
   const updateCaptionsInFrames = (frames) => {
     if (frames.new != frames.old) {
-      const caption = { ...activeCaption }
       // delete items
       for (let i = frames.old[0]; i <= frames.old[1]; i++) {
         frameList[i].captions = frameList[i].captions.filter((item) => {
-          if (item.id != caption.id) {
+          if (item.id != activeCaption.id) {
             return item
           }
         })
@@ -264,7 +263,7 @@ const VideoTemplates = (props) => {
       // add items
       for (let i = frames.new[0]; i <= frames.new[1]; i++) {
         frameList[i].captions = _.uniqBy(
-          [].concat(frameList[i].captions).concat(caption),
+          [].concat(frameList[i].captions).concat(activeCaption),
           'id',
         )
       }
