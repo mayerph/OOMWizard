@@ -23,11 +23,12 @@ import CardHeader from '@material-ui/core/CardHeader'
 import IconButton from '@material-ui/core/IconButton'
 import CloseButton from '@material-ui/icons/Close'
 import { v4 as uuidv4 } from 'uuid'
+import * as _ from 'lodash'
 
 function FrameSelector(props) {
   const { frames, callback } = props
   const valuetext = (value) => {
-    return `${value}`
+    return `${value + 1}`
   }
   const classes = useStyles()
 
@@ -45,10 +46,12 @@ function FrameSelector(props) {
         getAriaValueText={valuetext}
         aria-labelledby="continuous-slider"
         step={1}
+        marks
         min={0}
-        max={frames.length}
+        max={frames.length - 1}
         onChange={handleChange}
         valueLabelDisplay="auto"
+        valueLabelFormat={(value) => value + 1}
       />
     </div>
   )
@@ -60,9 +63,14 @@ function RangeSlider(props) {
   const classes = useStyles()
   const [value, setValue] = React.useState(config)
 
+  const valuetext = (value) => {
+    return `${value + 1}`
+  }
+
   const handleChange = (event, newValue) => {
+    console.log('new value is', newValue)
     setValue(newValue)
-    callback(newValue)
+    callback({ old: value, new: newValue })
   }
 
   return (
@@ -72,10 +80,14 @@ function RangeSlider(props) {
       </Typography>
       <Slider
         value={value}
+        getAriaValueText={valuetext}
         onChange={handleChange}
         valueLabelDisplay="auto"
         aria-labelledby="range-slider"
-        max={props.frames}
+        max={frames - 1}
+        step={1}
+        marks
+        valueLabelFormat={(value) => value + 1}
       />
     </div>
   )
@@ -94,21 +106,21 @@ const VideoTemplates = (props) => {
       text: 'hello world',
       x: 10,
       y: 50,
-      frames: [0, 30],
+      frames: [1, 2],
     },
     {
       id: uuidv4(),
       text: 'hello universe',
       x: 20,
       y: 60,
-      frames: [0, 30],
+      frames: [0, 2],
     },
     {
       id: uuidv4(),
       text: 'hello mars',
       x: 30,
       y: 70,
-      frames: [0, 30],
+      frames: [0, 2],
     },
   ]
 
@@ -147,9 +159,10 @@ const VideoTemplates = (props) => {
 
   const [drawing, setDrawing] = useState(false)
   const [captionList, setCaptionList] = useState(tileData)
+  const [frameList, setFrameList] = useState(frames)
   const [stepSize, setStepSize] = useState(10)
   const [activeCaption, setActiveCaption] = useState(captionList[0])
-  const [activeFrame, setActiveFrame] = useState(frames[0])
+  const [activeFrame, setActiveFrame] = useState(0)
 
   const useStyles = makeStyles((theme) => ({
     root: {
@@ -162,15 +175,11 @@ const VideoTemplates = (props) => {
     },
   }))
 
-  useEffect(() => {
-    drawImage()
-  }, [])
-
   const baseImage = new Image()
-  console.log('_------>', activeFrame.url)
+  console.log('_------>', frameList[activeFrame].url)
 
   const drawImage = () => {
-    baseImage.src = activeFrame.url
+    baseImage.src = frameList[activeFrame].url
     const canvas = document.getElementById('meme')
     const context = canvas.getContext('2d')
 
@@ -179,7 +188,7 @@ const VideoTemplates = (props) => {
     context.canvas.width = baseImage.width
     context.canvas.height = baseImage.height
     context.drawImage(baseImage, 0, 0)
-    captionList.forEach((e) => {
+    frameList[activeFrame].captions.forEach((e) => {
       context.font = '30px Arial'
       context.fillText(e.text, e.x, e.y)
     })
@@ -192,7 +201,7 @@ const VideoTemplates = (props) => {
       text: 'hello hello',
       x: 40,
       y: 80,
-      frames: [0, 30],
+      frames: [0, 2],
     })
     setCaptionList([...captionList])
 
@@ -215,8 +224,53 @@ const VideoTemplates = (props) => {
     setActiveCaption({ ...activeCaption, x: activeCaption.x - stepSize })
   }
 
+  useEffect(() => {
+    initDrawing()
+    drawImage()
+  }, [])
+
   const setActive = (index) => {
     setActiveCaption(captionList[index])
+  }
+
+  const initDrawing = () => {
+    for (var i = 0; i < captionList.length; i++) {
+      for (
+        let j = captionList[i].frames[0];
+        j <= captionList[i].frames[1];
+        j++
+      ) {
+        frameList[j].captions = _.uniqBy(
+          [].concat(frameList[j].captions).concat(captionList[i]),
+        )
+      }
+    }
+    setFrameList(frameList)
+    console.log('frameList', frameList)
+    console.log('the active frame', frameList[activeFrame])
+  }
+
+  const updateCaptionsInFrames = (frames) => {
+    if (frames.new != frames.old) {
+      const caption = { ...activeCaption }
+      // delete items
+      for (let i = frames.old[0]; i <= frames.old[1]; i++) {
+        frameList[i].captions = frameList[i].captions.filter((item) => {
+          if (item.id != caption.id) {
+            return item
+          }
+        })
+      }
+      // add items
+      for (let i = frames.new[0]; i <= frames.new[1]; i++) {
+        frameList[i].captions = _.uniqBy(
+          [].concat(frameList[i].captions).concat(caption),
+          'id',
+        )
+      }
+
+      setFrameList(frameList)
+    }
   }
 
   const handleChange = (e, index) => {
@@ -226,12 +280,16 @@ const VideoTemplates = (props) => {
     setCaptionList(temp)
   }
 
+  // update captionList
+  // update captions in frameList (only for rendering)
   const redefineFrameRange = (e, index) => {
-    captionList[index].frames = e
+    captionList[index].frames = e.new
+    updateCaptionsInFrames(e)
     setCaptionList([...captionList])
   }
 
   const deleteCaption = (index) => {
+    console.log('delete')
     const newList = [...captionList]
 
     const t = newList.filter((e, i) => i !== index)
@@ -240,7 +298,7 @@ const VideoTemplates = (props) => {
   }
 
   const setVisibleFrame = (index) => {
-    setActiveFrame(frames[index])
+    setActiveFrame(index)
   }
 
   useEffect(() => {
@@ -249,7 +307,6 @@ const VideoTemplates = (props) => {
   }, [activeFrame])
 
   useEffect(() => {
-    console.log('captionList')
     drawImage()
   }, [captionList])
 
@@ -269,7 +326,7 @@ const VideoTemplates = (props) => {
     <div className="meme-generator-body">
       <div>
         <FrameSelector
-          frames={frames}
+          frames={frameList}
           callback={(e) => {
             setVisibleFrame(e)
           }}
@@ -351,11 +408,11 @@ const VideoTemplates = (props) => {
                   </div>
                   <div>
                     <RangeSlider
-                      frames={20}
+                      frames={frameList.length}
                       callback={(e) => {
                         redefineFrameRange(e, index)
                       }}
-                      config={[0, 5]}
+                      config={item.frames}
                     ></RangeSlider>
                   </div>
                 </Typography>
