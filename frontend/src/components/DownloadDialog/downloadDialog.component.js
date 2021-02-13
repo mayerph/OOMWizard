@@ -157,6 +157,8 @@ const DownloadDialog = (props) => {
   /**
    * meme which should be shared
    */
+  console.log(props)
+  console.log(props.meme)
   const meme =
     props.meme && props.meme.id
       ? props.meme

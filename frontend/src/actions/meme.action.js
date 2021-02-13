@@ -58,6 +58,7 @@ const getMemes = () => (dispatch) => {
  */
 const generateMeme = (meme) => {
   return new Promise(async (resolve, reject) => {
+    console.log(meme)
     fetch(`${destination}/memes/file`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Filename: '' },
