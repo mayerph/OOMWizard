@@ -46,7 +46,6 @@ function FrameSelector(props) {
         getAriaValueText={valuetext}
         aria-labelledby="continuous-slider"
         step={1}
-        marks
         min={0}
         max={frames.length - 1}
         onChange={handleChange}
@@ -86,7 +85,6 @@ function RangeSlider(props) {
         aria-labelledby="range-slider"
         max={frames - 1}
         step={1}
-        marks
         valueLabelFormat={(value) => value + 1}
       />
     </div>
@@ -106,7 +104,7 @@ const VideoTemplates = (props) => {
       text: 'hello world',
       x: 10,
       y: 50,
-      frames: [1, 2],
+      frames: [0, 2],
     },
     {
       id: uuidv4(),
@@ -155,13 +153,31 @@ const VideoTemplates = (props) => {
         'https://nyc3.digitaloceanspaces.com/memecreator-cdn/media/__processed__/cd4/template-is-this-a-pigeon-0c6db91aec9c.jpg',
       captions: [],
     },
+    {
+      id: uuidv4(),
+      url:
+        'https://nyc3.digitaloceanspaces.com/memecreator-cdn/media/__processed__/cd4/template-is-this-a-pigeon-0c6db91aec9c.jpg',
+      captions: [],
+    },
+    {
+      id: uuidv4(),
+      url:
+        'https://i0.wp.com/comicsandmemes.com/wp-content/uploads/blank-meme-template-115-rick-and-morty-wall-tear-open.jpg?fit=580%2C600&ssl=1',
+      captions: [],
+    },
+    {
+      id: uuidv4(),
+      url:
+        'https://nyc3.digitaloceanspaces.com/memecreator-cdn/media/__processed__/cd4/template-is-this-a-pigeon-0c6db91aec9c.jpg',
+      captions: [],
+    },
   ]
 
   const [drawing, setDrawing] = useState(false)
   const [captionList, setCaptionList] = useState(tileData)
   const [frameList, setFrameList] = useState(frames)
   const [stepSize, setStepSize] = useState(10)
-  const [activeCaption, setActiveCaption] = useState(captionList[0])
+  const [activeCaption, setActiveCaption] = useState(0)
   const [activeFrame, setActiveFrame] = useState(0)
 
   const useStyles = makeStyles((theme) => ({
@@ -196,32 +212,44 @@ const VideoTemplates = (props) => {
   }
 
   const add = () => {
-    captionList.push({
+    const newCaption = {
       id: uuidv4(),
       text: 'hello hello',
       x: 40,
       y: 80,
-      frames: [0, 2],
-    })
-    setCaptionList([...captionList])
+      frames: [0, frameList.length - 1],
+    }
+    captionList.push(newCaption)
 
-    drawImage()
+    setCaptionList([...captionList])
+    updateCaptionsInFrames(
+      { new: newCaption.frames, old: undefined },
+      newCaption,
+    )
   }
 
   const up = () => {
-    setActiveCaption({ ...activeCaption, y: activeCaption.y - stepSize })
+    captionList[activeCaption].y = captionList[activeCaption].y - stepSize
+    const temp = [...captionList]
+    setCaptionList(temp)
   }
 
   const down = () => {
-    setActiveCaption({ ...activeCaption, y: activeCaption.y + stepSize })
+    captionList[activeCaption].y = captionList[activeCaption].y + stepSize
+    const temp = [...captionList]
+    setCaptionList(temp)
   }
 
   const right = () => {
-    setActiveCaption({ ...activeCaption, x: activeCaption.x + stepSize })
+    captionList[activeCaption].x = captionList[activeCaption].x + stepSize
+    const temp = [...captionList]
+    setCaptionList(temp)
   }
 
   const left = () => {
-    setActiveCaption({ ...activeCaption, x: activeCaption.x - stepSize })
+    captionList[activeCaption].x = captionList[activeCaption].x - stepSize
+    const temp = [...captionList]
+    setCaptionList(temp)
   }
 
   useEffect(() => {
@@ -230,7 +258,7 @@ const VideoTemplates = (props) => {
   }, [])
 
   const setActive = (index) => {
-    setActiveCaption(captionList[index])
+    setActiveCaption(index)
   }
 
   const initDrawing = () => {
@@ -250,24 +278,33 @@ const VideoTemplates = (props) => {
     console.log('the active frame', frameList[activeFrame])
   }
 
-  const updateCaptionsInFrames = (frames) => {
+  const updateCaptionsInFrames = (frames, itemToDelete) => {
     if (frames.new != frames.old) {
       // delete items
-      for (let i = frames.old[0]; i <= frames.old[1]; i++) {
-        frameList[i].captions = frameList[i].captions.filter((item) => {
-          if (item.id != activeCaption.id) {
-            return item
-          }
-        })
-      }
-      // add items
-      for (let i = frames.new[0]; i <= frames.new[1]; i++) {
-        frameList[i].captions = _.uniqBy(
-          [].concat(frameList[i].captions).concat(activeCaption),
-          'id',
-        )
+      if (frames.old !== undefined) {
+        for (let i = frames.old[0]; i <= frames.old[1]; i++) {
+          frameList[i].captions = frameList[i].captions.filter((item) => {
+            if (
+              item.id !=
+              (itemToDelete ? itemToDelete.id : captionList[activeCaption].id)
+            ) {
+              return item
+            }
+          })
+        }
       }
 
+      // add items
+      if (frames.new !== undefined) {
+        for (let i = frames.new[0]; i <= frames.new[1]; i++) {
+          frameList[i].captions = _.uniqBy(
+            []
+              .concat(frameList[i].captions)
+              .concat(itemToDelete ? itemToDelete : captionList[activeCaption]),
+            'id',
+          )
+        }
+      }
       setFrameList(frameList)
     }
   }
@@ -283,17 +320,23 @@ const VideoTemplates = (props) => {
   // update captions in frameList (only for rendering)
   const redefineFrameRange = (e, index) => {
     captionList[index].frames = e.new
-    updateCaptionsInFrames(e)
+    updateCaptionsInFrames(e, captionList[index])
     setCaptionList([...captionList])
   }
 
-  const deleteCaption = (index) => {
+  const deleteCaption = (index, id) => {
     console.log('delete')
     const newList = [...captionList]
+    const itemToDelete = { ...newList[index] }
+    console.log('itemToDelete', itemToDelete)
 
-    const t = newList.filter((e, i) => i !== index)
-
+    const t = newList.filter((e, i) => e.id !== id)
     setCaptionList(t)
+    updateCaptionsInFrames(
+      { new: undefined, old: itemToDelete.frames },
+      itemToDelete,
+    )
+    console.log('--<y<jö', t)
   }
 
   const setVisibleFrame = (index) => {
@@ -310,9 +353,10 @@ const VideoTemplates = (props) => {
   }, [captionList])
 
   useEffect(() => {
+    console.log('------------------------captionList', captionList)
     const newList = captionList.map((item) => {
-      if (item.id == activeCaption.id) {
-        return activeCaption
+      if (item.id == captionList[activeCaption].id) {
+        return captionList[activeCaption]
       }
       return item
     })
@@ -369,7 +413,12 @@ const VideoTemplates = (props) => {
           <>
             <Card
               className={`caption-card ${
-                item.id == activeCaption.id ? 'active-item' : ''
+                item.id ==
+                (captionList[activeCaption]
+                  ? captionList[activeCaption].id
+                  : '')
+                  ? 'active-item'
+                  : ''
               }`}
               key={item.id}
               onClick={(e) => {
@@ -381,7 +430,7 @@ const VideoTemplates = (props) => {
                   <IconButton aria-label="settings">
                     <CloseButton
                       onClick={() => {
-                        deleteCaption(index)
+                        deleteCaption(index, item.id)
                       }}
                     />
                   </IconButton>
