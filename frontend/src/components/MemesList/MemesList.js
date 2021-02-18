@@ -28,6 +28,9 @@ import { DownloadDialog } from '../DownloadDialog'
 import axios from 'axios'
 import { useEffect } from 'react'
 
+import HearingIcon from '@material-ui/icons/Hearing'
+import Speech from 'react-speech'
+
 class MemesList extends React.Component {
   constructor(props) {
     super(props)
@@ -67,6 +70,10 @@ class MemesList extends React.Component {
                 subtitle={'likes: ' + tile.name.length}
                 actionIcon={
                   <div className="actionButtons">
+                    <IconButton>
+                      <Speech text={tile.name} />
+                    </IconButton>
+
                     <IconButton
                       aria-label="upvote"
                       onClick={() => {
@@ -116,7 +123,7 @@ class MemesList extends React.Component {
                       />
                     </IconButton>
 
-                    <IconButton aria-label="downvote">
+                    {/* <IconButton aria-label="downvote">
                       <ArrowDownwardIcon
                         style={{
                           color: '#fafafa',
@@ -126,7 +133,7 @@ class MemesList extends React.Component {
                           padding: 2,
                         }}
                       />
-                    </IconButton>
+                    </IconButton> */}
                     <IconButton
                       aria-label="download"
                       onClick={() => {
