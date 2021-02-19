@@ -63,7 +63,17 @@ const memeSchema = new Schema(
   {
     name: {
       type: String,
-      required: true
+      required: true,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: false,
+    },
+    access: {
+      type: String,
+      enum:  ['private','unlisted','public'],
+      required:false,
     },
     route: {
       type: String,

@@ -26,6 +26,8 @@ export interface ICaption {
 export interface IMeme {
   id?: any
   name?: string
+  owner?: string
+  access?: string
   route?: string
   captions: ICaption[]
   template: ITemplate
