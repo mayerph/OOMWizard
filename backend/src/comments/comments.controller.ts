@@ -1,4 +1,3 @@
-import { Router, Request, NextFunction, Response } from "express"
 import { IComment, Comment } from "./comments.model"
 import { Meme} from "../meme/meme.model"
 var xss = require("xss")
