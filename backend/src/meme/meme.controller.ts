@@ -44,14 +44,14 @@ export class MemeController {
         _id: mongoose.Types.ObjectId("5ff46e6a4b03de6df1d420c5")
       },
       {
-        name: "d5703be0-4f5c-11eb-af94-1d9a1453b140.png",
+        name: "d5703be0-4f5c-11eb-af94-1d9a1453b14.png",
         route: "/images/memes/d5703be0-4f5c-11eb-af94-1d9a1453b140.png",
         owner: "test1234",
         access: "unlisted",
         template: {
           name: "Drake-Hotline-Bling.jpg",
           route: "/images/templates/Drake-Hotline-Bling.jpg",
-          _id: "5ff46e6a4b03de6df1d420c6"
+          _id: "aff46e6a4b03de6df1d420c9"
         },
         captions: [
           {
@@ -59,12 +59,12 @@ export class MemeController {
             position: {
               x: "0",
               y: "0",
-              _id: "5ff46e6a4b03de6df1d420c8"
+              _id: "aff46e6a4b03de6df1d420b8"
             },
-            _id: "5ff46e6a4b03de6df1d420c7"
+            _id: "aff46e6a4b03de6df1d420f7"
           }
         ],
-        _id: mongoose.Types.ObjectId("5ff46e6a4b03de6df1d420c5")
+        _id: mongoose.Types.ObjectId("aff46e6a4b03de6df1d420a5")
       },
     ]
     template_tmp.forEach((e) => new Meme(e).save())
@@ -75,7 +75,9 @@ export class MemeController {
    */
   async memes(username?: String): Promise<IMeme[]> {
     var memes: IMeme[] = await Meme.find()
+    console.log(`${memes.length} memes before user filtering`)
     memes = memes.filter((m) => m.is_accessible(false, username))
+    console.log(`${memes.length} memes after user filtering`)
     return memes
   }
 

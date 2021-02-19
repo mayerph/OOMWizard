@@ -33,11 +33,13 @@ export class LoginController {
     return (req: Request, res: Response, next: NextFunction) => {
       const token = req.cookies.token
       if(token){
+        console.log("Validating request token")
         try{// inject user into req if valid
           let payload = jwt.verify(token, jwtKey)
+          console.log(`Validated user as ${payload.username}`)
           req.user = payload.username
         }catch(err){
-          console.log("Token for", err, "could not be validated")
+          console.log(`Token for could not be validated (${err.name}: ${err.message})`)
         }
       }
       next()

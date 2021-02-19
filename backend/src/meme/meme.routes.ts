@@ -21,7 +21,8 @@ router.get(
     try {
       var limit = req.query.limit ? parseInt(req.query.limit as string) : 10
       var query = req.query.query as string
-      const memes = await memeController.query_memes(query, limit)
+      const memes = await memeController.query_memes(query, limit, req.user)
+      memes.forEach(e => console.log(`Meme query result ${e.name} with ${e.owner} and ${e.access}`))
       const { zip, filename } = await memeController.zipFile(memes)
       res.attachment(`${filename}`)
       res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
