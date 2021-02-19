@@ -13,12 +13,16 @@ import { default as videoRoutes } from "./video"
 import * as config from "./config.json"
 import * as mongoose from "mongoose"
 import * as fileUpload from "express-fileupload"
+import {LoginController} from "./login/login.controller"
 
 var cookieParser = require("cookie-parser")
 const app = express()
+const loginController = new LoginController()
+
 app.use(cors({ exposedHeaders: ["Filename"] }))
 app.use(bodyParser.json())
 app.use(cookieParser())
+app.use(loginController.verify_and_inject_user())
 app.use(express.static("storage"))
 app.use(
   fileUpload({

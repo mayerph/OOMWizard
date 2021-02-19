@@ -46,27 +46,32 @@ export class MemeController {
     ]
     template_tmp.forEach((e) => new Meme(e).save())
   }
+
   /**
    * returns all available memes
    */
-  async memes(): Promise<IMeme[]> {
-    const memes: IMeme[] = await Meme.find()
+  async memes(username?: String): Promise<IMeme[]> {
+    var memes: IMeme[] = await Meme.find()
+    memes = memes.filter((m) => m.is_accessible(false, username))
     return memes
   }
 
   /**
    * returns certain meme
    */
-  async meme(id: string): Promise<IMeme | null> {
+  async meme(id: string, username?: String, show_unlisted: boolean = false): Promise<IMeme | null> {
     const meme = await Meme.findById(id)
-    return meme
+    if (!meme) {
+      return null
+    }
+    return meme.is_accessible(show_unlisted, username) ? meme : null
   }
 
   /**
    * delete certain meme
    * @param id memeTemplate id
    */
-  async deleteMeme(id: string): Promise<IMeme | null> {
+  async deleteMeme(id: string, username?: String): Promise<IMeme | null> {
     return new Promise(async (resolve, reject) => {
       // query for a meme
       let meme = null
@@ -81,7 +86,11 @@ export class MemeController {
         reject(`no meme with id ${id} found`)
         return
       }
-
+      //check if a meme is owned by the user
+      if (meme.owner !== username){
+        reject(`cannot delete meme from another user`)
+        return
+      }
       // delete meme
       try {
         const result = await meme.deleteOne()
@@ -98,7 +107,11 @@ export class MemeController {
    * create and add new meme
    * @param meme metadata of the meme
    */
-  async addMeme(meme: IMeme): Promise<IMeme> {
+  async addMeme(
+    meme: IMeme,
+    owner?: String,
+    access?: String,
+  ): Promise<IMeme> {
     try {
       // create filename
       const filename = this.createFilename()
@@ -114,6 +127,8 @@ export class MemeController {
 
       const fullMeme = {
         name: filename,
+        owner: owner,
+        access: access,
         route: config.storage.images.memes.route + "/" + filename,
         template: meme.template,
         captions: meme.captions
@@ -147,19 +162,25 @@ export class MemeController {
     return uuid.v1() + "." + (format ? format : "png")
   }
 
-  async query_memes(query_str: string, limit: number) : Promise<IMeme[]>{
-    let tokens = query_str.split(' ')
-    let memes = await this.memes()
+  async query_memes(
+    query_str: string,
+    limit?: number,
+    username?: string,
+  ): Promise<IMeme[]> {
+    let tokens = query_str.split(" ")
+    let memes = await this.memes(username)
     memes = memes.filter((meme) => {
-      return tokens.some(t => {
-        return meme.name && meme.name.includes(t)
-          || meme.template.name.includes(t)
-          || meme.captions.some(cap => {
+      return tokens.some((t) => {
+        return (
+          (meme.name && meme.name.includes(t)) ||
+          meme.template.name.includes(t) ||
+          meme.captions.some((cap) => {
             return cap.text.includes(t)
-          }) 
+          })
+        )
       })
     })
-    return memes.slice(0, limit);
+    return memes.slice(0, limit)
   }
 
   /**

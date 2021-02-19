@@ -31,6 +31,7 @@ export interface IMeme {
   route?: string
   captions: ICaption[]
   template: ITemplate
+  is_accessible(show_unlisted: boolean, username?: String): boolean
 }
 
 export interface IMemeModel {}

@@ -8,7 +8,7 @@ const memeController = new MemeController(true)
  * route to all available meme
  */
 router.get("", async (req: Request, res: Response, next: NextFunction) => {
-  const memes = await memeController.memes()
+  const memes = await memeController.memes(req.user)
   res.json(memes)
 })
 
@@ -34,13 +34,12 @@ router.get(
   }
 )
 
-
 /**
  * route to a certain meme
  */
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
-  const meme = await memeController.meme(id)
+  const meme = await memeController.meme(id, req.user, true)
   res.json(meme)
 })
 
@@ -52,7 +51,7 @@ router.delete(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id
     try {
-      const meme = await memeController.deleteMeme(id)
+      const meme = await memeController.deleteMeme(id, req.user)
       res.json(meme)
     } catch (err) {
       res.status(500)
@@ -66,7 +65,7 @@ router.delete(
  */
 router.post("", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const meme = await memeController.addMeme(req.body.memes)
+    const meme = await memeController.addMeme(req.body.memes, req.user, req.body.access)
     res.json(meme)
   } catch (err) {
     res.status(500)

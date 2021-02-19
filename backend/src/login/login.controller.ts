@@ -23,31 +23,34 @@ const createAndSetJwtToken = (res: Response, username: String) => {
 }
 
 export class LoginController {
+
+
   /**
-   * Creates a middleware function that verifies the jwt token.
-   * And inserts the username into the request as req.username
-   * It can be installed with:
-   *  <br> app.use('/path', verifyLogin()) , router.user('/path', verifyLogin())
-   *  <br> app.Method('/path', verifyLogin()) ...
+   * Creates middleware that verifes a jwt token
+   * and injects the username into request.user
    */
-  verifyLogin() {
-    // TODO ? Maybe we could implement some for of automatic token refresh here
+  verify_and_inject_user(){
     return (req: Request, res: Response, next: NextFunction) => {
       const token = req.cookies.token
-      if (!token) {
-        res.status(403).send("Please log in.")
-        return res.end()
-      }
-      try {
-        let payload = jwt.verify(token, jwtKey)
-        req.user = payload.username
-        next()
-      } catch (e) {
-        if (e instanceof jwt.JsonWebTokenError) {
-          return res.status(403).send("Please log in.").end()
+      if(token){
+        try{// inject user into req if valid
+          let payload = jwt.verify(token, jwtKey)
+          req.user = payload.username
+        }catch(err){
+          console.log("Token for", err, "could not be validated")
         }
-        return res.status(401).end()
       }
+      next()
+    }
+  }
+
+  require_user(){
+    return (req: Request, res: Response, next: NextFunction) => {
+       if(!req.user){
+         res.status(403).send("Please login").end()
+       }else{
+         next()
+       }
     }
   }
   
@@ -61,7 +64,6 @@ export class LoginController {
   }
 
   async signUp(req: Request, res: Response, next: NextFunction) {
-    //FIXME care SQLInjection, should be caught by library
     const { username, password } = req.body
 
     if (username == null || username === ''){
@@ -73,7 +75,6 @@ export class LoginController {
     if(password.length < 8){
       return res.status(400).send("Password must contain at least 8 letters.")
     }
-
 
     const salt = uuidv4()
     const saltedHashedPassword = crypto

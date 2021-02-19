@@ -4,6 +4,6 @@
  */
 declare namespace Express{
    export interface Request {
-      user: string | null;
+      user?: string;
   }
 }

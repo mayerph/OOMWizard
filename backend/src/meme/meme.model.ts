@@ -63,17 +63,17 @@ const memeSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: true
     },
     owner: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: false,
+      ref: "User",
+      required: false
     },
     access: {
       type: String,
-      enum:  ['private','unlisted','public'],
-      required:false,
+      enum: ["private", "unlisted", "public"],
+      required: false
     },
     route: {
       type: String,
@@ -94,5 +94,17 @@ const memeSchema = new Schema(
     }
   }
 )
+
+memeSchema.methods.is_accessible = function (
+  show_unlisted: boolean,
+  username?: String
+) {
+  return (
+    this.owner == undefined ||
+    this.owner === username ||
+    this.access == "public" ||
+    (show_unlisted && this.access == "unlisted")
+  )
+}
 
 export const Meme = model<IMemeMongoose, IMemeModelMongoose>("Meme", memeSchema)
