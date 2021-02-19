@@ -88,4 +88,26 @@ router.post(
   }
 )
 
+router.get(
+  "/file.zip",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try{
+      var limit = req.query.limit
+        ? parseInt(req.query.limit as string)
+        : 10
+      var query = req.query.query as string
+    const memes = await memeController.query_memes(query, limit)
+    const {zip, filename} = await memeController.zipFile(memes)
+    res.attachment((`${filename}`))
+    res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
+    res.setHeader("Content-type", "application/zip")
+    zip.pipe(res)
+  }catch(err){
+    res.status(500)
+    res.json(err)
+  }
+
+  }
+)
+
 export default router

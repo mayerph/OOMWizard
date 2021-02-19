@@ -2,12 +2,13 @@ import * as fs from "fs"
 import * as config from "../config.json"
 import { Canvas, createCanvas, Image, loadImage } from "canvas"
 import { ICaption, IMeme } from "./meme.interface"
-import { Meme } from "./meme.model"
+import { captionSchema, Meme } from "./meme.model"
 import { Duplex } from "stream"
 import * as uuid from "uuid"
 import * as archiver from "archiver"
 import { PassThrough } from "stream"
 import * as mongoose from "mongoose"
+import e = require("express")
 
 export class MemeController {
   constructor(insert: boolean) {
@@ -144,6 +145,21 @@ export class MemeController {
    */
   createFilename(format?: string): string {
     return uuid.v1() + "." + (format ? format : "png")
+  }
+
+  async query_memes(query_str: string, limit: number) : Promise<IMeme[]>{
+    let tokens = query_str.split(' ')
+    let memes = await this.memes()
+    memes = memes.filter((meme) => {
+      return tokens.some(t => {
+        return meme.name && meme.name.includes(t)
+          || meme.template.name.includes(t)
+          || meme.captions.some(cap => {
+            return cap.text.includes(t)
+          }) 
+      })
+    })
+    return memes;
   }
 
   /**
