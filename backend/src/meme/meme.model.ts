@@ -66,8 +66,7 @@ const memeSchema = new Schema(
       required: true
     },
     owner: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+      type: String,
       required: false
     },
     access: {
