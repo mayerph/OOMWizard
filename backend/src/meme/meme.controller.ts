@@ -159,7 +159,7 @@ export class MemeController {
           }) 
       })
     })
-    return memes;
+    return memes.slice(0, limit);
   }
 
   /**
