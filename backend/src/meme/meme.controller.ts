@@ -81,6 +81,15 @@ export class MemeController {
     return memes
   }
 
+  async user_memes(username?: string): Promise<IMeme[]>{
+    if (username){
+      return await Meme.find({owner: username})
+    }else {
+      return []
+    }
+
+  }
+
   /**
    * returns certain meme
    */
