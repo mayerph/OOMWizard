@@ -25,6 +25,7 @@ const createAndSetJwtToken = (res: Response, username: String) => {
 export class LoginController {
   /**
    * Creates a middleware function that verifies the jwt token.
+   * And inserts the username into the request as req.username
    * It can be installed with:
    *  <br> app.use('/path', verifyLogin()) , router.user('/path', verifyLogin())
    *  <br> app.Method('/path', verifyLogin()) ...
@@ -34,15 +35,16 @@ export class LoginController {
     return (req: Request, res: Response, next: NextFunction) => {
       const token = req.cookies.token
       if (!token) {
-        res.status(401).send("missing jwt cookie token")
+        res.status(403).send("Please log in.")
         return res.end()
       }
       try {
         let payload = jwt.verify(token, jwtKey)
-        return next()
+        req.user = payload.username
+        next()
       } catch (e) {
         if (e instanceof jwt.JsonWebTokenError) {
-          return res.status(200).end()
+          return res.status(403).send("Please log in.").end()
         }
         return res.status(401).end()
       }
@@ -74,26 +76,22 @@ export class LoginController {
 
 
     const salt = uuidv4()
-    if (await Login.findOne({ username: username }).exec()) {
-      return res.status(400).send("User already exists.")
-    }
-    const login = new Login({
-      username: username,
-      salt: salt,
-      saltedHashedPassword: crypto
+    const saltedHashedPassword = crypto
         .createHash("sha512")
         .update(salt)
         .update(password)
         .digest("hex")
-    })
-    login.save()
-    console.log("Created User:", username)
-
-    userController.addUser({ name: username })
-    createAndSetJwtToken(res, username)
-    console.log("Logged in user:", username)
-
-    return res.status(200).end()
+    
+    try{
+      await userController.addUser(
+        username,
+        salt,
+        saltedHashedPassword,)
+      createAndSetJwtToken(res,username)
+      return res.status(200).end()
+    } catch(err){
+      return res.status(500).json(err)
+    }
   }
 
   async signIn(req: Request, res: Response, next: NextFunction) {

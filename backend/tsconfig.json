@@ -9,7 +9,11 @@
     "outDir": "./dist/",
     "rootDir": "./src/",
     "resolveJsonModule": true,
-    "watch": false
+    "watch": false,
+    "typeRoots": [
+      "src/typings/",
+      "node_modules/@types/"
+    ]
   },
   "exclude": [
     "node_modules",

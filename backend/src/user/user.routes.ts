@@ -1,55 +1,31 @@
 import * as express from "express"
 import { Router, Request, NextFunction, Response } from "express"
 import { UserController } from "./user.controller"
+import { LoginController} from "../login/login.controller"
 
 const router = express.Router()
+const loginController = new LoginController()
 const userController = new UserController()
-const test = "dfd"
-/**
- * get all users
- */
-router.get("", async (req: Request, res: Response, next: NextFunction) => {
-  const users = await userController.getUsers()
-  console.log("users", users)
-  res.json(users)
-})
 
-/**
- * get a certain user
- */
-router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
-  const user = await userController.getUserById(req.params.id)
-  res.json(user)
-})
-
-/**
- * add new user
- */
-router.post("/", async (req: Request, res: Response, next: NextFunction) => {
-  console.log("req.body", req.body)
-  const user = await userController.addUser(req.body)
-  res.send()
-})
-
-/**
- * update a certain user
- */
-router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
-  const id = req.params.id
-  const user = await userController.updateUser(id, req.body)
-  res.json(user)
-})
+router.use(loginController.verifyLogin())
 
 /**
  * delete a certain user
  */
 router.delete(
-  "/:id",
+  "/",
   async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id
-    const user = await userController.deleteUser(id)
-    res.send("User")
+    if (req.user == null) {
+      return res.status(400).send("You are not logged in.")
+    }
+    try{
+      await userController.deleteUser(req.user)
+      return res.status(200).end()
+    }catch(err){
+      return res.status(500).json(err).end()
+    }
   }
 )
+
 
 export default router

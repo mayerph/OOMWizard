@@ -1,92 +1,46 @@
 import { IUser } from "./user.interface"
 import { v4 as uuidv4 } from "uuid"
 import { User } from "./user.model"
+import { Login } from "../login/login.model"
 
 export class UserController {
-  users: IUser[] = [
-    { id: uuidv4(), name: "user1" },
-    { id: uuidv4(), name: "user2" },
-    { id: uuidv4(), name: "user3" }
-  ]
   constructor() {}
-
-  /**
-   * get a certain user
-   * @param id - users id
-   */
-  async getUserById(id: string): Promise<IUser | undefined> {
-    const users = this.users.filter((e) => e.id === id)
-    if (users.length > 0) {
-      return users[0]
-    }
-    return undefined
-  }
-
-  /**
-   * update certain user
-   * @param id - users id
-   * @param object - changed user object
-   */
-  async updateUser(id: string, object: any): Promise<IUser | undefined> {
-    if (!this.instanceOfUser(object, true) && id != object.id) {
-      return undefined
-    }
-    this.users = this.users.map((e) => {
-      if (e.id === id) {
-        return object
-      }
-      return e
-    })
-    return object
-  }
-
-  /**
-   * check if a object is of type user
-   * @param object - user object
-   * @param withId - should the id property be considered
-   */
-  instanceOfUser(object: any, withId?: boolean): object is IUser {
-    const id = withId ? "id" in object : true
-    const name = "name" in object
-    return name && id
-  }
 
   /**
    * add new user
    * @param object - user object
+   *
+   * throws error if user already exists
    */
-  async addUser(object: any): Promise<IUser | undefined> {
-    if (!this.instanceOfUser(object)) {
-      return undefined
+  async addUser(
+    name: string,
+    salt: string,
+    saltedHashedPassword: string
+  ): Promise<IUser> {
+    if (await User.findOne({ name: name }).exec()) {
+      throw new Error("User already exists.")
     }
-    const user = new User({ name: object.name })
+    //creating user first, then it's login
+    console.log("Creating user", name)
+    const user = new User({ name: name })
     await user.save()
-    console.log("the user is", user)
+    await new Login({
+      username: name,
+      salt: salt,
+      saltedHashedPassword: saltedHashedPassword
+    }).save()
+    console.log("Created user", name)
     return user
   }
 
   /**
    * delete certain User
-   * @param id - user id
    */
-  async deleteUser(id: string): Promise<IUser[]> {
-    this.users = this.users.filter((u) => id !== u.id)
-    return this.users
+  async deleteUser(username: string) {
+    //First delete the login for a user, then the user
+    console.log("Deleting user:", username)
+    await Login.deleteOne({ username: username }).exec()
+    await User.deleteOne({ name: username }).exec()
   }
 
-  /**
-   * return all Users
-   */
-  async getUsers() {
-    try {
-      const users = await User.find({})
-        .exec()
-        .catch((e) => {
-          throw new Error("")
-        })
-      return users
-    } catch (e) {
-      throw e
-    }
-  }
 }
