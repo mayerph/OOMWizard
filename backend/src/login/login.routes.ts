@@ -8,8 +8,6 @@ const loginController = new LoginController()
 
 router.use(cors())
 
-router.get("/testverify", loginController.verifyLogin())
-
 router.post(
   "/logout",
   async (req: Request, res: Response, next: NextFunction) => {

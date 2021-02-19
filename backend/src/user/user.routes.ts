@@ -7,8 +7,6 @@ const router = express.Router()
 const loginController = new LoginController()
 const userController = new UserController()
 
-router.use(loginController.verifyLogin())
-
 /**
  * delete a certain user
  */
