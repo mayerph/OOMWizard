@@ -1,6 +1,7 @@
 import * as express from "express"
 import { Router, Request, NextFunction, Response } from "express"
 import { MemeController } from "./meme.controller"
+import { default as commentRoutes  } from "../comments/comments.routes"
 
 const router = express.Router()
 const memeController = new MemeController(true)
@@ -11,7 +12,6 @@ router.get("", async (req: Request, res: Response, next: NextFunction) => {
   const memes = await memeController.memes(req.user)
   res.json(memes)
 })
-
 /**
  * route to query memes and get them as zip
  */

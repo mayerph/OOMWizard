@@ -8,6 +8,7 @@ import { default as userRoutes } from "./user/user.routes"
 import { default as loginRoutes } from "./login/login.routes"
 import { default as memesRoutes } from "./meme/meme.routes"
 import { default as templateRoutes } from "./template/template.routes"
+import { default as commentRoutes } from "./comments/comments.routes"
 import { default as gifRoutes } from "./gif"
 import { default as videoRoutes } from "./video"
 import * as config from "./config.json"
@@ -48,6 +49,12 @@ mongoose.connect(
 app.get("", (req: Request, res: Response, next: NextFunction) => {
   res.send("base-route")
 })
+
+/**
+ * route all comment requests
+ */
+app.use("/comments", commentRoutes)
+
 
 /**
  * Route to all users
