@@ -15,7 +15,7 @@ import GetAppIcon from '@material-ui/icons/GetApp'
 import ShareIcon from '@material-ui/icons/Share'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 
-import { getApi, getApiImgFlip, uploadUrl } from '../../actions'
+import { getApi, getApiImgFlip, uploadUrl, changeActive } from '../../actions'
 import {
   EmailShareButton,
   FacebookShareButton,
@@ -47,6 +47,12 @@ class MemesList extends React.Component {
   uploadUrl() {
     this.props.uploadUrl('')
   }
+  updateActive(index) {
+    console.log(this.props)
+    console.log(index)
+    this.props.changeActive(this.props, index)
+  }
+
   render() {
     return (
       <div className="root">
@@ -63,7 +69,14 @@ class MemesList extends React.Component {
 
         <GridList cellHeight={500} className="gridList" cols={4}>
           {this.props.tileData.map((tile, index) => (
-            <GridListTile key={tile.id} cols={tile.cols || 1}>
+            <GridListTile
+              key={tile.id}
+              cols={tile.cols || 1}
+              onClick={() => {
+                console.log(index)
+                this.updateActive(index)
+              }}
+            >
               <img src={tile.url} alt={tile.name} className="gridImg" />
               <GridListTileBar
                 title={tile.name}
@@ -243,4 +256,5 @@ const mapStateToProps = (state, ownProps) => {
 export default connect(mapStateToProps, {
   getApi,
   getApiImgFlip,
+  changeActive,
 })(MemesList)

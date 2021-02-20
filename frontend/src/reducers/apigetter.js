@@ -56,6 +56,8 @@ const apiGetter = (state = [], action) => {
       } else {
         return { ...state, auto: '4000' }
       }
+    case 'ACTIVE':
+      return { ...state, active: action.index }
 
     default:
       //console.log(state)

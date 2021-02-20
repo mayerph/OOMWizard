@@ -54,6 +54,7 @@ class MemeSlideShow extends React.Component {
           interval={this.props.auto}
           autoPlay="false"
           navButtonsAlwaysVisible="true"
+          index={this.props.active}
         >
           {this.props.tileData.map((tile) => (
             <Paper key={tile.id}>
@@ -82,17 +83,20 @@ class MemeSlideShow extends React.Component {
 const mapStateToProps = (state, ownProps) => {
   console.log(ownProps.type)
   console.log(state.api.tileData)
+  console.log(state.api.active)
   if (ownProps.type == 'template') {
     return {
       ...state,
       tileData: state.api.tileData,
       auto: state.api.auto,
+      active: state.api.active,
     }
   } else if (ownProps.type == 'meme') {
     return {
       ...state,
       tileData: state.api.tileDataMeme,
       auto: state.api.auto,
+      active: state.api.active,
     }
   }
 }

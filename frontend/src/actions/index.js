@@ -52,6 +52,7 @@ export const getApi = (mode, apitype) => {
       })
   }
 }
+
 export const getApiImgFlip = (mode, apitype) => {
   return (dispatch) => {
     fetch('https://api.imgflip.com/get_memes', {
@@ -113,3 +114,10 @@ export const autoplay = (state) => ({
   type: 'AUTOPLAY',
   state,
 })
+
+export const changeActive = (state, index) => {
+  console.log(state)
+  return (dispatch) => {
+    dispatch({ type: 'ACTIVE', index: index, state })
+  }
+}
