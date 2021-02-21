@@ -11,13 +11,16 @@ import ReduxThunk from 'redux-thunk'
 import MemeCanvas from './components/MemeCanvas/MemeCanvas'
 import MemesList from './components/MemesList/MemesList'
 import MemeSlideShow from './components/MemeSlideShow/MemeSlideShow'
+import CommentList from './components/Comments'
 import Grid from '@material-ui/core/Grid'
+
 
 function App() {
   return (
     <Provider store={createStore(reducers, {}, applyMiddleware(ReduxThunk))}>
       <div className="App">
         <NavBar />
+        <CommentList meme_id="5ff46e6a4b03de6df1d420c5"/>
         <Switch>
           <Route path={'/'} exact component={MainApp} />
           <Route path={'/meme/:id'} exact component={SharedMeme} />

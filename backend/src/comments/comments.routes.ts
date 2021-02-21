@@ -14,7 +14,10 @@ router.get(
         return res.status(400).send("query param 'meme_id' is required.").end()
       }
       let comments = await commentsController.list_comments(meme)
-      return res.json(comments).end()
+      return res.json({
+        meme_id: meme,
+        comments: comments,
+      }).end()
     } catch (err) {
       return res.status(500).json(err).end()
     }
@@ -22,7 +25,7 @@ router.get(
 )
 
 router.post(
-  "/post",
+  "",
   async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
       return res.status(403).send("Log in to submit a comment.").end()
@@ -36,7 +39,10 @@ router.post(
       let comments = await commentsController.list_comments(
         req.body.meme_id as string
       )
-      return res.json(comments).end()
+      return res.json({
+        meme_id: req.body.meme_id,
+        comments:comments,
+      }).end()
     } catch (err) {
       return res.status(500).json(err).end()
     }
