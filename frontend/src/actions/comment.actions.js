@@ -2,8 +2,7 @@ import * as config from '../config.json'
 
 const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 
-
-export const post_comment = ((meme_id, comment) => (dispatch) => {
+export const post_comment = (meme_id, comment) => (dispatch) => {
   let formData = new FormData()
   formData.set('meme_id', meme_id)
   formData.set('comment', comment)
@@ -12,6 +11,7 @@ export const post_comment = ((meme_id, comment) => (dispatch) => {
   fetch(url, {
     method: 'POST',
     body: formData,
+    credentials: 'include',
   }).then(
     async (res) => {
       if (res.ok) {
@@ -22,13 +22,13 @@ export const post_comment = ((meme_id, comment) => (dispatch) => {
         })
       } else {
         console.log(
-          `Response to fetch comments failed with ${res.status}:${res.statusText}.`,
+          `Response to post comments failed with ${res.status}:${res.statusText}.`,
         )
       }
     },
     (reason) => console.log(reason),
   )
-})
+}
 
 export const load_comments = (meme_id) => (dispatch) => {
   let url =

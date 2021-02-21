@@ -6,8 +6,6 @@ var cors = require('cors')
 const router = express.Router()
 const loginController = new LoginController()
 
-router.use(cors())
-
 router.post(
   "/logout",
   async (req: Request, res: Response, next: NextFunction) => {

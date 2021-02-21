@@ -14,13 +14,19 @@ import { default as videoRoutes } from "./video"
 import * as config from "./config.json"
 import * as mongoose from "mongoose"
 import * as fileUpload from "express-fileupload"
-import {LoginController} from "./login/login.controller"
+import { LoginController } from "./login/login.controller"
 
 var cookieParser = require("cookie-parser")
 const app = express()
 const loginController = new LoginController()
 
-app.use(cors({ exposedHeaders: ["Filename"] }))
+const cors_options = {
+  origin: "http://localhost:3000", //(Reason: Credential is not supported if the CORS header ‘Access-Control-Allow-Origin’ is ‘*’)
+  credentials: true,
+  exposedHeaders: ["Filename"]
+}
+
+app.use(cors(cors_options))
 app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(loginController.verify_and_inject_user())
@@ -54,7 +60,6 @@ app.get("", (req: Request, res: Response, next: NextFunction) => {
  * route all comment requests
  */
 app.use("/comments", commentRoutes)
-
 
 /**
  * Route to all users

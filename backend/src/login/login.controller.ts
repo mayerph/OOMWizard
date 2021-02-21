@@ -19,7 +19,7 @@ const createAndSetJwtToken = (res: Response, username: String) => {
     algorithm: "HS256",
     expiresIn: jwtExpirySeconds
   })
-  res.cookie("token", token, { maxAge: jwtExpirySeconds * 1000 })
+  res.cookie("token", token, { maxAge: jwtExpirySeconds * 1000, httpOnly: false })
 }
 
 export class LoginController {
@@ -41,15 +41,17 @@ export class LoginController {
         }catch(err){
           console.log(`Token for could not be validated (${err.name}: ${err.message})`)
         }
+      }else{
+        console.log("No req.cookies.token available to verify, continue as normal user")
       }
       next()
     }
   }
 
-  require_user(){
+  require_user(error_message: string="Please log in, for private api access."){
     return (req: Request, res: Response, next: NextFunction) => {
        if(!req.user){
-         res.status(403).send("Please login").end()
+         res.status(403).send(error_message).end()
        }else{
          next()
        }

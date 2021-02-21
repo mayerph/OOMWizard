@@ -1,38 +1,7 @@
 import * as config from '../config.json'
+//import Cookie from 'react-native-cookie'
 
 const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
-
-function authenticate(dispatch, form, new_user) {
-  var formData = new FormData(form)
-  var username = formData.get('username')
-  var url = new_user
-    ? `${backend_uri}/auth/signUp`
-    : `${backend_uri}/auth/signIn`
-  fetch(url, {
-    method: 'POST',
-    body: formData,
-  }).then(
-    async (res) => {
-      if (res.ok) {
-        dispatch({
-          type: 'AUTH_SUCCESS',
-          payload: {
-            username: username,
-          },
-        })
-      } else {
-        var msg = await res.text()
-        dispatch({
-          type: 'AUTH_FAILURE',
-          payload: {
-            auth_err_msg: msg,
-          },
-        })
-      }
-    },
-    (reason) => console.log(reason),
-  )
-}
 
 export const open_prompt = () => (dispatch) => {
   dispatch({ type: 'OPEN_PROMPT' })
@@ -52,8 +21,13 @@ export const logout = () => (dispatch) => {
 export const signIn = (form) => (dispatch) => {
   var formData = new FormData(form)
   var username = formData.get('username')
-  fetch(`${backend_uri}/auth/signIn`, { method: 'POST', body: formData }).then(
+  fetch(`${backend_uri}/auth/signIn`, {
+    method: 'POST',
+    body: formData,
+    credentials: 'include',
+  }).then(
     async (res) => {
+      console.log('executed sigin callback')
       var action
       if (res.ok) {
         action = { type: 'AUTH_SUCCESS', payload: { username: username } }
@@ -65,13 +39,18 @@ export const signIn = (form) => (dispatch) => {
       }
       dispatch(action)
     },
+    (error) => console.log(error),
   )
 }
 
 export const signUp = (form) => (dispatch) => {
   var formData = new FormData(form)
   var username = formData.get('username')
-  fetch(`${backend_uri}/auth/signUp`, { method: 'POST', body: formData }).then(
+  fetch(`${backend_uri}/auth/signUp`, {
+    method: 'POST',
+    body: formData,
+    credentials: 'include',
+  }).then(
     async (res) => {
       if (res.ok) {
         dispatch({ type: 'AUTH_SUCCESS', payload: { username: username } })
