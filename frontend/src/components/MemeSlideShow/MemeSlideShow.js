@@ -9,6 +9,7 @@ import GridListTile from '@material-ui/core/GridListTile'
 import GridListTileBar from '@material-ui/core/GridListTileBar'
 import { FormControlLabel, Checkbox, Paper } from '@material-ui/core'
 import Button from '@material-ui/core/Button'
+import CommentSection from '../Comments/CommentList'
 import {
   getApi,
   getApiImgFlip,
@@ -60,6 +61,7 @@ class MemeSlideShow extends React.Component {
             <Paper key={tile.id}>
               <h2>{tile.name}</h2>
               <img src={tile.url} alt={tile.name} className="slideImage" />
+              <CommentSection meme_id={tile.id}/>
             </Paper>
           ))}
         </Carousel>

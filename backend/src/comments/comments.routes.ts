@@ -27,7 +27,6 @@ router.get(
 router.post(
   "/",
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log("received comment post request")
     if (!req.user) {
       return res.status(403).send("Log in to submit a comment.").end()
     }
@@ -45,6 +44,7 @@ router.post(
         comments:comments,
       }).end()
     } catch (err) {
+      console.log(err)
       return res.status(500).json(err).end()
     }
   }

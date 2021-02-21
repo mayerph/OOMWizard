@@ -6,10 +6,10 @@ export class CommentsController {
 
   async comment(meme_id: string, username: string, comment: string) {
     let escaped_comment = xss(comment)
-    //check whether meme_id exists
-    if (!await Meme.findById(meme_id)){
-      throw new Error(`Meme with id ${meme_id} does not exist`)
-    }
+    //check whether meme_id exists // we omit this check for, so we can just easily comment templates and memes in on go
+    //if (!await Meme.findById(meme_id)){
+      //throw new Error(`Meme with id ${meme_id} does not exist`)
+    //}
 
     let com = new Comment({
       meme_id: meme_id,

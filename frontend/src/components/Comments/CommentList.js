@@ -22,9 +22,10 @@ const commentStyle = makeStyles((theme) => ({
 }))
 
 class CommentSection extends React.Component {
-  post_comment(meme_id, comment) {
-    this.props.post_comment(meme_id, comment)
-  }
+
+  //constructor(props){
+    //console.log(`props ${props}`)
+  //}
 
   render_comments() {
     return (
@@ -45,6 +46,7 @@ class CommentSection extends React.Component {
   }
 
   render() {
+    console.log("rendering comments for", this.props.meme_id)
     if (!this.props.comments) {
       this.props.load_comments()
     }
@@ -65,7 +67,6 @@ class CommentSection extends React.Component {
           <ListItem>
             <form
               style={{ width: '100%' }}
-              id={`comments-${this.props.meme_id}`}
               noValidate
               autoComplete="off"
             >
