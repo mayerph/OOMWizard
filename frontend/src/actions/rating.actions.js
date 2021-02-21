@@ -1,11 +1,19 @@
 import * as config from '../config.json'
 const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 
-export const post_comment = (meme_id, comment) => (dispatch) => {
+const dispatch_rating = (dispatch, json_result) => {
+  console.log('new ratings', json_result)
+  dispatch({
+    type: 'UPDATE_RATING',
+    payload: json_result,
+  })
+}
+
+export const post_rating = (meme_id, rating) => (dispatch) => {
   let formData = new FormData()
   formData.set('meme_id', meme_id)
-  formData.set('comment', comment)
-  let url = `${backend_uri}/comments`
+  formData.set('rating', rating)
+  let url = `${backend_uri}/rating`
 
   fetch(url, {
     method: 'POST',
@@ -15,13 +23,10 @@ export const post_comment = (meme_id, comment) => (dispatch) => {
     async (res) => {
       if (res.ok) {
         let json = await res.json()
-        dispatch({
-          type: 'UPDATE_COMMENTS',
-          payload: json,
-        })
+        dispatch_rating(dispatch, json)
       } else {
         console.log(
-          `Response to post comments failed with ${res.status}:${res.statusText}.`,
+          `Response to post ratings failed with ${res.status}:${res.statusText}.`,
         )
       }
     },
@@ -29,23 +34,21 @@ export const post_comment = (meme_id, comment) => (dispatch) => {
   )
 }
 
-export const load_comments = (meme_id) => (dispatch) => {
+export const load_rating = (meme_id) => (dispatch) => {
   let url =
-    `${backend_uri}/comments?` +
+    `${backend_uri}/rating?` +
     new URLSearchParams({
       meme_id: meme_id,
     })
 
   fetch(url, {
     method: 'GET',
+    credentials: 'include',
   }).then(
     async (res) => {
       if (res.ok) {
         let json = await res.json()
-        dispatch({
-          type: 'UPDATE_COMMENTS',
-          payload: json,
-        })
+        dispatch_rating(dispatch, json)
       } else {
         console.log(
           `Response to fetch comments failed with ${res.status}:${res.statusText}.`,

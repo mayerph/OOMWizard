@@ -1,7 +1,6 @@
 import * as express from "express"
 import { Router, Request, NextFunction, Response } from "express"
 import { MemeController } from "./meme.controller"
-import { default as commentRoutes  } from "../comments/comments.routes"
 
 const router = express.Router()
 const memeController = new MemeController(true)

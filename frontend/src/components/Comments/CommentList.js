@@ -15,18 +15,7 @@ import {
   post_comment,
 } from '../../actions/comment.actions'
 
-const commentStyle = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-  },
-}))
-
 class CommentSection extends React.Component {
-
-  //constructor(props){
-    //console.log(`props ${props}`)
-  //}
-
   render_comments() {
     return (
       <>
@@ -46,7 +35,7 @@ class CommentSection extends React.Component {
   }
 
   render() {
-    console.log("rendering comments for", this.props.meme_id)
+    console.log('rendering comments for', this.props.meme_id)
     if (!this.props.comments) {
       this.props.load_comments()
     }
@@ -65,11 +54,7 @@ class CommentSection extends React.Component {
         <Divider />
         {this.props.username ? (
           <ListItem>
-            <form
-              style={{ width: '100%' }}
-              noValidate
-              autoComplete="off"
-            >
+            <form style={{ width: '100%' }} noValidate autoComplete="off">
               <TextField
                 fullWidth
                 label={`Comment as ${this.props.username}`}

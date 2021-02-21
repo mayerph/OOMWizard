@@ -4,11 +4,22 @@ import { IRating, Rating } from "./rating.model"
 
 export class RatingController {
 
-  async get_rating(meme_id: string): Promise<number | undefined> {
+  constructor(){
+    Rating.deleteMany({}).exec()
+  }
+
+  async get_rating(
+    meme_id: string
+  ): Promise<{ rating: number; nr_ratings: number }> {
     let ratings = await Rating.find({ meme_id: meme_id }).exec()
     return ratings.length == 0
-      ? undefined
-      : ratings.map((a) => a.rating).reduce((a, b) => a + b, 0) / ratings.length
+      ? { rating: 0, nr_ratings: 0 }
+      : {
+          rating:
+            ratings.map((a) => a.rating).reduce((a, b) => a + b, 0) /
+            ratings.length,
+          nr_ratings: ratings.length
+        }
   }
 
   async get_rating_by_user(
@@ -24,9 +35,10 @@ export class RatingController {
 
   async rate(meme_id: string, rating: number, username: string) {
     rating = Math.min(Math.max(0, rating), 10)
-    await Rating.replaceOne(
-      { meme_id: meme_id, username: username },
-      new Rating({ meme_id: meme_id, username: username, rating: rating })
-    ).exec()
+    console.log((await Rating.find({meme_id:meme_id}).exec()).length)
+    //await Rating.find({meme_id: meme_id, username: username}).update({rating:rating}, {upsert:true}).exec()
+    await Rating.updateOne({meme_id: meme_id, username: username}, {rating: rating}, {upsert: true}).exec()
+    //await Rating.findOneAndUpdate({meme_id: meme_id, username: username}, {rating: rating}, {upsert:true}).exec()
+    console.log((await Rating.find({meme_id:meme_id}).exec()).length)
   }
 }
