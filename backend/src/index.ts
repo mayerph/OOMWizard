@@ -53,7 +53,7 @@ app.get("", (req: Request, res: Response, next: NextFunction) => {
 /**
  * route all comment requests
  */
-app.use("comment/comments", commentRoutes)
+app.use("/comments", commentRoutes)
 
 
 /**

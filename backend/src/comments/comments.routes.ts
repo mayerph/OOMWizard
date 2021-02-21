@@ -6,7 +6,7 @@ const router = express.Router()
 const commentsController = new CommentsController()
 
 router.get(
-  "",
+  "/",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       let meme = req.query.meme_id as string
@@ -25,7 +25,7 @@ router.get(
 )
 
 router.post(
-  "",
+  "/",
   async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
       return res.status(403).send("Log in to submit a comment.").end()
