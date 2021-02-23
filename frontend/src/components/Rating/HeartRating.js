@@ -36,27 +36,42 @@ class HeartRating extends React.Component {
         mb={3}
         borderColor="transparent"
       >
-        {this.props.rating ? (
-          <Typography>
-            Avg {this.props.rating.rating}/10 with{' '}
-            {this.props.rating.nr_ratings} votes.
-          </Typography>
-        ) : (
-          <Skeleton animation="wave" />
-        )}
-        <StyledRating
-          name="customized-color"
-          value={this.props.user_rating ? this.props.user_rating.rating : 0}
-          getLabelText={(value) => `${value} Heart${value !== 1 ? 's' : ''}`}
-          max={10}
-          min={1}
-          precision={0.1}
-          disabled={this.props.username ? false : true}
-          icon={<FavoriteIcon fontSize="inherit" />}
-          onChange={(event, newValue) => {
-            this.props.submit_rating(newValue)
-          }}
-        />
+        {
+          // only display user rating if present
+          this.props.user_rating ? (
+            <Typography>
+              Your rating: {this.props.user_rating.rating}/10
+            </Typography>
+          ) : null
+        }
+
+        {
+          //display skeleton while loading rating
+          this.props.rating ? (
+            <>
+              <StyledRating
+                name="customized-color"
+                value={this.props.rating.rating}
+                getLabelText={(value) =>
+                  `${value} Heart${value !== 1 ? 's' : ''}`
+                }
+                max={10}
+                min={1}
+                precision={0.1}
+                disabled={this.props.username ? false : true}
+                icon={<FavoriteIcon fontSize="inherit" />}
+                onChange={(event, newValue) => {
+                  this.props.submit_rating(newValue)
+                }}
+              />
+              <Typography>
+                with {this.props.rating.nr_ratings} {this.props.rating.nr_ratings == 1? "rating": "ratings"} 
+              </Typography>
+            </>
+          ) : (
+            <Skeleton animation="wave" />
+          )
+        }
       </Box>
     )
   }
