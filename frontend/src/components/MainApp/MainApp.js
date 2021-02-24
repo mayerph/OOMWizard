@@ -6,6 +6,7 @@ import { MemesList } from '../MemesList'
 import { MemeSlideShow } from '../MemeSlideShow'
 import { ImageUpload } from '../ImageUpload'
 import { ImageUrlUpload } from '../ImageUrlUpload'
+import { ImageScreenshotUpload } from '../ImageScreenshotUpload'
 import { ImagePainter } from '../ImagePainter'
 import { MemePhotoCapture } from '../MemePhotoCapture'
 import { Link } from 'react-router-dom'
@@ -79,7 +80,10 @@ class MainApp extends React.Component {
             <ImageUpload />
           </div>
           <div hidden={this.state.newValue !== 2}>
+            <h1>Upload an image from the internet!</h1>
             <ImageUrlUpload />
+            <h1>Take a Screenshot!</h1>
+            <ImageScreenshotUpload />
           </div>
           <div hidden={this.state.newValue !== 3}>
             <MemePhotoCapture />
