@@ -7,6 +7,7 @@ import { getApi } from '../../actions'
 
 import Camera from 'react-html5-camera-photo'
 import 'react-html5-camera-photo/build/css/index.css'
+import { Redirect } from 'react-router-dom'
 
 //https://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
 //got partially stuck when understanding how javascript handles datauri, here how I understanded the code snippet in the onTakePhoto function
@@ -25,47 +26,71 @@ import 'react-html5-camera-photo/build/css/index.css'
 //this upload format is used in all of ther other template upload components
 
 class MemePhotoCapture extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      pictureUrl: null,
+    }
+  }
   onApiLoad() {
     this.props.getApi('api')
   }
 
   render() {
     return (
-      <Camera
-        onTakePhoto={(dataUri) => {
-          console.log(dataUri)
-          var byteString = atob(dataUri.split(',')[1])
-          //console.log(byteString)
-          var mimeString = dataUri.split(',')[0].split(':')[1].split(';')[0]
-          console.log(mimeString)
-          var ia = new Uint8Array(byteString.length)
-          for (var i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i)
-          }
-          console.log(ia)
-          var blob = new Blob([ia], { type: mimeString })
-          console.log(blob)
-          var date = new Date()
+      <div>
+        {this.state.pictureUrl ? (
+          <Redirect
+            to={{
+              pathname: '/imagememe',
+              state: {
+                imageUrls: [this.state.pictureUrl],
+              },
+            }}
+          />
+        ) : (
+          <Camera
+            onTakePhoto={(dataUri) => {
+              console.log(dataUri)
+              var byteString = atob(dataUri.split(',')[1])
+              //console.log(byteString)
+              var mimeString = dataUri.split(',')[0].split(':')[1].split(';')[0]
+              console.log(mimeString)
+              var ia = new Uint8Array(byteString.length)
+              for (var i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i)
+              }
+              console.log(ia)
+              var blob = new Blob([ia], { type: mimeString })
+              console.log(blob)
+              var date = new Date()
 
-          var newfile = new File([blob], 'camera_' + 'test' + '.png', {
-            type: blob.type,
-          })
-          console.log(newfile)
-          var fd = new FormData()
-          fd.append('template', newfile)
+              var newfile = new File([blob], 'camera_' + 'test' + '.png', {
+                type: blob.type,
+              })
+              console.log(newfile)
+              var fd = new FormData()
+              fd.append('template', newfile)
 
-          axios
-            .post('http://localhost:2000/templates/', fd, {})
-            .then((res) => {
-              console.log(res.statusText)
-            })
-            .then((result) => {
-              this.onApiLoad()
-            })
+              axios
+                .post('http://localhost:2000/templates/', fd, {})
+                .then((res) => {
+                  console.log(res)
+                  this.setState({
+                    pictureUrl:
+                      res.config.url.replace('templates/', '') +
+                      res.data.route.substring(1),
+                  })
+                })
+                .then((result) => {
+                  this.onApiLoad()
+                })
 
-          //handleTakePhoto(dataUri)
-        }}
-      />
+              //handleTakePhoto(dataUri)
+            }}
+          />
+        )}
+      </div>
     )
   }
 }

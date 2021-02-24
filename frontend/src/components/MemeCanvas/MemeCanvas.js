@@ -53,8 +53,8 @@ class MemeCanvas extends React.Component {
         <Grid item container direction="row">
           <Grid item id="meme-canvas-text-control-container">
             <TextControl
-              initialImage={
-                this.props.location.state && this.props.location.state.imageUrl
+              initialImages={
+                this.props.location.state && this.props.location.state.imageUrls
               }
             />
           </Grid>

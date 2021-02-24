@@ -16,10 +16,9 @@ class TextControl extends React.Component {
   canvasElementCounter = 0
   handleAddElement(type, url) {
     const element = {
-      x: Math.floor(Math.random() * 200),
-      y: Math.floor(Math.random() * 200),
-      width: Math.floor(Math.random() * 200) + 50,
-      height: Math.floor(Math.random() * 200) + 50,
+      x: 0,
+      y: 0,
+      width: 400,
       bounds: '#meme-canvas',
       id: this.canvasElementCounter++,
       type: type,
@@ -75,8 +74,10 @@ class TextControl extends React.Component {
   }
 
   render() {
-    if (this.props.initialImage && this.canvasElementCounter < 1) {
-      this.handleAddElement('image', this.props.initialImage)
+    if (this.props.initialImages && this.canvasElementCounter < 1) {
+      this.props.initialImages.forEach((image) =>
+        this.handleAddElement('image', image),
+      )
     }
 
     let controlVisibility = this.props.editorState ? 1 : 0.2

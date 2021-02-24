@@ -6,8 +6,15 @@ import { getApi } from '../../actions'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import './ImageUrlUpload.css'
+import { Redirect } from 'react-router-dom'
 
 class ImageUrlUpload extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      pictureUrl: null,
+    }
+  }
   //check if url is legit, regex from https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
   //RegExp matches the text to a regular expression
   //added personal explainations to the regexp after the original comments
@@ -49,6 +56,11 @@ class ImageUrlUpload extends React.Component {
             .post('http://localhost:2000/templates/', fd, {})
             .then((res) => {
               console.log(res.statusText)
+              this.setState({
+                pictureUrl:
+                  res.config.url.replace('templates/', '') +
+                  res.data.route.substring(1),
+              })
             })
             .then((result) => {
               this.onApiLoad()
@@ -64,22 +76,33 @@ class ImageUrlUpload extends React.Component {
 
   render() {
     return (
-      <div className="urlUpload" id="urlUpload">
-        {/*         <input type="text" id="urlinput" placeholder="Image Url" />
+      <div>
+        {this.state.pictureUrl ? (
+          <Redirect
+            to={{
+              pathname: '/imagememe',
+              state: {
+                imageUrls: [this.state.pictureUrl],
+              },
+            }}
+          />
+        ) : (
+          <div className="urlUpload" id="urlUpload">
+            {/*         <input type="text" id="urlinput" placeholder="Image Url" />
         <input type="text" id="nameinput" placeholder="Image Name" /> */}
-        <TextField
-          required
-          id="urlinput"
-          label="Image Url"
-          variant="outlined"
-        />
-        <TextField
-          required
-          id="nameinput"
-          label="Image Name"
-          variant="outlined"
-        />
-        {/*         <button
+            <TextField
+              required
+              id="urlinput"
+              label="Image Url"
+              variant="outlined"
+            />
+            <TextField
+              required
+              id="nameinput"
+              label="Image Name"
+              variant="outlined"
+            />
+            {/*         <button
           id="uploadButtonFile"
           type="submit"
           onClick={this.uploadTemplate.bind(this)}
@@ -87,16 +110,18 @@ class ImageUrlUpload extends React.Component {
           Upload File
         </button> */}
 
-        <Button
-          variant="contained"
-          color="primary"
-          component="span"
-          id="uploadButtonFile"
-          type="submit"
-          onClick={this.uploadTemplate.bind(this)}
-        >
-          Upload File
-        </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              id="uploadButtonFile"
+              type="submit"
+              onClick={this.uploadTemplate.bind(this)}
+            >
+              Upload File
+            </Button>
+          </div>
+        )}
       </div>
     )
   }

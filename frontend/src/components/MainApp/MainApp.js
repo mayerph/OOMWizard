@@ -8,6 +8,7 @@ import { ImageUpload } from '../ImageUpload'
 import { ImageUrlUpload } from '../ImageUrlUpload'
 import { ImagePainter } from '../ImagePainter'
 import { MemePhotoCapture } from '../MemePhotoCapture'
+import { Link } from 'react-router-dom'
 
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -24,7 +25,7 @@ import {
   CollectionsBookmark,
   CloudUpload,
 } from '@material-ui/icons'
-import Link from '@material-ui/icons/Link'
+import LinkIcon from '@material-ui/icons/Link'
 import { VideoTemplates } from '../VideoTemplates'
 import { VideoMemes } from '../VideoMemes'
 
@@ -54,7 +55,7 @@ class MainApp extends React.Component {
             >
               <Tab label="Image Templates" icon={<InsertPhoto />} />
               <Tab label="Upload Image" icon={<CloudUpload />} />
-              <Tab label="Link Image" icon={<Link />} />
+              <Tab label="Link Image" icon={<LinkIcon />} />
               <Tab label="Take Picture" icon={<CameraAlt />} />
               <Tab label="Draw Image" icon={<Brush />} />
               <Tab label="Gif Templates" icon={<Gif />} />
@@ -91,12 +92,14 @@ class MainApp extends React.Component {
               to={{
                 pathname: '/imagememe',
                 state: {
-                  imageUrl:
+                  imageUrls: [
                     'https://i.kym-cdn.com/photos/images/newsfeed/001/733/354/be4.jpg',
+                    'https://i.kym-cdn.com/photos/images/newsfeed/001/733/354/be4.jpg',
+                  ],
                 },
               }}
             >
-              to meme canvas
+              image
             </Link>
           </div>
           <div hidden={this.state.newValue !== 6}>

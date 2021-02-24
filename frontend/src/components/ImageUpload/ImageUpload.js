@@ -6,8 +6,15 @@ import { getApi } from '../../actions'
 import Button from '@material-ui/core/Button'
 import './ImageUpload.css'
 import Input from '@material-ui/core/Input'
+import { Redirect } from 'react-router-dom'
 
 class ImageUpload extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      pictureUrl: null,
+    }
+  }
   uploadTemplate() {
     const container = document.getElementById('templateUpload')
     const file = container.querySelector('input[type="file"]').files[0]
@@ -18,6 +25,11 @@ class ImageUpload extends React.Component {
       .post('http://localhost:2000/templates/', fd, {})
       .then((res) => {
         console.log(res.statusText)
+        this.setState({
+          pictureUrl:
+            res.config.url.replace('templates/', '') +
+            res.data.route.substring(1),
+        })
       })
       .then((result) => {
         this.onApiLoad()
@@ -29,30 +41,43 @@ class ImageUpload extends React.Component {
 
   render() {
     return (
-      <div className="templateUpload" id="templateUpload">
-        <Input
-          type="file"
-          accept="image/png, image/jpeg, image/jpg"
-          id="fileupload"
-        />
+      <div>
+        {this.state.pictureUrl ? (
+          <Redirect
+            to={{
+              pathname: '/imagememe',
+              state: {
+                imageUrls: [this.state.pictureUrl],
+              },
+            }}
+          />
+        ) : (
+          <div className="templateUpload" id="templateUpload">
+            <Input
+              type="file"
+              accept="image/png, image/jpeg, image/jpg"
+              id="fileupload"
+            />
 
-        {/*         <button
+            {/*         <button
           id="uploadButtonFile"
           type="submit"
           onClick={this.uploadTemplate.bind(this)}
         >
           Upload File
         </button> */}
-        <Button
-          variant="contained"
-          color="primary"
-          component="span"
-          id="uploadButtonFile"
-          type="submit"
-          onClick={this.uploadTemplate.bind(this)}
-        >
-          Upload File
-        </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              id="uploadButtonFile"
+              type="submit"
+              onClick={this.uploadTemplate.bind(this)}
+            >
+              Upload File
+            </Button>
+          </div>
+        )}
       </div>
     )
   }

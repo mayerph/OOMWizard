@@ -25,10 +25,14 @@ import {
 } from '../../actions'
 
 import Carousel from 'react-material-ui-carousel'
+import { Redirect } from 'react-router-dom'
 
 class MemeSlideShow extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      pictureUrl: null,
+    }
     props.getApi('api', props.type)
   }
   onApiLoad() {
@@ -45,47 +49,75 @@ class MemeSlideShow extends React.Component {
   autoplay() {
     this.props.autoplay()
   }
+  goToMemeCanvas(url) {
+    if (this.state.pictureUrl === null) {
+      console.log(url)
+      this.setState({
+        pictureUrl: url,
+      })
+    }
+  }
 
   ///currently sorting the memes by title length
   render() {
     return (
-      <div className="root">
-        <Button onClick={this.randomize.bind(this)} variant="outlined">
-          Randomize!
-        </Button>
-        <Button onClick={this.sortByLikes.bind(this)} variant="outlined">
-          Sort by Likes!
-        </Button>
+      <div>
+        {this.state.pictureUrl ? (
+          <Redirect
+            to={{
+              pathname: '/imagememe',
+              state: {
+                imageUrls: [this.state.pictureUrl],
+              },
+            }}
+          />
+        ) : (
+          <div className="root">
+            <Button onClick={this.randomize.bind(this)} variant="outlined">
+              Randomize!
+            </Button>
+            <Button onClick={this.sortByLikes.bind(this)} variant="outlined">
+              Sort by Likes!
+            </Button>
 
-        <Carousel
-          interval={this.props.auto}
-          autoPlay="false"
-          navButtonsAlwaysVisible="true"
-          index={this.props.active}
-        >
-          {this.props.tileData.map((tile) => (
-            <Paper key={tile.id}>
-              <h2>{tile.name}</h2>
-              <img src={tile.url} alt={tile.name} className="slideImage" />
-              <div>
-                <HeartRating style={{}} meme_id={tile.id} />
-              </div>
-              <CommentSection meme_id={tile.id} />
-            </Paper>
-          ))}
-        </Carousel>
+            <Carousel
+              interval={this.props.auto}
+              autoPlay="false"
+              navButtonsAlwaysVisible="true"
+              index={this.props.active}
+            >
+              {this.props.tileData.map((tile) => (
+                <Paper key={tile.id}>
+                  <h2>{tile.name}</h2>
+                  <img
+                    onClick={() => {
+                      this.goToMemeCanvas(tile.url)
+                    }}
+                    src={tile.url}
+                    alt={tile.name}
+                    className="slideImage"
+                  />
+                  <div>
+                    <HeartRating style={{}} meme_id={tile.id} />
+                  </div>
+                  <CommentSection meme_id={tile.id} />
+                </Paper>
+              ))}
+            </Carousel>
 
-        <FormControlLabel
-          control={
-            <Checkbox
-              onChange={this.autoplay.bind(this)}
-              checked={this.props.auto !== '4000' ? false : true}
-              value="autoplay"
-              color="primary"
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={this.autoplay.bind(this)}
+                  checked={this.props.auto !== '4000' ? false : true}
+                  value="autoplay"
+                  color="primary"
+                />
+              }
+              label="Auto-play"
             />
-          }
-          label="Auto-play"
-        />
+          </div>
+        )}
       </div>
     )
   }

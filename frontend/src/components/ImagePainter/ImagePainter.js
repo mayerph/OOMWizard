@@ -4,10 +4,17 @@ import { connect } from 'react-redux'
 import axios from 'axios'
 import { getApi } from '../../actions'
 import { ReactPainter } from 'react-painter'
+import { Link, Redirect } from 'react-router-dom'
 
 import './ImagePainter.css'
 
 class ImagePainter extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      paintingUrl: null,
+    }
+  }
   onApiLoad() {
     this.props.getApi('api')
   }
@@ -28,10 +35,15 @@ class ImagePainter extends React.Component {
             var fd = new FormData()
             fd.append('template', newfile)
             console.log(fd)
+
             axios
               .post('http://localhost:2000/templates/', fd, {})
               .then((res) => {
-                console.log(res.statusText)
+                this.setState({
+                  paintingUrl:
+                    res.config.url.replace('templates/', '') +
+                    res.data.route.substring(1),
+                })
               })
               .then((result) => {
                 this.onApiLoad()
@@ -39,8 +51,21 @@ class ImagePainter extends React.Component {
           }}
           render={({ triggerSave, canvas }) => (
             <div>
-              <div>{canvas}</div>
-              <button onClick={triggerSave}>Save as Template</button>
+              {this.state.paintingUrl ? (
+                <Redirect
+                  to={{
+                    pathname: '/imagememe',
+                    state: {
+                      imageUrls: [this.state.paintingUrl],
+                    },
+                  }}
+                />
+              ) : (
+                <div>
+                  <div>{canvas}</div>
+                  <button onClick={triggerSave}>Save as Template</button>
+                </div>
+              )}
             </div>
           )}
         />
