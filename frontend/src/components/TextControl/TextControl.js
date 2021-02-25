@@ -7,6 +7,7 @@ import FormatBoldIcon from '@material-ui/icons/FormatBold'
 import FormatItalicIcon from '@material-ui/icons/FormatItalic'
 import FormatUnderlineIcon from '@material-ui/icons/FormatUnderlined'
 import ColorizeIcon from '@material-ui/icons/Colorize'
+import SettingsIcon from '@material-ui/icons/Settings'
 import IconButton from '@material-ui/core/IconButton'
 import { connect } from 'react-redux'
 import ResizableText from '../ResizableText/ResizableText'
@@ -21,12 +22,14 @@ class TextControl extends React.Component {
     this.state = {
       isDialogOpened: false,
       memeTemplates: null,
+      isImageGenerated: false,
+      generatedImageUrl: null,
     }
   }
   handleClose() {
-    console.log('aa')
     this.setState({
       isDialogOpened: false,
+      isImageGenerated: false,
     })
   }
 
@@ -48,9 +51,22 @@ class TextControl extends React.Component {
         open={this.state.isDialogOpened}
         aria-labelledby="login-form-title"
       >
-        <DialogTitle id="login-form-title">Select template</DialogTitle>
+        <DialogTitle id="login-form-title">Select Image Template</DialogTitle>
         <DialogContent>
           {this.state.memeTemplates && this.templateList()}
+        </DialogContent>
+      </Dialog>
+    )
+  }
+  generatedImageDialog() {
+    return (
+      <Dialog
+        onClose={() => this.handleClose()}
+        open={this.state.isImageGenerated}
+        aria-labelledby="login-form-title"
+      >
+        <DialogContent>
+          <img src={this.state.generatedImageUrl} />
         </DialogContent>
       </Dialog>
     )
@@ -68,6 +84,64 @@ class TextControl extends React.Component {
       imageUrl: url,
     }
     this.props.dispatch({ type: 'ADD_ELEMENT', element: element })
+  }
+
+  handleGenerate() {
+    const canvas = document
+      .getElementById('meme-canvas')
+      .getBoundingClientRect()
+    const captions = []
+    this.props.canvasElements.forEach((element) => {
+      if (element.type === 'text') {
+        const textElement = document.querySelectorAll(
+          '#resizeable-text-' + element.id + ' span span',
+        )[0]
+        captions.push({
+          text: textElement.textContent,
+          position: {
+            x: textElement.getBoundingClientRect().left - canvas.left,
+            y: textElement.getBoundingClientRect().top - canvas.top,
+          },
+          size: parseInt(
+            window.getComputedStyle(textElement).fontSize.replace('px', ''),
+          ),
+          color: window.getComputedStyle(textElement).color,
+        })
+      } else {
+      }
+    })
+
+    const postData = {
+      memes: [
+        {
+          template: {
+            name: 'Drake-Hotline-Bling.jpg',
+            route: '/images/templates/Drake-Hotline-Bling.jpg',
+            id: '5ff446fa4de819687770bfac',
+          },
+          captions: captions,
+        },
+      ],
+    }
+
+    fetch('http://localhost:2000/memes/file', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(postData),
+    })
+      .then((response) => response.blob())
+      .then((data) => {
+        console.log('Success:', URL.createObjectURL(data))
+        this.setState({
+          generatedImageUrl: URL.createObjectURL(data),
+          isImageGenerated: true,
+        })
+      })
+      .catch((error) => {
+        console.error('Error:', error)
+      })
   }
 
   templateList() {
@@ -149,6 +223,7 @@ class TextControl extends React.Component {
 
     return (
       <div>
+        {this.generatedImageDialog()}
         {this.memeCanvasDialog()}
         <Card className="text-control-card">
           <div style={{ opacity: controlVisibility }}>
@@ -229,7 +304,7 @@ class TextControl extends React.Component {
               startIcon={<AddIcon />}
               onClick={() => this.handleMemeCanvasDialogOpen()}
             >
-              Image
+              Image Template
             </Button>
             <Button
               style={{ margin: 5 }}
@@ -239,6 +314,15 @@ class TextControl extends React.Component {
               onClick={() => this.handleAddElement('text')}
             >
               Text
+            </Button>
+            <Button
+              style={{ margin: 5 }}
+              variant="contained"
+              color="secondary"
+              startIcon={<SettingsIcon />}
+              onClick={() => this.handleGenerate()}
+            >
+              Generate
             </Button>
           </div>
         </Card>
@@ -256,6 +340,7 @@ function mapStateToProps(state) {
     editorStateId: state.focusEditorState.editorStateId,
     editorState: state.focusEditorState.editorState,
     inlineStyles: state.focusEditorState.inlineStyles,
+    canvasElements: state.canvasElements,
   }
 }
 

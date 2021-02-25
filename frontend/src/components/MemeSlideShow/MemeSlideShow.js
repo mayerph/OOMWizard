@@ -1,12 +1,8 @@
 import React from 'react'
-import { Rnd } from 'react-rnd'
 import { connect } from 'react-redux'
 
 import './MemeSlideShow.css'
 
-import GridList from '@material-ui/core/GridList'
-import GridListTile from '@material-ui/core/GridListTile'
-import GridListTileBar from '@material-ui/core/GridListTileBar'
 import {
   FormControlLabel,
   Checkbox,

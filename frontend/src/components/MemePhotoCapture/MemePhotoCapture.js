@@ -1,5 +1,4 @@
 import React from 'react'
-import { Rnd } from 'react-rnd'
 import { connect } from 'react-redux'
 import axios from 'axios'
 

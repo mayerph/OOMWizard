@@ -19,6 +19,16 @@ export interface ICaption {
   color: string
   size: number
 }
+/**
+ * Interface for images
+ */
+export interface IImage {
+  id?: any
+  name: string
+  position: IPosition
+  width: number
+  height: number
+}
 
 /**
  * Interface for a meme
