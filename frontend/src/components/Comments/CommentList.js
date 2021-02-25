@@ -10,16 +10,75 @@ import SendIcon from '@material-ui/icons/Send'
 
 import React from 'react'
 import { connect } from 'react-redux'
-import {
-  load_comments as get_comments,
-  post_comment,
-} from '../../actions/comment.actions'
+
+import * as config from '../../config.json'
+const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 
 class CommentSection extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      comments: undefined,
+    }
+  }
+
+  componentDidMount() {
+    this.load_comments()
+  }
+
+  load_comments() {
+    let url =
+      `${backend_uri}/comments?` +
+      new URLSearchParams({
+        identifier: this.props.identifier,
+      })
+
+    fetch(url, {
+      method: 'GET',
+    }).then(
+      async (res) => {
+        if (res.ok) {
+          let json = await res.json()
+          this.setState({ comments: json.comments })
+        } else {
+          console.log(
+            `Response to fetch comments failed with ${res.status}:${res.statusText}.`,
+          )
+        }
+      },
+      (reason) => console.log(reason),
+    )
+  }
+
+  post_comment(comment) {
+    let formData = new FormData()
+    formData.set('identifier', this.props.identifier)
+    formData.set('comment', comment)
+    let url = `${backend_uri}/comments`
+
+    fetch(url, {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    }).then(
+      async (res) => {
+        if (res.ok) {
+          let json = await res.json()
+          this.setState({ comments: json.comments })
+        } else {
+          console.log(
+            `Response to post comments failed with ${res.status}:${res.statusText}.`,
+          )
+        }
+      },
+      (reason) => console.log(reason),
+    )
+  }
+
   render_comments() {
     return (
       <>
-        {this.props.comments.map((comment, index) => (
+        {this.state.comments.map((comment, index) => (
           <>
             <Divider component="li" />
             <ListItem>
@@ -35,13 +94,9 @@ class CommentSection extends React.Component {
   }
 
   render() {
-    console.log('rendering comments for', this.props.meme_id)
-    if (!this.props.comments) {
-      this.props.load_comments()
-    }
     return (
       <List>
-        {this.props.comments ? (
+        {this.state.comments ? (
           this.render_comments()
         ) : (
           // display some placeholder skeleton while comments are being loaded
@@ -67,7 +122,11 @@ class CommentSection extends React.Component {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={this.props.submit_comment}
+                onClick={(event) => {
+                  let form = new FormData(event.currentTarget.form)
+                  this.post_comment(form.get('comment'))
+                  event.currentTarget.form.reset()
+                }}
               >
                 <SendIcon />
               </Button>
@@ -84,25 +143,12 @@ class CommentSection extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let meme_id = ownProps.meme_id
-  let comments = state.comments[meme_id]
   return {
     username: state.auth.username,
-    meme_id: meme_id,
-    comments: comments,
   }
 }
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    load_comments: () => {
-      get_comments(ownProps.meme_id)(dispatch)
-    },
-    submit_comment: (event) => {
-      let formData = new FormData(event.currentTarget.form)
-      post_comment(ownProps.meme_id, formData.get('comment'))(dispatch)
-      event.currentTarget.form.reset()
-    },
-  }
+const mapDispatchToProps = (dispatch) => {
+  return {}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommentSection)

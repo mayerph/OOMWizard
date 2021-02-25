@@ -9,14 +9,14 @@ const commentsController = new CommentsController()
 
 router.get(
   "/",
-  require_query_param("meme_id"),
+  require_query_param("identifier"),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let meme = req.query.meme_id as string
-      let comments = await commentsController.list_comments(meme)
+      let identifier = req.query.identifier as string
+      let comments = await commentsController.list_comments(identifier)
       return res
         .json({
-          meme_id: meme,
+          identifier: identifier,
           comments: comments
         })
         .end()
@@ -29,21 +29,21 @@ router.get(
 router.post(
   "/",
   require_user(),
-  require_form_param("meme_id"),
+  require_form_param("identifier"),
   require_form_param("comment"),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await commentsController.comment(
-        req.body.meme_id as string,
+        req.body.identifier as string,
         req.user as string,
         req.body.comment as string
       )
       let comments = await commentsController.list_comments(
-        req.body.meme_id as string
+        req.body.identifier as string
       )
       return res
         .json({
-          meme_id: req.body.meme_id,
+          identifier: req.body.identifier,
           comments: comments
         })
         .end()

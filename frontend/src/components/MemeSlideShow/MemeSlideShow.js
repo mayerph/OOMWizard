@@ -98,7 +98,7 @@ class MemeSlideShow extends React.Component {
                     className="slideImage"
                   />
                   <div>
-                    <HeartRating style={{}} meme_id={tile.id} />
+                    <HeartRating style={{}} identifier={tile.id} />
                   </div>
                   <CommentSection meme_id={tile.id} />
                 </Paper>

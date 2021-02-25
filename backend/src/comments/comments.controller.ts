@@ -25,7 +25,7 @@ export class CommentsController {
   async nr_comments_timeline(identifier?: string) {
     let comments = await Comment.find({ identifier: identifier }).exec()
     return comments.map((com, index) => {
-      return { timestamp: com.timestamp, index }
+      return { timestamp: com.timestamp, comments: index }
     })
   }
 }
