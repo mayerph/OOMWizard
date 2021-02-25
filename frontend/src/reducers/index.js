@@ -6,14 +6,14 @@ import memeReducer from './memeReducer'
 import auth from './auth'
 import navigation from './navigation'
 import comments from './comments.state'
-import ratings from './rating.state'
+import meta from './meta.state'
 
 export default combineReducers({
   canvasElements,
   focusEditorState,
   auth,
   comments,
-  ratings,
+  meta,
   nav: navigation,
   api: apiGetter,
   memeReducer,

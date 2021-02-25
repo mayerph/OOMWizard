@@ -48,15 +48,7 @@ export class LoginController {
     }
   }
 
-  require_user(error_message: string="Please log in, for private api access."){
-    return (req: Request, res: Response, next: NextFunction) => {
-       if(!req.user){
-         res.status(403).send(error_message).end()
-       }else{
-         next()
-       }
-    }
-  }
+
   
   async logOut(req: Request, res: Response, next: NextFunction) {
     const token = jwt.sign({username: ''}, jwtKey, {

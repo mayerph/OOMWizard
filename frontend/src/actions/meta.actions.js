@@ -1,19 +1,18 @@
 import * as config from '../config.json'
 const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 
-const dispatch_rating = (dispatch, json_result) => {
-  console.log('new ratings', json_result)
+const dispatch_update_meta_info = (dispatch, json_result) => {
   dispatch({
-    type: 'UPDATE_RATING',
+    type: 'UPDATE_META_INFO',
     payload: json_result,
   })
 }
 
-export const post_rating = (meme_id, rating) => (dispatch) => {
+export const post_rating = (identifier, rating) => (dispatch) => {
   let formData = new FormData()
-  formData.set('meme_id', meme_id)
+  formData.set('identifier', identifier)
   formData.set('rating', rating)
-  let url = `${backend_uri}/rating`
+  let url = `${backend_uri}/meta/rate`
 
   fetch(url, {
     method: 'POST',
@@ -23,7 +22,7 @@ export const post_rating = (meme_id, rating) => (dispatch) => {
     async (res) => {
       if (res.ok) {
         let json = await res.json()
-        dispatch_rating(dispatch, json)
+        dispatch_update_meta_info(dispatch, json)
       } else {
         console.log(
           `Response to post ratings failed with ${res.status}:${res.statusText}.`,
@@ -34,21 +33,15 @@ export const post_rating = (meme_id, rating) => (dispatch) => {
   )
 }
 
-export const load_rating = (meme_id) => (dispatch) => {
-  let url =
-    `${backend_uri}/rating?` +
-    new URLSearchParams({
-      meme_id: meme_id,
-    })
-
-  fetch(url, {
+export const load_meta = (identifier) => (dispatch) => {
+  let url = fetch(`${backend_uri}/meta/${identifier}`, {
     method: 'GET',
     credentials: 'include',
   }).then(
     async (res) => {
       if (res.ok) {
         let json = await res.json()
-        dispatch_rating(dispatch, json)
+        dispatch_update_meta_info(dispatch, json)
       } else {
         console.log(
           `Response to fetch comments failed with ${res.status}:${res.statusText}.`,

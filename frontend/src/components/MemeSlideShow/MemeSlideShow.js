@@ -104,7 +104,6 @@ class MemeSlideShow extends React.Component {
                 </Paper>
               ))}
             </Carousel>
-
             <FormControlLabel
               control={
                 <Checkbox
