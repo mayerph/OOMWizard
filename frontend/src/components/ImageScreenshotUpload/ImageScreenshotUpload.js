@@ -75,42 +75,11 @@ class ImageScreenshotUpload extends React.Component {
   }
 
   render() {
-    //sppech implementation from
+    //speech implementation from
     //https://www.twilio.com/blog/speech-recognition-browser-web-speech-api
-    const button = document.getElementById('start_button')
-    const field = document.getElementById('screennameinput')
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition
+
     let trying = false
-    const speech = new SpeechRecognition()
-    console.log(speech)
-    speech.onresult = console.log
-    const start = () => {
-      console.log('started')
-      speech.start()
-    }
-    const stop = () => {
-      console.log('stoped')
-      speech.stop()
-    }
-    const onResult = (event) => {
-      const results = document.getElementById('results')
-      results.innerHTML = ''
-      for (const res of event.results) {
-        let result = res[0].transcript
-        const text = document.createTextNode(res[0].transcript)
-        const p = document.createElement('p')
-        console.log(result)
-        if (res.isFinal) {
-          p.classList.add('final')
-        }
-        p.appendChild(text)
-        results.appendChild(p)
-      }
-    }
-    speech.continuous = true
-    speech.interimResults = true
-    speech.addEventListener('result', onResult)
+
     return (
       <div className="urlScreenShotUpload" id="urlScreenShotUpload">
         {/*         <input type="text" id="urlinput" placeholder="Image Url" />
@@ -148,8 +117,35 @@ class ImageScreenshotUpload extends React.Component {
         <button
           id="start_button"
           onClick={() => {
-            trying ? stop() : start()
-            trying = !trying
+            const SpeechRecognition =
+              window.SpeechRecognition || window.webkitSpeechRecognition
+            if (typeof SpeechRecognition === 'undefined') {
+            } else {
+              const testinput = document.getElementById('nameinput')
+              const speech = new SpeechRecognition()
+              speech.onresult = console.log
+              trying ? speech.stop() : speech.start()
+              trying = !trying
+              const onResult = (event) => {
+                const results = document.getElementById('results')
+                results.innerHTML = ''
+                for (const res of event.results) {
+                  let result = res[0].transcript
+                  const text = document.createTextNode(res[0].transcript)
+                  const p = document.createElement('p')
+                  console.log(result)
+                  if (res.isFinal) {
+                    p.classList.add('final')
+                  }
+                  p.appendChild(text)
+                  results.appendChild(p)
+                  testinput.value = result
+                }
+              }
+              speech.continuous = true
+              speech.interimResults = true
+              speech.addEventListener('result', onResult)
+            }
           }}
         ></button>
         <div id="results"></div>
