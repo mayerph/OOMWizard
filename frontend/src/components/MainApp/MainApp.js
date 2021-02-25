@@ -95,12 +95,6 @@ class MainApp extends React.Component {
             <Link
               to={{
                 pathname: '/imagememe',
-                state: {
-                  imageUrls: [
-                    'https://i.kym-cdn.com/photos/images/newsfeed/001/733/354/be4.jpg',
-                    'https://i.kym-cdn.com/photos/images/newsfeed/001/733/354/be4.jpg',
-                  ],
-                },
               }}
             >
               image

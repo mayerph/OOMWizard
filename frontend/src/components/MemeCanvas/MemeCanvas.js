@@ -49,42 +49,45 @@ class MemeCanvas extends React.Component {
     }
 
     return (
-      <Grid container>
-        <Grid item container direction="row">
-          <Grid item id="meme-canvas-text-control-container">
-            <TextControl
-              initialImages={
-                this.props.location.state && this.props.location.state.imageUrls
-              }
-            />
+      <div>
+        <Grid container>
+          <Grid item container direction="row">
+            <Grid item id="meme-canvas-text-control-container">
+              <TextControl
+                initialImages={
+                  this.props.location.state &&
+                  this.props.location.state.imageUrls
+                }
+              />
+            </Grid>
+          </Grid>
+          <Grid container direction="row">
+            <Grid item container id="meme-canvas-container">
+              <Rnd
+                id="meme-canvas"
+                default={{
+                  x: 0,
+                  y: 0,
+                  height: 500,
+                }}
+                minWidth="500px"
+                minHeight="500px"
+                bounds="#meme-canvas-container"
+                disableDragging
+                onClick={(e) => this.handleUnfocusText(e)}
+                resizeHandleClasses={{
+                  bottomLeft: 'resize-handle-bottom-left',
+                  bottomRight: 'resize-handle-bottom-right',
+                  topLeft: 'resize-handle-top-left',
+                  topRight: 'resize-handle-top-right',
+                }}
+              >
+                <Card id="meme-canvas-card">{canvasElements}</Card>
+              </Rnd>
+            </Grid>
           </Grid>
         </Grid>
-        <Grid container direction="row">
-          <Grid item container id="meme-canvas-container">
-            <Rnd
-              id="meme-canvas"
-              default={{
-                x: 0,
-                y: 0,
-                height: 500,
-              }}
-              minWidth="500px"
-              minHeight="500px"
-              bounds="#meme-canvas-container"
-              disableDragging
-              onClick={(e) => this.handleUnfocusText(e)}
-              resizeHandleClasses={{
-                bottomLeft: 'resize-handle-bottom-left',
-                bottomRight: 'resize-handle-bottom-right',
-                topLeft: 'resize-handle-top-left',
-                topRight: 'resize-handle-top-right',
-              }}
-            >
-              <Card id="meme-canvas-card">{canvasElements}</Card>
-            </Rnd>
-          </Grid>
-        </Grid>
-      </Grid>
+      </div>
     )
   }
 }

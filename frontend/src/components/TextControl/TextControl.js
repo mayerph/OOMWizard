@@ -11,8 +11,51 @@ import IconButton from '@material-ui/core/IconButton'
 import { connect } from 'react-redux'
 import ResizableText from '../ResizableText/ResizableText'
 import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
 
 class TextControl extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      isDialogOpened: false,
+      memeTemplates: null,
+    }
+  }
+  handleClose() {
+    console.log('aa')
+    this.setState({
+      isDialogOpened: false,
+    })
+  }
+
+  handleMemeCanvasDialogOpen() {
+    fetch('http://localhost:2000/templates/')
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({
+          isDialogOpened: true,
+          memeTemplates: data,
+        })
+      })
+  }
+
+  memeCanvasDialog() {
+    return (
+      <Dialog
+        onClose={() => this.handleClose()}
+        open={this.state.isDialogOpened}
+        aria-labelledby="login-form-title"
+      >
+        <DialogTitle id="login-form-title">Select template</DialogTitle>
+        <DialogContent>
+          {this.state.memeTemplates && this.templateList()}
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
   canvasElementCounter = 0
   handleAddElement(type, url) {
     const element = {
@@ -25,6 +68,27 @@ class TextControl extends React.Component {
       imageUrl: url,
     }
     this.props.dispatch({ type: 'ADD_ELEMENT', element: element })
+  }
+
+  templateList() {
+    return (
+      <div>
+        {this.state.memeTemplates.map((template) => (
+          <img
+            key={template.id}
+            className="meme-canvas-templates"
+            src={'http://localhost:2000' + template.route}
+            onClick={() => {
+              this.handleAddElement(
+                'image',
+                'http://localhost:2000' + template.route,
+              )
+              this.handleClose()
+            }}
+          />
+        ))}
+      </div>
+    )
   }
 
   applyStyle(style) {
@@ -85,6 +149,7 @@ class TextControl extends React.Component {
 
     return (
       <div>
+        {this.memeCanvasDialog()}
         <Card className="text-control-card">
           <div style={{ opacity: controlVisibility }}>
             <IconButton
@@ -162,7 +227,7 @@ class TextControl extends React.Component {
               variant="contained"
               color="secondary"
               startIcon={<AddIcon />}
-              onClick={() => this.handleAddElement('image')}
+              onClick={() => this.handleMemeCanvasDialogOpen()}
             >
               Image
             </Button>
