@@ -9,8 +9,17 @@ import './ImageScreenshotUpload.css'
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
+import { speechtotext } from '../speechtotext/speechtotext.js'
+import IconButton from '@material-ui/core/IconButton'
+import MicIcon from '@material-ui/icons/Mic'
 
 class ImageScreenshotUpload extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      screenshotnameinput: 'Enter Name',
+    }
+  }
   //check if url is legit, regex from https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
   //RegExp matches the text to a regular expression
   //added personal explainations to the regexp after the original comments -> in ImageUrlUpload as code is the same
@@ -77,9 +86,7 @@ class ImageScreenshotUpload extends React.Component {
   render() {
     //speech implementation from
     //https://www.twilio.com/blog/speech-recognition-browser-web-speech-api
-
     let trying = false
-
     return (
       <div className="urlScreenShotUpload" id="urlScreenShotUpload">
         {/*         <input type="text" id="urlinput" placeholder="Image Url" />
@@ -95,6 +102,7 @@ class ImageScreenshotUpload extends React.Component {
           id="screennameinput"
           label="Image Name"
           variant="outlined"
+          value={this.state.screenshotnameinput}
         />
         {/*         <button
           id="uploadButtonFile"
@@ -103,6 +111,18 @@ class ImageScreenshotUpload extends React.Component {
         >
           Upload File
         </button> */}
+        <IconButton
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            console.log(trying)
+            speechtotext('screennameinput', trying)
+            console.log(trying)
+            trying = !trying
+          }}
+        >
+          <MicIcon />
+        </IconButton>
 
         <Button
           variant="contained"
@@ -114,40 +134,7 @@ class ImageScreenshotUpload extends React.Component {
         >
           Upload File
         </Button>
-        <button
-          id="start_button"
-          onClick={() => {
-            const SpeechRecognition =
-              window.SpeechRecognition || window.webkitSpeechRecognition
-            if (typeof SpeechRecognition === 'undefined') {
-            } else {
-              const testinput = document.getElementById('nameinput')
-              const speech = new SpeechRecognition()
-              speech.onresult = console.log
-              trying ? speech.stop() : speech.start()
-              trying = !trying
-              const onResult = (event) => {
-                const results = document.getElementById('results')
-                results.innerHTML = ''
-                for (const res of event.results) {
-                  let result = res[0].transcript
-                  const text = document.createTextNode(res[0].transcript)
-                  const p = document.createElement('p')
-                  console.log(result)
-                  if (res.isFinal) {
-                    p.classList.add('final')
-                  }
-                  p.appendChild(text)
-                  results.appendChild(p)
-                  testinput.value = result
-                }
-              }
-              speech.continuous = true
-              speech.interimResults = true
-              speech.addEventListener('result', onResult)
-            }
-          }}
-        ></button>
+
         <div id="results"></div>
       </div>
     )

@@ -24,6 +24,9 @@ import IconButton from '@material-ui/core/IconButton'
 import CloseButton from '@material-ui/icons/Close'
 import { v4 as uuidv4 } from 'uuid'
 import * as _ from 'lodash'
+import { speechtotext } from '../speechtotext/speechtotext.js'
+import Button from '@material-ui/core/Button'
+import MicIcon from '@material-ui/icons/Mic'
 
 function FrameSelector(props) {
   const { frames, callback } = props
@@ -364,6 +367,7 @@ const VideoTemplates = (props) => {
   }, [activeCaption])
 
   const classes = useStyles()
+  let trying = false
 
   return (
     <div className="meme-generator-body">
@@ -452,8 +456,21 @@ const VideoTemplates = (props) => {
                         handleChange(e, index)
                       }}
                       variant="outlined"
+                      id={item.id}
                     />
                   </div>
+                  <IconButton
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      console.log(trying)
+                      speechtotext(item.id, trying)
+                      console.log(trying)
+                      trying = !trying
+                    }}
+                  >
+                    <MicIcon />
+                  </IconButton>
                   <div>
                     <RangeSlider
                       frames={frameList.length}
