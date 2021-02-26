@@ -101,7 +101,7 @@ class StatsView extends React.Component {
           <Card>
             <ReactApexChart
               type="line"
-              height={350}
+              height={200}
               options={{
                 ...chart_base_options,
                 title: { text: 'Avg rating over time', align: 'left' },
@@ -117,7 +117,7 @@ class StatsView extends React.Component {
           <Card>
             <ReactApexChart
               type="line"
-              height={350}
+              height={200}
               options={{
                 ...chart_base_options,
                 title: { text: 'Views over time', align: 'left' },
@@ -133,7 +133,7 @@ class StatsView extends React.Component {
           <Card>
             <ReactApexChart
               type="line"
-              height={350}
+              height={200}
               options={{
                 ...chart_base_options,
                 title: { text: 'Comments over time', align: 'left' },
@@ -149,7 +149,7 @@ class StatsView extends React.Component {
           <Card>
             <ReactApexChart
               type="line"
-              height={350}
+              height={200}
               options={{
                 ...chart_base_options,
                 title: { text: 'Generated memes over time', align: 'left' },
