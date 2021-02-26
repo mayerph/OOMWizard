@@ -1,5 +1,4 @@
 import React from 'react'
-import { Rnd } from 'react-rnd'
 import { connect } from 'react-redux'
 
 import './TileView.css'
@@ -12,21 +11,10 @@ import GetAppIcon from '@material-ui/icons/GetApp'
 import ShareIcon from '@material-ui/icons/Share'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 
-import { changeActive } from '../../actions'
-import {
-  EmailShareButton,
-  FacebookShareButton,
-  TwitterShareButton,
-  WhatsappShareButton,
-} from 'react-share'
-
-import { EmailIcon, FacebookIcon, WhatsappIcon } from 'react-share'
 import { ShareDialog } from '../ShareDialog'
 import { DownloadDialog } from '../DownloadDialog'
 import axios from 'axios'
-import { useEffect } from 'react'
 
-import HearingIcon from '@material-ui/icons/Hearing'
 import Speech from 'react-speech'
 import { Redirect } from 'react-router-dom'
 import { Typography } from '@material-ui/core'
@@ -95,7 +83,7 @@ class TileView extends React.Component {
     return text
   }
 
-  upload_img_flip(tile) { //FIXME this needs to be reintroduce to render template image
+  upload_img_flip(tile) {
     fetch(tile.url)
       .then((res) => res.blob())
       .then((blob) => {
@@ -152,24 +140,35 @@ class TileView extends React.Component {
                 <Speech text={this.get_img_speech(tile)} />
               </IconButton>
 
-              {/** download button */}
-              <IconButton
-                aria-label="download"
-                onClick={() => {
-                  this.prompt_download(tile)
-                }}
-                download
-              >
-                <GetAppIcon
-                  style={{
-                    color: '#fafafa',
-                    fontSize: 15,
-                    backgroundColor: '#2196f3',
-                    borderRadius: 5,
-                    padding: 2,
+              {tile.foreign ? (
+                // upload button
+                <IconButton>
+                  <CloudUploadIcon
+                    aria-label="upload"
+                    onClick={() => this.upload_img_flip(tile)}
+                  ></CloudUploadIcon>
+                </IconButton>
+              ) : (
+                // download button
+                // download button
+                <IconButton
+                  aria-label="download"
+                  onClick={() => {
+                    this.prompt_download(tile)
                   }}
-                />
-              </IconButton>
+                  download
+                >
+                  <GetAppIcon
+                    style={{
+                      color: '#fafafa',
+                      fontSize: 15,
+                      backgroundColor: '#2196f3',
+                      borderRadius: 5,
+                      padding: 2,
+                    }}
+                  />
+                </IconButton>
+              )}
 
               {/** share button */}
               <IconButton

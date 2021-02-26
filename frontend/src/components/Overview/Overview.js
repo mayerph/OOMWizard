@@ -73,6 +73,7 @@ class Overview extends React.Component {
       .then((results) => {
         for (var meme of results.data.memes) {
           meme.type = 'img_meme'
+          meme.foreign = true
         }
         this.expand_with_meta_info('ImgFlip', results.data.memes)
       })
@@ -106,6 +107,7 @@ class Overview extends React.Component {
           template.url = template.route
           template.type = 'img_template'
         }
+        console.log(results)
         this.expand_with_meta_info('omm_templates', results)
       })
   }
