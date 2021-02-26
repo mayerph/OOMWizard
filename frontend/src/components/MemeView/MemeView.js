@@ -12,6 +12,8 @@ import {
   CircularProgress,
   Check,
   Button,
+  Switch,
+  FormControlLabel,
 } from '@material-ui/core'
 
 import ToogleButtonGroup from '@material-ui/lab/ToggleButtonGroup'
@@ -33,6 +35,7 @@ class MemeView extends React.Component {
     this.state = {
       mode: 'gallery',
       focused_gallery_item: undefined,
+      ownedOnly: false,
       sort_by: 'rating',
       source: 'omm',
       data: undefined,
@@ -55,6 +58,7 @@ class MemeView extends React.Component {
             ...meta_infos[i],
           }
         })
+        console.log('Loaded:', result)
         this.setState({
           source: source,
           data: result,
@@ -88,6 +92,8 @@ class MemeView extends React.Component {
         this.expand_with_meta_info('omm', tileData)
       })
   }
+
+
 
   load_data(source = this.state.source) {
     if (source === 'omm') {
@@ -134,9 +140,12 @@ class MemeView extends React.Component {
   create_memes_list() {
     var result = this.state.data
     if (this.state.filter && this.state.filter != '') {
-      result = this.state.data.filter((e, i) =>
-        e.name.includes(this.state.filter),
-      )
+      result = result.filter((e, i) => e.name.includes(this.state.filter))
+    }
+    if (this.state.ownedOnly) {
+      result = result.filter((e, i) => {
+        return e.owner && (e.owner == this.props.username)
+      })
     }
     result = this.sort(result)
     return result
@@ -160,6 +169,21 @@ class MemeView extends React.Component {
                 <Button onClick={() => this.load_data()}>
                   <RefreshIcon fontSize="small" />
                 </Button>
+              </Box>
+
+              {/** own meme filter */}
+              <Box component="span" m={1}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={this.state.ownedOnly}
+                      onChange={(e) => {
+                        this.setState({ ownedOnly: e.target.checked })
+                      }}
+                    />
+                  }
+                  label="Owned"
+                />
               </Box>
 
               {/** sort */}
