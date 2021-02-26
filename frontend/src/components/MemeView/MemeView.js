@@ -25,6 +25,7 @@ import MemesList from '../MemesList/MemesList'
 import MemeSlideShow from '../MemeSlideShow/MemeSlideShow'
 
 import { randomizeTD } from '../../reducers/apigetter'
+import { set } from 'lodash'
 
 class MemeView extends React.Component {
   constructor(props) {
@@ -39,6 +40,28 @@ class MemeView extends React.Component {
     }
   }
 
+  expand_with_meta_info(source, data) {
+    let formData = new FormData()
+    formData.set('identifiers', JSON.stringify(data.map((e) => e.id)))
+    fetch('http://localhost:2000/meta/', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((meta_infos) => {
+        let result = data.map((e, i) => {
+          return {
+            ...e,
+            ...meta_infos[i],
+          }
+        })
+        this.setState({
+          source: source,
+          data: result,
+        })
+      })
+  }
+
   load_img_flip() {
     //TODO with config
     fetch('https://api.imgflip.com/get_memes', {
@@ -46,16 +69,14 @@ class MemeView extends React.Component {
     })
       .then((res) => res.json())
       .then((results) => {
-        this.setState({
-          source: 'ImgFlip',
-          data: results.data.memes,
-        })
+        this.expand_with_meta_info('ImgFlip', results.data.memes)
       })
   }
 
   load_omm_wizard() {
     fetch('http://localhost:2000/memes/', {
       method: 'GET',
+      credentials: 'include',
     })
       .then((res) => res.json())
       .then((results) => {
@@ -64,10 +85,7 @@ class MemeView extends React.Component {
           tileData[i].route = 'http://localhost:2000' + tileData[i].route
           tileData[i].url = tileData[i].route
         }
-        this.setState({
-          source: 'omm',
-          data: tileData,
-        })
+        this.expand_with_meta_info('omm', tileData)
       })
   }
 
@@ -88,11 +106,11 @@ class MemeView extends React.Component {
   sort(items) {
     switch (this.state.sort_by) {
       case 'views':
-        return items //TODO
+        return items.sort((a,b)=> b.meta_info.views - a.meta_info.views)
       case 'comments':
-        return items //TODO
+        return items.sort((a,b)=> b.meta_info.comments - a.meta_info.comments)
       case 'rating':
-        return items // TODO
+        return items.sort((a,b)=> b.meta_info.avg_rating - a.meta_info.avg_rating)
       case 'date':
         return items // TODO
       case 'random':
