@@ -111,7 +111,32 @@ class MemesList extends React.Component {
                     actionIcon={
                       <div className="actionButtons">
                         <IconButton>
-                          <Speech text={tile.name} />
+                          {this.props.type === 'template' ? (
+                            <Speech
+                              text={'The template title is ' + tile.name}
+                            />
+                          ) : (
+                            <Speech
+                              text={
+                                typeof tile.captions === 'undefined'
+                                  ? 'The meme title is ' +
+                                    tile.name +
+                                    ' and there are no captions'
+                                  : tile.captions.length > 0
+                                  ? 'The meme title is ' +
+                                    tile.name +
+                                    ' and the captions say ' +
+                                    tile.captions
+                                      .map((c) => {
+                                        return c.text
+                                      })
+                                      .toString()
+                                  : 'The meme title is ' +
+                                    tile.name +
+                                    ' and there are no captions'
+                              }
+                            />
+                          )}
                         </IconButton>
 
                         {/* <IconButton
