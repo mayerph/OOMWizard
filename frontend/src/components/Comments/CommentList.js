@@ -81,7 +81,7 @@ class CommentSection extends React.Component {
         {this.state.comments.map((comment, index) => (
           <>
             <Divider component="li" />
-            <ListItem>
+            <ListItem style={{ width: '100%' }}>
               <ListItemText
                 primary={`${comment.username} - ${comment.timestamp}`}
                 secondary={comment.comment}
@@ -95,7 +95,7 @@ class CommentSection extends React.Component {
 
   render() {
     return (
-      <List>
+      <List style={{ width: '100%' }}>
         {this.state.comments ? (
           this.render_comments()
         ) : (
@@ -108,7 +108,7 @@ class CommentSection extends React.Component {
         )}
         <Divider />
         {this.props.username ? (
-          <ListItem>
+          <ListItem style={{ width: '100%' }}>
             <form style={{ width: '100%' }} noValidate autoComplete="off">
               <TextField
                 fullWidth

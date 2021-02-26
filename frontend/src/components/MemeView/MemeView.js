@@ -218,6 +218,7 @@ class MemeView extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
+    // logging in should trigger an update, because new memes may be retrieved
     username: state.auth.username,
   }
 }

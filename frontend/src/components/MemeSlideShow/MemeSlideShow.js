@@ -5,14 +5,18 @@ import { Redirect } from 'react-router-dom'
 import {
   FormControlLabel,
   Checkbox,
-  Paper,
-  DialogTitle,
   Typography,
-  Button,
   Box,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
 } from '@material-ui/core'
+
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+
 import CommentSection from '../Comments/CommentList'
 import HeartRating from '../Rating/HeartRating'
+import StatsView from '../StatsView/StatsView'
 
 import Carousel from 'react-material-ui-carousel'
 import './MemeSlideShow.css'
@@ -23,16 +27,6 @@ class MemeSlideShow extends React.Component {
     this.state = {
       current: undefined,
       autoplay: false,
-    }
-  }
-
-  //TODO remove and refactor
-  goToMemeCanvas(url) {
-    if (this.state.pictureUrl === null) {
-      console.log(url)
-      this.setState({
-        pictureUrl: url,
-      })
     }
   }
 
@@ -63,14 +57,32 @@ class MemeSlideShow extends React.Component {
               <h2>{tile.name}</h2>
               <img
                 className="slideImage"
-                onClick={() => {
-                  this.goToMemeCanvas(tile.url)
-                }}
+                onClick={() => {}} //TODO
                 src={tile.url}
                 alt={tile.name}
               />
+
               <HeartRating style={{}} identifier={tile.id} />
-              <CommentSection meme_id={tile.id} />
+
+              {/** stats */}
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>Stats</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <StatsView identifier={tile.id} />
+                </AccordionDetails>
+              </Accordion>
+
+              {/** comments */}
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography>Comment section</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <CommentSection identifier={tile.id} />
+                </AccordionDetails>
+              </Accordion>
             </Box>
           ))}
         </Carousel>
