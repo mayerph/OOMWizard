@@ -95,15 +95,16 @@ class MemesList extends React.Component {
 
             <GridList cellHeight={500} className="gridList" cols={4}>
               {this.props.tileData.map((tile, index) => (
-                <GridListTile
-                  key={tile.id}
-                  cols={tile.cols || 1}
-                  onClick={() => {
-                    console.log(index)
-                    this.updateActive(index, tile.url)
-                  }}
-                >
-                  <img src={tile.url} alt={tile.name} className="gridImg" />
+                <GridListTile key={tile.id} cols={tile.cols || 1}>
+                  <img
+                    src={tile.url}
+                    alt={tile.name}
+                    className="gridImg"
+                    onClick={() => {
+                      console.log(index)
+                      this.updateActive(index, tile.url)
+                    }}
+                  />
                   <GridListTileBar
                     title={tile.name}
                     subtitle={'likes: ' + tile.name.length}
