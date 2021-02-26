@@ -106,13 +106,19 @@ class MemeView extends React.Component {
   sort(items) {
     switch (this.state.sort_by) {
       case 'views':
-        return items.sort((a,b)=> b.meta_info.views - a.meta_info.views)
+        return items.sort((a, b) => b.meta_info.views - a.meta_info.views)
       case 'comments':
-        return items.sort((a,b)=> b.meta_info.comments - a.meta_info.comments)
+        return items.sort((a, b) => b.meta_info.comments - a.meta_info.comments)
       case 'rating':
-        return items.sort((a,b)=> b.meta_info.avg_rating - a.meta_info.avg_rating)
+        return items.sort(
+          (a, b) => b.meta_info.avg_rating - a.meta_info.avg_rating,
+        )
       case 'date':
-        return items // TODO
+        return items.sort((a, b) => {
+          bTime = b.timestamp ? Date.parse(b.timestamp) : 0
+          aTime = a.timestamp ? Date.parse(a.timestamp) : 0
+          return bTime - aTime
+        })
       case 'random':
       default:
         return randomizeTD(items)
