@@ -74,6 +74,10 @@ const memeSchema = new Schema(
       enum: ["private", "unlisted", "public"],
       required: false
     },
+    timestamp:{
+      type: Date,
+      required: false,
+    },
     route: {
       type: String,
       required: true

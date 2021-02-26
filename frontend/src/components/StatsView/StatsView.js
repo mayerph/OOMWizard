@@ -1,15 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import ReactApexChart from 'react-apexcharts'
-import Divider from '@material-ui/core/Divider'
+
+import { Divider, CardContent, Box, Card, Typography } from '@material-ui/core'
 import Skeleton from '@material-ui/lab/Skeleton'
-import Typography from '@material-ui/core/Typography'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
 
 import * as config from '../../config.json'
 const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
-
 
 let chart_base_options = {
   chart: {
@@ -64,7 +61,7 @@ class StatsView extends React.Component {
           data: {
             meta: result.meta_info,
             stats: result.timeline,
-          }
+          },
         })
       } else {
         console.log(
@@ -97,72 +94,67 @@ class StatsView extends React.Component {
         return { x: e.timestamp, y: e.nr_comments }
       })
       return (
-        <>
-          <Card>
-            <ReactApexChart
-              type="line"
-              height={350}
-              options={{
-                ...chart_base_options,
-                title: { text: 'Avg rating over time', align: 'left' },
-              }}
-              series={[
-                {
-                  name: 'rating',
-                  data: ratings,
-                },
-              ]}
-            />
-          </Card>
-          <Card>
-            <ReactApexChart
-              type="line"
-              height={350}
-              options={{
-                ...chart_base_options,
-                title: { text: 'Views over time', align: 'left' },
-              }}
-              series={[
-                {
-                  name: 'views',
-                  data: views,
-                },
-              ]}
-            />
-          </Card>
-          <Card>
-            <ReactApexChart
-              type="line"
-              height={350}
-              options={{
-                ...chart_base_options,
-                title: { text: 'Comments over time', align: 'left' },
-              }}
-              series={[
-                {
-                  name: 'comments',
-                  data: nr_comments,
-                },
-              ]}
-            />
-          </Card>
-          <Card>
-            <ReactApexChart
-              type="line"
-              height={350}
-              options={{
-                ...chart_base_options,
-                title: { text: 'Generated memes over time', align: 'left' },
-              }}
-              series={[
-                {
-                  name: 'generated_memes',
-                  data: generated_memes,
-                },
-              ]}
-            />
-          </Card>
-        </>
+        <Card>
+          <ReactApexChart
+            type="line"
+            height={200}
+            options={{
+              ...chart_base_options,
+              title: { text: 'Avg rating over time', align: 'left' },
+            }}
+            series={[
+              {
+                name: 'rating',
+                data: ratings,
+              },
+            ]}
+          />
+          <Divider />
+          <ReactApexChart
+            type="line"
+            height={200}
+            options={{
+              ...chart_base_options,
+              title: { text: 'Views over time', align: 'left' },
+            }}
+            series={[
+              {
+                name: 'views',
+                data: views,
+              },
+            ]}
+          />
+          <Divider />
+          <ReactApexChart
+            type="line"
+            height={200}
+            options={{
+              ...chart_base_options,
+              title: { text: 'Comments over time', align: 'left' },
+            }}
+            series={[
+              {
+                name: 'comments',
+                data: nr_comments,
+              },
+            ]}
+          />
+          <Divider />
+          <ReactApexChart
+            type="line"
+            height={200}
+            options={{
+              ...chart_base_options,
+              title: { text: 'Generated memes over time', align: 'left' },
+            }}
+            series={[
+              {
+                name: 'generated_memes',
+                data: generated_memes,
+              },
+            ]}
+          />
+        </Card>
       )
     }
   }
