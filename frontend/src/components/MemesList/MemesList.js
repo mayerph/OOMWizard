@@ -114,7 +114,7 @@ class MemesList extends React.Component {
                           <Speech text={tile.name} />
                         </IconButton>
 
-                        <IconButton
+                        {/* <IconButton
                           aria-label="upvote"
                           onClick={() => {
                             if (tile.url.split('.')[1] == 'imgflip') {
@@ -147,7 +147,7 @@ class MemesList extends React.Component {
                                 })
                             } else {
                               alert(
-                                'feature can only be used on the imgflip images',
+                                'upload feature can only be used on the imgflip images',
                               )
                             }
                           }}
@@ -161,7 +161,7 @@ class MemesList extends React.Component {
                               padding: 2,
                             }}
                           />
-                        </IconButton>
+                        </IconButton> */}
 
                         {/* <IconButton aria-label="downvote">
                       <ArrowDownwardIcon
@@ -177,7 +177,35 @@ class MemesList extends React.Component {
                         <IconButton
                           aria-label="download"
                           onClick={() => {
-                            if (this.props.type == 'template') {
+                            if (tile.url.split('.')[1] == 'imgflip') {
+                              fetch(tile.url)
+                                .then((res) => res.blob())
+                                .then((blob) => {
+                                  console.log(blob)
+                                  var newfile = new File(
+                                    [blob],
+                                    tile.name + '.jpg',
+                                    {
+                                      type: blob.type,
+                                    },
+                                  )
+                                  console.log(newfile)
+                                  var fd = new FormData()
+                                  fd.append('template', newfile)
+                                  axios
+                                    .post(
+                                      'http://localhost:2000/templates/',
+                                      fd,
+                                      {},
+                                    )
+                                    .then((res) => {
+                                      console.log(res.statusText)
+                                    })
+                                    .then((result) => {
+                                      //this.onApiLoad()
+                                    })
+                                })
+                            } else if (this.props.type == 'template') {
                               this.setState({
                                 ...this.state,
                                 memeToDownload: {
@@ -201,7 +229,7 @@ class MemesList extends React.Component {
                             style={{
                               color: '#fafafa',
                               fontSize: 15,
-                              backgroundColor: '#2196f3',
+                              backgroundColor: '#00984A',
                               borderRadius: 5,
                               padding: 2,
                             }}
