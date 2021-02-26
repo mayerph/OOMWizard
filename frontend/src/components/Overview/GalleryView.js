@@ -27,6 +27,7 @@ class GalleryView extends React.Component {
     this.state = {
       current: undefined,
       autoplay: false,
+      focus_index: props.data.findIndex(e => e.id === props.focus),
     }
   }
 
@@ -50,14 +51,14 @@ class GalleryView extends React.Component {
           interval={this.props.auto}
           autoPlay={this.state.autoplay}
           navButtonsAlwaysVisible="true"
-          index={this.props.active}
+          index={this.state.focus_index}
         >
           {this.props.data.map((tile) => (
             <Box key={tile.id} align={'center'} m={1}>
               <h2>{tile.name}</h2>
               <img
                 className="slideImage"
-                onClick={() => {}} //TODO
+                onClick={() => { alert('implement meme creation here', tile.id)}} 
                 src={tile.url}
                 alt={tile.name}
               />

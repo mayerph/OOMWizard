@@ -32,7 +32,8 @@ class Overview extends React.Component {
     super(props)
     this.state = {
       mode: 'gallery',
-      focused_gallery_item: undefined,
+      gallery_focus: undefined,
+      gallery_autoplay: false,
       ownedOnly: false,
       sort_by: 'rating',
       source: 'omm',
@@ -267,12 +268,17 @@ class Overview extends React.Component {
             this.state.mode == 'grid' ? (
               <TileView
                 data={this.create_memes_list()}
-                triggerFocus={(id) => alert('implement focus for', id)}
+                triggerFocus={(id) =>
+                  this.setState({
+                    mode: 'gallery',
+                    gallery_focus: id,
+                  })
+                }
               />
             ) : (
               <GalleryView
                 data={this.create_memes_list()}
-                focus={this.state.focused_gallery_item}
+                focus={this.state.gallery_focus}
               />
             )
           ) : (
