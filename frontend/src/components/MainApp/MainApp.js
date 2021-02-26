@@ -29,6 +29,7 @@ import {
 import LinkIcon from '@material-ui/icons/Link'
 import { VideoTemplates } from '../VideoTemplates'
 import { VideoMemes } from '../VideoMemes'
+import { MemeView } from '../MemeView'
 
 class MainApp extends React.Component {
   constructor(props) {
@@ -67,6 +68,8 @@ class MainApp extends React.Component {
             </Tabs>
           </Paper>
           <div hidden={this.state.newValue !== 0}>
+            <MemeView />
+            {/*
             <Grid container id="memes-list-container">
               <Grid item xs={4}>
                 <MemeSlideShow type="template" />
@@ -75,6 +78,7 @@ class MainApp extends React.Component {
                 <MemesList type="template" />
               </Grid>
             </Grid>
+            */}
           </div>
           <div hidden={this.state.newValue !== 1}>
             <ImageUpload />
@@ -120,6 +124,7 @@ class MainApp extends React.Component {
             >
               To list of created Memes
             </Link> */}
+            {/** 
             <Grid container id="memes-list-container">
               <Grid item xs={4}>
                 <MemeSlideShow type="meme" />
@@ -128,6 +133,7 @@ class MainApp extends React.Component {
                 <MemesList type="meme" />
               </Grid>
             </Grid>
+            */}
           </div>
           <div hidden={this.state.newValue !== 8}>
             <VideoMemes></VideoMemes>

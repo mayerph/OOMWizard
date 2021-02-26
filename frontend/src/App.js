@@ -23,6 +23,7 @@ function App() {
           <Route path={'/'} exact component={MainApp} />
           <Route path={'/meme/:id'} exact component={SharedMeme} />
           <Route path={'/imagememe/'} exact component={MemeCanvas} />
+          {/** 
           <Route
             path={'/memeslist/'}
             render={(props) => (
@@ -36,6 +37,7 @@ function App() {
               </Grid>
             )}
           />
+            */}
           <Redirect to="/" />
         </Switch>
       </div>

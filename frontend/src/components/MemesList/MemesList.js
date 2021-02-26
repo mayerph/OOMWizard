@@ -7,21 +7,19 @@ import './MemesList.css'
 import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
 import GridListTileBar from '@material-ui/core/GridListTileBar'
-import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward'
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import GetAppIcon from '@material-ui/icons/GetApp'
 import ShareIcon from '@material-ui/icons/Share'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 
-import { getApi, getApiImgFlip, uploadUrl, changeActive } from '../../actions'
+import { changeActive } from '../../actions'
 import {
   EmailShareButton,
   FacebookShareButton,
   TwitterShareButton,
   WhatsappShareButton,
 } from 'react-share'
+
 import { EmailIcon, FacebookIcon, WhatsappIcon } from 'react-share'
 import { ShareDialog } from '../ShareDialog'
 import { DownloadDialog } from '../DownloadDialog'
@@ -31,312 +29,189 @@ import { useEffect } from 'react'
 import HearingIcon from '@material-ui/icons/Hearing'
 import Speech from 'react-speech'
 import { Redirect } from 'react-router-dom'
+import { Typography } from '@material-ui/core'
 
+/**
+ * supported props:
+ * - data: list of memes
+ * - type: template/meme
+ */
 class MemesList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      memeToShare: undefined,
-      memeToDownload: undefined,
-      pictureUrl: null,
+      prompt_share: undefined,
+      prompt_download: undefined,
+      opening: undefined,
     }
-    props.getApi('api', props.type)
   }
 
-  onApiLoad() {
-    this.props.getApi('api', this.props.type)
-  }
-  onApiIMGFlipLoad() {
-    this.props.getApiImgFlip('api', this.props.type)
-  }
-  goToMemeCanvas(url) {}
-  uploadUrl() {
-    this.props.uploadUrl('')
-  }
-  updateActive(index, url) {
-    if (this.state.pictureUrl === null) {
-      console.log(url)
+  on_click_image(index, url) {}
+
+  prompt_download(tile) {
+    if (this.props.type == 'template') {
       this.setState({
-        pictureUrl: url,
+        ...this.state,
+        prompt_download: {
+          id: tile.id,
+          name: tile.name,
+          route: tile.route,
+          template: tile,
+          captions: [],
+        },
+      })
+    } else {
+      this.setState({
+        ...this.state,
+        prompt_download: tile,
       })
     }
-    console.log(this.props)
-    console.log(index)
-    this.props.changeActive(this.props, index)
+  }
+
+  prompt_share(tile) {
+    if (this.props.type == 'template') {
+      this.setState({
+        prompt_share: {
+          id: tile.id,
+          name: tile.name,
+          route: tile.route,
+          template: tile,
+          captions: [],
+        },
+      })
+    } else {
+      this.setState({
+        prompt_share: tile,
+      })
+    }
+  }
+
+  get_speech(tile) {
+    if (this.props.type === 'template') {
+      return 'The template title is ' + tile.name
+    } else {
+      let text = `The meme title is ${tile.name}.`
+      text +=
+        tile.captions && tile.captions.length > 0
+          ? `And the captions say` + tile.captions.map((c) => c.text).toString()
+          : 'And there are not captions'
+      return text
+    }
+  }
+
+  upload_img_flip(tile) {
+    fetch(tile.url)
+      .then((res) => res.blob())
+      .then((blob) => {
+        var newfile = new File([blob], tile.name + '.jpg', { type: blob.type })
+        var fd = new FormData()
+        fd.append('template', newfile)
+        axios.post('http://localhost:2000/templates/', fd, {}).then((res) => {
+          console.log(res.statusText)
+        })
+      })
+  }
+
+  render_tile(tile, index) {
+    return (
+      <GridListTile key={tile.id} cols={tile.cols || 1}>
+        <img
+          src={tile.url}
+          alt={tile.name}
+          className="gridImg"
+          onClick={() => this.on_click_image(index, tile.url)}
+        />
+        <GridListTileBar
+          title={tile.name}
+          subtitle={''}
+          actionIcon={
+            <div className="actionButtons">
+              {/** text to speech */}
+              <IconButton>
+                <Speech text={this.get_speech(tile)} />
+              </IconButton>
+
+              {/** download button */}
+              <IconButton
+                aria-label="download"
+                onClick={() => {
+                  this.prompt_download(tile)
+                }}
+                download
+              >
+                <GetAppIcon
+                  style={{
+                    color: '#fafafa',
+                    fontSize: 15,
+                    backgroundColor: '#2196f3',
+                    borderRadius: 5,
+                    padding: 2,
+                  }}
+                />
+              </IconButton>
+
+              {/** share button */}
+              <IconButton
+                aria-label="share-btn"
+                onClick={() => {
+                  this.prompt_share(tile)
+                }}
+              >
+                <ShareIcon
+                  style={{
+                    color: '#fafafa',
+                    fontSize: 15,
+                    backgroundColor: '#2196f3',
+                    borderRadius: 5,
+                    padding: 2,
+                  }}
+                />
+              </IconButton>
+            </div>
+          }
+        />
+      </GridListTile>
+    )
   }
 
   render() {
     return (
-      <div>
-        {this.state.pictureUrl ? (
-          <Redirect
-            to={{
-              pathname: '/imagememe',
-              state: {
-                imageUrls: [this.state.pictureUrl],
-              },
-            }}
-          />
-        ) : (
-          <div className="root">
-            {this.props.type === 'template' ? (
-              <Button onClick={this.onApiLoad.bind(this)} variant="outlined">
-                Load OOMWizard Templates
-              </Button>
-            ) : null}
-            {this.props.type === 'template' ? (
-              <Button
-                onClick={this.onApiIMGFlipLoad.bind(this)}
-                variant="outlined"
-              >
-                Load IMGFlip Templates
-              </Button>
-            ) : null}
+      <>
+        <GridList cellHeight={500} className="gridList" cols={4}>
+          {this.props.data.map((tile, index) => this.render_tile(tile, index))}
 
-            <GridList cellHeight={500} className="gridList" cols={4}>
-              {this.props.tileData.map((tile, index) => (
-                <GridListTile key={tile.id} cols={tile.cols || 1}>
-                  <img
-                    src={tile.url}
-                    alt={tile.name}
-                    className="gridImg"
-                    onClick={() => {
-                      console.log(index)
-                      this.updateActive(index, tile.url)
-                    }}
-                  />
-                  <GridListTileBar
-                    title={tile.name}
-                    subtitle={'likes: ' + tile.name.length}
-                    actionIcon={
-                      <div className="actionButtons">
-                        <IconButton>
-                          {this.props.type === 'template' ? (
-                            <Speech
-                              text={'The template title is ' + tile.name}
-                            />
-                          ) : (
-                            <Speech
-                              text={
-                                typeof tile.captions === 'undefined'
-                                  ? 'The meme title is ' +
-                                    tile.name +
-                                    ' and there are no captions'
-                                  : tile.captions.length > 0
-                                  ? 'The meme title is ' +
-                                    tile.name +
-                                    ' and the captions say ' +
-                                    tile.captions
-                                      .map((c) => {
-                                        return c.text
-                                      })
-                                      .toString()
-                                  : 'The meme title is ' +
-                                    tile.name +
-                                    ' and there are no captions'
-                              }
-                            />
-                          )}
-                        </IconButton>
-
-                        {/* <IconButton
-                          aria-label="upvote"
-                          onClick={() => {
-                            if (tile.url.split('.')[1] == 'imgflip') {
-                              fetch(tile.url)
-                                .then((res) => res.blob())
-                                .then((blob) => {
-                                  console.log(blob)
-                                  var newfile = new File(
-                                    [blob],
-                                    tile.name + '.jpg',
-                                    {
-                                      type: blob.type,
-                                    },
-                                  )
-                                  console.log(newfile)
-                                  var fd = new FormData()
-                                  fd.append('template', newfile)
-                                  axios
-                                    .post(
-                                      'http://localhost:2000/templates/',
-                                      fd,
-                                      {},
-                                    )
-                                    .then((res) => {
-                                      console.log(res.statusText)
-                                    })
-                                    .then((result) => {
-                                      //this.onApiLoad()
-                                    })
-                                })
-                            } else {
-                              alert(
-                                'upload feature can only be used on the imgflip images',
-                              )
-                            }
-                          }}
-                        >
-                          <CloudUploadIcon
-                            style={{
-                              color: '#fafafa',
-                              fontSize: 15,
-                              backgroundColor: '#388e3c',
-                              borderRadius: 5,
-                              padding: 2,
-                            }}
-                          />
-                        </IconButton> */}
-
-                        {/* <IconButton aria-label="downvote">
-                      <ArrowDownwardIcon
-                        style={{
-                          color: '#fafafa',
-                          fontSize: 15,
-                          backgroundColor: '#f4511e',
-                          borderRadius: 5,
-                          padding: 2,
-                        }}
-                      />
-                    </IconButton> */}
-                        <IconButton
-                          aria-label="download"
-                          onClick={() => {
-                            if (tile.url.split('.')[1] == 'imgflip') {
-                              fetch(tile.url)
-                                .then((res) => res.blob())
-                                .then((blob) => {
-                                  console.log(blob)
-                                  var newfile = new File(
-                                    [blob],
-                                    tile.name + '.jpg',
-                                    {
-                                      type: blob.type,
-                                    },
-                                  )
-                                  console.log(newfile)
-                                  var fd = new FormData()
-                                  fd.append('template', newfile)
-                                  axios
-                                    .post(
-                                      'http://localhost:2000/templates/',
-                                      fd,
-                                      {},
-                                    )
-                                    .then((res) => {
-                                      console.log(res.statusText)
-                                    })
-                                    .then((result) => {
-                                      //this.onApiLoad()
-                                    })
-                                })
-                            } else if (this.props.type == 'template') {
-                              this.setState({
-                                ...this.state,
-                                memeToDownload: {
-                                  id: tile.id,
-                                  name: tile.name,
-                                  route: tile.route,
-                                  template: tile,
-                                  captions: [],
-                                },
-                              })
-                            } else {
-                              this.setState({
-                                ...this.state,
-                                memeToDownload: tile,
-                              })
-                            }
-                          }}
-                          download
-                        >
-                          <GetAppIcon
-                            style={{
-                              color: '#fafafa',
-                              fontSize: 15,
-                              backgroundColor: '#00984A',
-                              borderRadius: 5,
-                              padding: 2,
-                            }}
-                          />
-                        </IconButton>
-                        <IconButton
-                          aria-label="share-btn"
-                          onClick={() => {
-                            if (this.props.type == 'template') {
-                              this.setState({
-                                ...this.state,
-                                memeToShare: {
-                                  id: tile.id,
-                                  name: tile.name,
-                                  route: tile.route,
-                                  template: tile,
-                                  captions: [],
-                                },
-                              })
-                            } else {
-                              this.setState({
-                                ...this.state,
-                                memeToShare: tile,
-                              })
-                            }
-                          }}
-                        >
-                          <ShareIcon
-                            style={{
-                              color: '#fafafa',
-                              fontSize: 15,
-                              backgroundColor: '#2196f3',
-                              borderRadius: 5,
-                              padding: 2,
-                            }}
-                          />
-                        </IconButton>
-                      </div>
-                    }
-                  />
-                </GridListTile>
-              ))}
-            </GridList>
-            <ShareDialog
-              meme={this.state.memeToShare}
-              open={this.state.memeToShare ? true : false}
-              onClose={() => {
-                this.setState({ ...this.state, memeToShare: undefined })
-              }}
-            ></ShareDialog>
-            <DownloadDialog
-              meme={this.state.memeToDownload}
-              open={this.state.memeToDownload ? true : false}
-              onClose={() => {
-                this.setState({ ...this.state, memeToDownload: undefined })
-              }}
-            ></DownloadDialog>
-          </div>
-        )}
-      </div>
+          {
+            //show message if no memes are present
+            this.props.data.length == 0 ? (
+              <Typography>No Memes found :(</Typography>
+            ) : null
+          }
+        </GridList>
+        <ShareDialog
+          meme={this.state.prompt_share}
+          open={this.state.prompt_share ? true : false}
+          onClose={() => {
+            this.setState({ prompt_share: undefined })
+          }}
+        ></ShareDialog>
+        <DownloadDialog
+          meme={this.state.prompt_download}
+          open={this.state.prompt_download ? true : false}
+          onClose={() => {
+            this.setState({ prompt_download: undefined })
+          }}
+        ></DownloadDialog>
+      </>
     )
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(ownProps.type)
-  console.log(state.api.tileData)
-  if (ownProps.type == 'template') {
-    return {
-      ...state,
-      tileData: state.api.tileData,
-    }
-  } else if (ownProps.type == 'meme') {
-    return {
-      ...state,
-      tileData: state.api.tileDataMeme,
-    }
-  }
+  return { ...ownProps }
 }
 
-export default connect(mapStateToProps, {
-  getApi,
-  getApiImgFlip,
-  changeActive,
-})(MemesList)
+const mapDispatchToProps = (dispatch) => {
+  return {}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MemesList)
