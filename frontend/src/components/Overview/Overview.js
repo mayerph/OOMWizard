@@ -10,7 +10,6 @@ import {
   Box,
   Divider,
   CircularProgress,
-  Check,
   Button,
   Switch,
   FormControlLabel,
@@ -23,13 +22,12 @@ import ViewCarouselIcon from '@material-ui/icons/ViewCarousel'
 import ViewComfyIcon from '@material-ui/icons/ViewComfy'
 import RefreshIcon from '@material-ui/icons/Refresh'
 
-import MemesList from '../MemesList/MemesList'
-import MemeSlideShow from '../MemeSlideShow/MemeSlideShow'
+import TileView from './TileView'
+import GalleryView from './GalleryView'
 
 import { randomizeTD } from '../../reducers/apigetter'
-import { set } from 'lodash'
 
-class MemeView extends React.Component {
+class Overview extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -265,12 +263,12 @@ class MemeView extends React.Component {
           <Divider />
           {this.state.data ? (
             this.state.mode == 'grid' ? (
-              <MemesList
+              <TileView
                 data={this.create_memes_list()}
                 triggerFocus={(id) => alert('implement focus for', id)}
               />
             ) : (
-              <MemeSlideShow
+              <GalleryView
                 data={this.create_memes_list()}
                 focus={this.state.focused_gallery_item}
               />
@@ -295,4 +293,4 @@ const mapDispatchToProps = (dispatch) => {
   return {}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MemeView)
+export default connect(mapStateToProps, mapDispatchToProps)(Overview)

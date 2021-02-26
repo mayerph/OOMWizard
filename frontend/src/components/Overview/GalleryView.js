@@ -19,9 +19,9 @@ import HeartRating from '../Rating/HeartRating'
 import StatsView from '../StatsView/StatsView'
 
 import Carousel from 'react-material-ui-carousel'
-import './MemeSlideShow.css'
+import './GalleryView.css'
 
-class MemeSlideShow extends React.Component {
+class GalleryView extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -105,4 +105,4 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch) => {
   return {}
 }
-export default connect(mapStateToProps, mapDispatchToProps)(MemeSlideShow)
+export default connect(mapStateToProps, mapDispatchToProps)(GalleryView)

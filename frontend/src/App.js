@@ -9,10 +9,6 @@ import { applyMiddleware, createStore } from 'redux'
 import reducers from './reducers'
 import ReduxThunk from 'redux-thunk'
 import MemeCanvas from './components/MemeCanvas/MemeCanvas'
-import MemesList from './components/MemesList/MemesList'
-import MemeSlideShow from './components/MemeSlideShow/MemeSlideShow'
-import StatsView from './components/StatsView/StatsView'
-import Grid from '@material-ui/core/Grid'
 
 function App() {
   return (

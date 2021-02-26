@@ -2,7 +2,7 @@ import React from 'react'
 import { Rnd } from 'react-rnd'
 import { connect } from 'react-redux'
 
-import './MemesList.css'
+import './TileView.css'
 
 import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
@@ -36,7 +36,7 @@ import { Typography } from '@material-ui/core'
  * - data: list of memes
  * - type: template/meme
  */
-class MemesList extends React.Component {
+class TileView extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -246,4 +246,4 @@ const mapDispatchToProps = (dispatch) => {
   return {}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MemesList)
+export default connect(mapStateToProps, mapDispatchToProps)(TileView)
