@@ -86,20 +86,16 @@ class MemesList extends React.Component {
     }
   }
 
-  get_speech(tile) {
-    if (this.props.type === 'template') {
-      return 'The template title is ' + tile.name
-    } else {
-      let text = `The meme title is ${tile.name}.`
-      text +=
-        tile.captions && tile.captions.length > 0
-          ? `And the captions say` + tile.captions.map((c) => c.text).toString()
-          : 'And there are not captions'
-      return text
-    }
+  get_img_speech(tile) {
+    let text = `The meme title is ${tile.name}.`
+    text +=
+      tile.captions && tile.captions.length > 0
+        ? `And the captions say` + tile.captions.map((c) => c.text).toString()
+        : 'And there are not captions'
+    return text
   }
 
-  upload_img_flip(tile) {
+  upload_img_flip(tile) { //FIXME this needs to be reintroduce to render template image
     fetch(tile.url)
       .then((res) => res.blob())
       .then((blob) => {
@@ -112,14 +108,14 @@ class MemesList extends React.Component {
       })
   }
 
-  render_tile(tile, index) {
+  render_img_template(tile, index) {
     return (
       <GridListTile key={tile.id} cols={tile.cols || 1}>
         <img
           src={tile.url}
           alt={tile.name}
           className="gridImg"
-          onClick={() => this.props.onClickMeme(tile.id)}
+          onClick={() => alert('implement template creation here')} //TODO
         />
         <GridListTileBar
           title={tile.name}
@@ -128,7 +124,32 @@ class MemesList extends React.Component {
             <div className="actionButtons">
               {/** text to speech */}
               <IconButton>
-                <Speech text={this.get_speech(tile)} />
+                <Speech text={`The template title is ${tile.name}`} />
+              </IconButton>
+            </div>
+          }
+        />
+      </GridListTile>
+    )
+  }
+
+  render_img_meme(tile, index) {
+    return (
+      <GridListTile key={tile.id} cols={tile.cols || 1}>
+        <img
+          src={tile.url}
+          alt={tile.name}
+          className="gridImg"
+          onClick={() => this.props.triggerFocus(tile.id)}
+        />
+        <GridListTileBar
+          title={tile.name}
+          subtitle={''}
+          actionIcon={
+            <div className="actionButtons">
+              {/** text to speech */}
+              <IconButton>
+                <Speech text={this.get_img_speech(tile)} />
               </IconButton>
 
               {/** download button */}
@@ -172,6 +193,18 @@ class MemesList extends React.Component {
         />
       </GridListTile>
     )
+  }
+
+  render_tile(tile, index) {
+    switch (tile.type) {
+      case 'img_meme':
+        return this.render_img_meme(tile, index)
+      case 'img_template':
+        return this.render_img_template(tile, index)
+      default:
+        console.log('unsupported meme type', tile)
+        return null
+    }
   }
 
   render() {

@@ -73,6 +73,9 @@ class MemeView extends React.Component {
     })
       .then((res) => res.json())
       .then((results) => {
+        for (var meme of results.data.memes) {
+          meme.type = 'img_meme'
+        }
         this.expand_with_meta_info('ImgFlip', results.data.memes)
       })
   }
@@ -84,22 +87,44 @@ class MemeView extends React.Component {
     })
       .then((res) => res.json())
       .then((results) => {
-        var tileData = results
-        for (var i = 0; i < tileData.length; i++) {
-          tileData[i].route = 'http://localhost:2000' + tileData[i].route
-          tileData[i].url = tileData[i].route
+        for (var meme of results) {
+          meme['route'] = 'http://localhost:2000' + meme.route
+          meme.url = meme.route
+          meme.type = 'img_meme'
         }
-        this.expand_with_meta_info('omm', tileData)
+        this.expand_with_meta_info('omm', results)
       })
   }
 
-
+  load_omm_wizard_templates() {
+    fetch('http://localhost:2000/templates/', {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((results) => {
+        for (var template of results) {
+          template.route = 'http://localhost:2000' + template.route //FIXME add some other information?
+          template.url = template.route
+          template.type = 'img_template'
+        }
+        this.expand_with_meta_info('omm_templates', results)
+      })
+  }
 
   load_data(source = this.state.source) {
-    if (source === 'omm') {
-      this.load_omm_wizard()
-    } else {
-      this.load_img_flip()
+    switch (source) {
+      case 'omm':
+        this.load_omm_wizard()
+        break
+      case 'omm_templates':
+        this.load_omm_wizard_templates()
+        break
+      case 'ImgFlip':
+        this.load_img_flip()
+        break
+      default:
+        console.log('No valid load data specifier')
     }
   }
 
@@ -144,7 +169,7 @@ class MemeView extends React.Component {
     }
     if (this.state.ownedOnly) {
       result = result.filter((e, i) => {
-        return e.owner && (e.owner == this.props.username)
+        return e.owner && e.owner == this.props.username
       })
     }
     result = this.sort(result)
@@ -212,8 +237,9 @@ class MemeView extends React.Component {
                     this.setSource(e.target.value)
                   }}
                 >
-                  <option value={'omm'}>OOMWizard</option>
-                  <option value={'ImgFlip'}>ImgFlip</option>
+                  <option value={'omm'}>Wizard Memes</option>
+                  <option value={'omm_templates'}>Wizard Templates</option>
+                  <option value={'ImgFlip'}>ImgFlip Memes</option>
                 </Select>
               </Box>
 
@@ -241,13 +267,7 @@ class MemeView extends React.Component {
             this.state.mode == 'grid' ? (
               <MemesList
                 data={this.create_memes_list()}
-                onClickMeme={
-                  this.props.type === 'template'
-                    ? (id) => {}
-                    : (identifier) => {
-                        alert(identifier)
-                      }
-                }
+                triggerFocus={(id) => alert('implement focus for', id)}
               />
             ) : (
               <MemeSlideShow
