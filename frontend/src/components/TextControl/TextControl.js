@@ -5,7 +5,6 @@ import AddIcon from '@material-ui/icons/Add'
 import RemoveIcon from '@material-ui/icons/Remove'
 import FormatBoldIcon from '@material-ui/icons/FormatBold'
 import FormatItalicIcon from '@material-ui/icons/FormatItalic'
-import FormatUnderlineIcon from '@material-ui/icons/FormatUnderlined'
 import ColorizeIcon from '@material-ui/icons/Colorize'
 import SettingsIcon from '@material-ui/icons/Settings'
 import IconButton from '@material-ui/core/IconButton'
@@ -91,6 +90,7 @@ class TextControl extends React.Component {
       .getElementById('meme-canvas')
       .getBoundingClientRect()
     const captions = []
+    const images = []
     this.props.canvasElements.forEach((element) => {
       if (element.type === 'text') {
         const textElement = document.querySelectorAll(
@@ -106,8 +106,22 @@ class TextControl extends React.Component {
             window.getComputedStyle(textElement).fontSize.replace('px', ''),
           ),
           color: window.getComputedStyle(textElement).color,
+          style: window.getComputedStyle(textElement).fontStyle,
+          weight: window.getComputedStyle(textElement).fontWeight,
         })
       } else {
+        const imageElement = document.querySelectorAll(
+          '#resizeable-image-' + element.id + ' img',
+        )[0]
+        images.push({
+          name: imageElement.src.split('/').pop(),
+          position: {
+            x: imageElement.getBoundingClientRect().left - canvas.left,
+            y: imageElement.getBoundingClientRect().top - canvas.top,
+          },
+          width: imageElement.width,
+          height: imageElement.height,
+        })
       }
     })
 
@@ -120,9 +134,15 @@ class TextControl extends React.Component {
             id: '5ff446fa4de819687770bfac',
           },
           captions: captions,
+          images: images,
+          canvas: {
+            width: document.getElementById('meme-canvas').offsetWidth,
+            height: document.getElementById('meme-canvas').offsetHeight,
+          },
         },
       ],
     }
+    console.log(postData)
 
     fetch('http://localhost:2000/memes/file', {
       method: 'POST',
@@ -200,7 +220,7 @@ class TextControl extends React.Component {
     }
     if (modifier === 'INCREASE_FONT') {
       const newFontSize = parseInt(textContainer.style.fontSize, 10) + 5
-      if (newFontSize <= 65) {
+      if (newFontSize <= 300) {
         textContainer.style.fontSize = newFontSize.toString() + 'px'
       }
     } else if (modifier === 'DECREASE_FONT') {
@@ -250,12 +270,6 @@ class TextControl extends React.Component {
               onClick={() => this.applyStyle('ITALIC')}
             >
               <FormatItalicIcon />
-            </IconButton>
-            <IconButton
-              disabled={isDisabled}
-              onClick={() => this.applyStyle('UNDERLINE')}
-            >
-              <FormatUnderlineIcon />
             </IconButton>
             <IconButton
               disabled={isDisabled}

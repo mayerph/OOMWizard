@@ -23,6 +23,7 @@ class ResizableImage extends React.Component {
     return (
       <Rnd
         className="resizeable-image-container"
+        id={'resizeable-image-' + this.props.id}
         default={{
           x: this.props.x,
           y: this.props.y,

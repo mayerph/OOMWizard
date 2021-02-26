@@ -17,6 +17,8 @@ export interface ICaption {
   text: string
   position: IPosition
   color: string
+  style?: string
+  weight?: string
   size: number
 }
 /**
@@ -26,6 +28,11 @@ export interface IImage {
   id?: any
   name: string
   position: IPosition
+  width: number
+  height: number
+}
+
+export interface ICanvas {
   width: number
   height: number
 }
@@ -40,6 +47,8 @@ export interface IMeme {
   access?: string
   route?: string
   captions: ICaption[]
+  images?: IImage[]
+  canvas?: ICanvas
   template: ITemplate
   is_accessible(show_unlisted: boolean, username?: String): boolean
 }
