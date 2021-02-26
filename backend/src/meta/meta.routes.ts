@@ -87,6 +87,28 @@ router.get(
 )
 
 router.post(
+  "/",
+  require_form_param("identifiers"),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      let identifiers = JSON.parse(req.body.identifiers)
+      console.log(identifiers)
+      let result: any[] = []
+      for (let e of identifiers) {
+        result.push({
+          identifier: e,
+          ...(await get_meta(e))
+        })
+      }
+      return res.status(200).json(result).end()
+    } catch (err) {
+      console.log(err)
+      return res.status(500).json(err).end()
+    }
+  }
+)
+
+router.post(
   "/rate",
   require_user(),
   require_form_param("identifier"),
