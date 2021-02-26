@@ -119,7 +119,7 @@ class MemesList extends React.Component {
           src={tile.url}
           alt={tile.name}
           className="gridImg"
-          onClick={() => this.on_click_image(index, tile.url)}
+          onClick={() => this.props.onClickMeme(tile.id)}
         />
         <GridListTileBar
           title={tile.name}
@@ -179,7 +179,6 @@ class MemesList extends React.Component {
       <>
         <GridList cellHeight={500} className="gridList" cols={4}>
           {this.props.data.map((tile, index) => this.render_tile(tile, index))}
-
           {
             //show message if no memes are present
             this.props.data.length == 0 ? (

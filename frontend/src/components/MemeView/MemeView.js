@@ -24,14 +24,18 @@ import RefreshIcon from '@material-ui/icons/Refresh'
 import MemesList from '../MemesList/MemesList'
 import MemeSlideShow from '../MemeSlideShow/MemeSlideShow'
 
+import { randomizeTD } from '../../reducers/apigetter'
+
 class MemeView extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       mode: 'gallery',
+      focused_gallery_item: undefined,
       sort_by: 'rating',
       source: 'omm',
       data: undefined,
+      filter: undefined,
     }
   }
 
@@ -81,6 +85,22 @@ class MemeView extends React.Component {
     }
   }
 
+  sort(items) {
+    switch (this.state.sort_by) {
+      case 'views':
+        return items //TODO
+      case 'comments':
+        return items //TODO
+      case 'rating':
+        return items // TODO
+      case 'date':
+        return items // TODO
+      case 'random':
+      default:
+        return randomizeTD(items)
+    }
+  }
+
   setSource(source) {
     console.log('setting source: ', source)
     this.setState({ data: undefined, source: source })
@@ -88,8 +108,14 @@ class MemeView extends React.Component {
   }
 
   create_memes_list() {
-    //TODO filter and sort
-    return this.state.data
+    var result = this.state.data
+    if (this.state.filter && this.state.filter != '') {
+      result = this.state.data.filter((e, i) =>
+        e.name.includes(this.state.filter),
+      )
+    }
+    result = this.sort(result)
+    return result
   }
 
   render() {
@@ -99,7 +125,10 @@ class MemeView extends React.Component {
           <form>
             <Box display="flex" bgcolor="background.paper">
               <Box component="span" flexGrow={1} m={1}>
-                <InputBase placeholder="Filter.."></InputBase>
+                <InputBase
+                  placeholder="Filter.."
+                  onChange={(e) => this.setState({ filter: e.target.value })}
+                ></InputBase>
               </Box>
 
               {/** refesh button */}
@@ -162,9 +191,21 @@ class MemeView extends React.Component {
           <Divider />
           {this.state.data ? (
             this.state.mode == 'grid' ? (
-              <MemesList data={this.create_memes_list()} />
+              <MemesList
+                data={this.create_memes_list()}
+                onClickMeme={
+                  this.props.type === 'template'
+                    ? (id) => {}
+                    : (identifier) => {
+                        alert(identifier)
+                      }
+                }
+              />
             ) : (
-              <MemeSlideShow data={this.create_memes_list()} />
+              <MemeSlideShow
+                data={this.create_memes_list()}
+                focus={this.state.focused_gallery_item}
+              />
             )
           ) : (
             <CircularProgress />
