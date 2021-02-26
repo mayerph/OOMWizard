@@ -48,6 +48,7 @@ export class MemeController {
         route: "/images/memes/d5703be0-4f5c-11eb-af94-1d9a1453b140.png",
         owner: "test1234",
         access: "unlisted",
+        timestamp: new Date(),
         template: {
           name: "Drake-Hotline-Bling.jpg",
           route: "/images/templates/Drake-Hotline-Bling.jpg",
@@ -163,6 +164,7 @@ export class MemeController {
         name: filename,
         owner: owner,
         access: access,
+        timestamp: new Date(),
         route: config.storage.images.memes.route + "/" + filename,
         template: meme.template,
         captions: meme.captions

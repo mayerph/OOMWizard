@@ -38,6 +38,7 @@ export interface IMeme {
   name?: string
   owner?: string
   access?: string
+  timestamp?: Date
   route?: string
   captions: ICaption[]
   template: ITemplate
