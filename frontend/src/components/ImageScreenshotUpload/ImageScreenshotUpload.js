@@ -15,6 +15,8 @@ import {
 } from '../speechtotext/speechtotext.js'
 import IconButton from '@material-ui/core/IconButton'
 import MicIcon from '@material-ui/icons/Mic'
+import Chip from '@material-ui/core/Chip'
+import { VoiceControl } from '../VoiceControl'
 
 class ImageScreenshotUpload extends React.Component {
   constructor(props) {
@@ -140,7 +142,7 @@ class ImageScreenshotUpload extends React.Component {
           variant="contained"
           color="primary"
           component="span"
-          id="uploadButtonFile"
+          id="uploadButtonScreenshot"
           type="submit"
           onClick={this.uploadTemplate.bind(this)}
         >
@@ -150,7 +152,18 @@ class ImageScreenshotUpload extends React.Component {
           <div id="loading"></div>
         </div>
 
-        <p id="results" style={{ visibility: 'hidden' }}></p>
+        {/* <IconButton
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            speechtocontrol('uploadButtonScreenshot')
+          }}
+        >
+          <MicIcon />
+        </IconButton>
+        <Chip icon={<MicIcon />} label="Upload" color="secondary" />
+        <Chip icon={<MicIcon />} label="Cancel" color="secondary" /> */}
+        <VoiceControl tocontrol={'uploadButtonScreenshot'} />
       </div>
     )
   }
