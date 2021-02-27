@@ -31,6 +31,10 @@ const videoMemeSchema = new Schema(
     },
     route: {
       type: String
+    },
+    timestamp: {
+      type: Date,
+      required: false
     }
   },
   {

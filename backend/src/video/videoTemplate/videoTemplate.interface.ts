@@ -15,6 +15,7 @@ export interface IVideoTemplate {
   audio: string
   thumbnail: string
   frames?: IFrameVectorT
+  timestamp?: Date
 }
 
 export interface IVideoTemplateModel {}

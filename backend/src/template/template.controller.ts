@@ -17,22 +17,26 @@ export class TemplateController {
       {
         _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfac"),
         name: "Drake-Hotline-Bling.jpg",
+        timestamp: new Date(),
         route:
           config.storage.images.templates.route + "/Drake-Hotline-Bling.jpg"
       },
       {
         _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfad"),
         name: "Is-This-A-Pigeon.jpg",
+        timestamp: new Date(),
         route: config.storage.images.templates.route + "/Is-This-A-Pigeon.jpg"
       },
       {
         _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfae"),
         name: "Monkey-Puppet.jpg",
+        timestamp: new Date(),
         route: config.storage.images.templates.route + "/Monkey-Puppet.jpg"
       },
       {
         _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfaf"),
         name: "Running-Away-Balloon.jpg",
+        timestamp: new Date(),
         route:
           config.storage.images.templates.route + "/Running-Away-Balloon.jpg"
       }
@@ -161,6 +165,7 @@ export class TemplateController {
           }
           const memeDoc: ITemplate = {
             name: image.name,
+            timestamp: new Date(),
             route: config.storage.images.templates.route + "/" + image.name
           }
           try {

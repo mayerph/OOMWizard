@@ -175,7 +175,8 @@ export class GifTemplateController {
       const gifTemplateDoc: IGifTemplate = {
         file: "",
         route: "",
-        frames: []
+        frames: [],
+        timestamp: new Date(),
       }
 
       const gifTemplate = new GifTemplate(gifTemplateDoc)

@@ -15,6 +15,7 @@ export interface IGifMeme {
   id?: any
   file?: string
   route?: string
+  timestamp?: Date
   frames?: IFrameExt[]
 }
 

@@ -22,6 +22,7 @@ export interface IVideoMeme {
   route?: string
   audio?: string
   frames?: IFrameVectorM
+  timestamp?: Date
 }
 
 export interface IVideoMemeModel {}

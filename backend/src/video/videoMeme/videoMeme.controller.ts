@@ -105,7 +105,8 @@ export class VideoMemeController {
         const modFrames = await this.writeFramesToFile(meme, pathToFrames)
         const videoMeta = {
           file: "",
-          frames: modFrames as any
+          frames: modFrames as any,
+          timestamp: new Date()
         }
         // encode modified images to video
         const destinationPath = path.resolve(

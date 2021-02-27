@@ -33,6 +33,10 @@ const gifMemeSchema = new Schema(
     file: {
       type: String
     },
+    timestamp: {
+      type: Date,
+      required: false,
+    },
     route: {
       type: String
     }

@@ -192,6 +192,7 @@ export class VideoTemplateController {
           file: "..",
           route: "..",
           audio: "..",
+          timestamp: new Date(),
           frames: {
             frames: [],
             fps: ".."
