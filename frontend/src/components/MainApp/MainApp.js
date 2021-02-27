@@ -61,7 +61,7 @@ class MainApp extends React.Component {
               centered
             >
               <Tab label="Overview" icon={<RemoveRedEyeIcon />} />
-              <Tab label="Create Image Template" icon={<CloudUpload />} />
+              <Tab label="Add Image Template" icon={<CloudUpload />} />
               <Tab label="Create Gif Meme" icon={<Gif />} />
               <Tab label="Create Video Meme" icon={<Movie />} />
               <Tab label="REMOVE?? Video Memes" icon={<VideoLibrary />} />
