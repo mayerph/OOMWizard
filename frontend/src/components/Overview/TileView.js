@@ -103,7 +103,7 @@ class TileView extends React.Component {
           src={tile.url}
           alt={tile.name}
           className="gridImg"
-          onClick={() => alert('implement template creation here')} //TODO
+          onClick={() => this.props.triggerFocus(tile.id)}
         />
         <GridListTileBar
           title={tile.name}
