@@ -93,11 +93,16 @@ class TextControl extends React.Component {
     const images = []
     this.props.canvasElements.forEach((element) => {
       if (element.type === 'text') {
-        const textElement = document.querySelectorAll(
+        const textElements = document.querySelectorAll(
           '#resizeable-text-' + element.id + ' span span',
-        )[0]
+        )
+        const textElement = textElements[0]
+        const text = [...textElements]
+          .map((span) => span.textContent)
+          .join('\n')
+
         captions.push({
-          text: textElement.textContent,
+          text: text,
           position: {
             x: textElement.getBoundingClientRect().left - canvas.left,
             y: textElement.getBoundingClientRect().top - canvas.top,

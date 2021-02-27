@@ -422,7 +422,7 @@ export class MemeController {
       captions.forEach((caption) => {
         const fontStyle = caption.style ? caption.style : "normal"
         const fontWeight = caption.weight ? caption.weight : "700"
-        ctx.font = `${fontStyle} ${fontWeight} ${caption.size}pt Arial`
+        ctx.font = `${fontStyle} ${fontWeight} ${caption.size}px Arial`
         ctx.fillStyle = caption.color
 
         // write text
