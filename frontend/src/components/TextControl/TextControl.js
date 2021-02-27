@@ -82,6 +82,7 @@ class TextControl extends React.Component {
     const saveImg = document.createElement('a')
     saveImg.href = image.src
     saveImg.download = 'meme.jpg'
+    saveImg.target = '_blank'
     document.body.appendChild(saveImg)
     saveImg.click()
     document.body.removeChild(saveImg)
@@ -122,9 +123,11 @@ class TextControl extends React.Component {
           <Button onClick={() => this.downloadGeneratedImage()} color="primary">
             Download
           </Button>
-          <Button onClick={() => this.handleShare()} color="primary">
-            Share
-          </Button>
+          {this.state.generatedMeme && (
+            <Button onClick={() => this.handleShare()} color="primary">
+              Share
+            </Button>
+          )}
           <Button
             onClick={() => {
               this.setState({ isImageGenerated: false })
@@ -203,8 +206,6 @@ class TextControl extends React.Component {
 
   handleAddElement(type, url) {
     const element = {
-      x: 0,
-      y: 0,
       width: 400,
       bounds: '#meme-canvas',
       type: type,
