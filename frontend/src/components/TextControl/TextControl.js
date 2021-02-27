@@ -16,6 +16,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
 import { ShareDialog } from '../ShareDialog'
+import html2canvas from 'html2canvas'
 
 class TextControl extends React.Component {
   constructor(props) {
@@ -126,6 +127,69 @@ class TextControl extends React.Component {
         </DialogActions>
       </Dialog>
     )
+  }
+
+  browserGeneration() {
+    // Don't include borders to image
+    document.querySelectorAll('.resizeable-text-container').forEach((node) => {
+      node.style.borderWidth = 0
+    })
+    document.querySelectorAll('.resizeable-image-container').forEach((node) => {
+      node.style.borderWidth = 0
+    })
+
+    // Convert images to blobs to make html2canvas work
+    const canvasImages = document.querySelectorAll('img')
+    if (canvasImages.length > 0) {
+      canvasImages.forEach((img) => {
+        let imgSrc = img.src
+        fetch(img.src)
+          .then((response) => {
+            return response.blob()
+          })
+          .then((blob) => {
+            img.src = URL.createObjectURL(blob)
+            html2canvas(document.querySelector('#meme-canvas-card'), {
+              allowTaint: true,
+            }).then((canvas) => {
+              canvas.toBlob((blob) => {
+                this.setState({
+                  generatedImageUrl: URL.createObjectURL(blob),
+                  isImageGenerated: true,
+                })
+              }, 'image/jpeg')
+            })
+            img.src = imgSrc
+            document
+              .querySelectorAll('.resizeable-text-container')
+              .forEach((node) => {
+                node.style.borderWidth = '1px'
+              })
+            document
+              .querySelectorAll('.resizeable-image-container')
+              .forEach((node) => {
+                node.style.borderWidth = '1px'
+              })
+          })
+      })
+      // Text only memes
+    } else {
+      html2canvas(document.querySelector('#meme-canvas-card'), {
+        allowTaint: true,
+      }).then((canvas) => {
+        canvas.toBlob((blob) => {
+          this.setState({
+            generatedImageUrl: URL.createObjectURL(blob),
+            isImageGenerated: true,
+          })
+        }, 'image/jpeg')
+      })
+      document
+        .querySelectorAll('.resizeable-text-container')
+        .forEach((node) => {
+          node.style.borderWidth = '1px'
+        })
+    }
   }
 
   canvasElementCounter = 0
@@ -393,13 +457,22 @@ class TextControl extends React.Component {
               Text
             </Button>
             <Button
-              style={{ margin: 5 }}
+              style={{ margin: 5, marginLeft: 20 }}
               variant="contained"
               color="secondary"
               startIcon={<SettingsIcon />}
               onClick={() => this.handleGenerate()}
             >
-              Generate
+              Generate (Backend)
+            </Button>
+            <Button
+              style={{ margin: 5 }}
+              variant="contained"
+              color="secondary"
+              startIcon={<SettingsIcon />}
+              onClick={() => this.browserGeneration()}
+            >
+              Generate (Frontend)
             </Button>
           </div>
         </Card>
