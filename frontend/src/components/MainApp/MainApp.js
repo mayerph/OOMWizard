@@ -137,13 +137,6 @@ class MainApp extends React.Component {
             </div>
           </div>
           <div hidden={this.state.newValue !== 2}>
-            <Link
-              to={{
-                pathname: '/imagememe',
-              }}
-            >
-              image
-            </Link>
             <GifTemplates></GifTemplates>
           </div>
           <div hidden={this.state.newValue !== 3}>

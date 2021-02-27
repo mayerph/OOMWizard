@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
 const GifTemplates = (props) => {
   const [stepSize, setStepSize] = useState(10)
   const [activeCaption, setActiveCaption] = useState(0)
-
+  const [trying, setTrying] = useState(false)
   const debug = false
   const [colorpickerOpen, setColorpickerOpen] = useState(false)
   let templateGif = React.useRef(null)
@@ -299,7 +299,6 @@ const GifTemplates = (props) => {
   }, [activeCaption])
 
   const classes = useStyles()
-  let trying = false
 
   const setActiveTemplate_ = (index) => {
     dispatch(setActiveTemplate(index))
@@ -530,26 +529,38 @@ const GifTemplates = (props) => {
                           color="textSecondary"
                           gutterBottom
                         >
-                          <div className="caption-option">
-                            <TextField
-                              className="caption-input"
-                              label="Caption"
-                              defaultValue={getCaptions()[index].text}
-                              onChange={(e) => {
-                                handleChange(e, index)
-                              }}
-                              variant="outlined"
-                            />
+                          <div className="caption-option textfield-container-parent">
+                            <div className="textfield-container">
+                              <TextField
+                                className="caption-input"
+                                label="Caption"
+                                value={getCaptions()[index].text}
+                                onChange={(e) => {
+                                  handleChange(e, index)
+                                }}
+                                variant="outlined"
+                              />
+                            </div>
                             <div>
+                              <span id="results" hidden></span>
                               <IconButton
                                 variant="contained"
-                                color="primary"
+                                className={`${
+                                  trying ? 'microphone-on' : 'microphone-off '
+                                }`}
                                 onClick={() => {
                                   speechtotextreturn(trying)
                                   const results = document.getElementById(
                                     'results',
                                   ).innerHTML
-                                  trying = !trying
+                                  if (trying) {
+                                    const tempCaptions = [...getCaptions()]
+                                    tempCaptions[index].text = results
+
+                                    dispatch(updateCaptions(tempCaptions))
+                                  }
+
+                                  setTrying(!trying)
                                 }}
                               >
                                 <MicIcon />
