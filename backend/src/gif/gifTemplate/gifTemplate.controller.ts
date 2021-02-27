@@ -6,6 +6,8 @@ import * as uuid from "uuid"
 import * as gif from "gifEndecoder"
 import * as path from "path"
 
+import { filter_accessible, is_accessible } from "../../user/ownership"
+
 export class GifTemplateController {
   constructor() {
     GifTemplate.deleteMany({}).exec()
@@ -53,18 +55,18 @@ export class GifTemplateController {
   /**
    * returns all available gif templates
    */
-  async gifTemplates(): Promise<IGifTemplate[]> {
-    const gifTemplates: IGifTemplate[] = await GifTemplate.find()
+  async gifTemplates(username?: String): Promise<IGifTemplate[]> {
+    var gifTemplates: IGifTemplate[] = await GifTemplate.find()
+    gifTemplates = filter_accessible(gifTemplates, false, username)
     return gifTemplates
   }
 
   /**
    * returns certain gif template
    */
-  async gifTemplate(id: string): Promise<IGifTemplate | null> {
+  async gifTemplate(id: string, username?: String): Promise<IGifTemplate | null> {
     const gifTemplate = await GifTemplate.findById(id)
-
-    return gifTemplate
+    return gifTemplate && is_accessible(gifTemplate, true, username) ? gifTemplate : null
   }
 
   /**
@@ -163,6 +165,7 @@ export class GifTemplateController {
     })
   }
 
+  //FIXME post gif template?
   /**
    * write image to file
    * @param image object with the image (meta)data

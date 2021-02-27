@@ -1,7 +1,8 @@
+import { IOwned } from '../user/ownership'
 /**
  * interface for a meme template
  */
-export interface ITemplate {
+export interface ITemplate extends IOwned{
   id?: any
   name: string
   route: string

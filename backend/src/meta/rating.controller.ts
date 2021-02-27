@@ -3,6 +3,7 @@ import { Rating, RatingHistory, IRatingHistory, IRating } from "./rating.model"
 export class RatingController {
   constructor() {
     Rating.deleteMany({}).exec()
+    RatingHistory.deleteMany({}).exec()
   }
 
   async update_avg_rating(identifier: string) {

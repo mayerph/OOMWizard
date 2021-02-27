@@ -37,7 +37,7 @@ router.post(
  */
 router.post("", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const meme = await gifMemeController.addGifMeme(req.body.meme)
+    const meme = await gifMemeController.addGifMeme(req.body.meme, req.user, req.body.access)
     res.json(meme)
   } catch (err) {
     res.status(500)
@@ -49,7 +49,7 @@ router.post("", async (req: Request, res: Response, next: NextFunction) => {
  * route to all available gif meme
  */
 router.get("", async (req: Request, res: Response, next: NextFunction) => {
-  const gifMeme = await gifMemeController.gifMemes()
+  const gifMeme = await gifMemeController.gifMemes(req.user)
   res.json(gifMeme)
 })
 
@@ -58,7 +58,7 @@ router.get("", async (req: Request, res: Response, next: NextFunction) => {
  */
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
-  const gifMeme = await gifMemeController.gifMeme(id)
+  const gifMeme = await gifMemeController.gifMeme(id, req.user)
   res.json(gifMeme)
 })
 export default router

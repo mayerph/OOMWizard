@@ -4,6 +4,8 @@ import * as config from "../config.json"
 import * as fs from "fs"
 import * as mongoose from "mongoose"
 
+import { filter_accessible, is_accessible } from "../user/ownership"
+
 export class TemplateController {
   constructor() {
     this.insertTestData()
@@ -46,18 +48,18 @@ export class TemplateController {
   /**
    * returns all available meme template
    */
-  async templates(): Promise<ITemplate[]> {
-    const templates: ITemplate[] = await Template.find()
+  async templates(username?: String): Promise<ITemplate[]> {
+    var templates: ITemplate[] = await Template.find()
+    templates = filter_accessible(templates, false, username)
     return templates
   }
 
   /**
    * returns certain meme template
    */
-  async template(id: string): Promise<ITemplate | null> {
+  async template(id: string, username?: string): Promise<ITemplate | null> {
     const template = await Template.findById(id)
-
-    return template
+    return template && is_accessible(template, true, username)? template: null
   }
 
   /**
@@ -151,7 +153,7 @@ export class TemplateController {
    * write image to file
    * @param image object with the image (meta)data
    */
-  writeMemeTemplate(image: any): Promise<ITemplate> {
+  writeMemeTemplate(image: any, owner?: string, access?: string): Promise<ITemplate> {
     return new Promise((resolve, reject) => {
       if (!image.data || !image.name) {
         reject(new Error("no image data"))
@@ -166,7 +168,9 @@ export class TemplateController {
           const memeDoc: ITemplate = {
             name: image.name,
             timestamp: new Date(),
-            route: config.storage.images.templates.route + "/" + image.name
+            route: config.storage.images.templates.route + "/" + image.name,
+            owner: owner,
+            access: access,
           }
           try {
             const meme = await new Template(memeDoc).save()
