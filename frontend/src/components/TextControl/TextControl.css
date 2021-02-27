@@ -7,7 +7,7 @@
 
 .meme-canvas-templates {
     cursor: pointer;
-    width: calc(50% - 20px);
+    width: calc(33% - 20px);
     margin: 10px;
     vertical-align: top;
 }

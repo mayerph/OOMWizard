@@ -10,6 +10,8 @@ import { connect } from 'react-redux'
 import NavAccountMenu from '../AccountMenu'
 import { AuthDialog } from '../Auth'
 import { Link } from 'react-router-dom'
+import Button from '@material-ui/core/Button'
+import BrushIcon from '@material-ui/icons/Brush'
 
 class NavBar extends React.Component {
   render() {
@@ -17,10 +19,6 @@ class NavBar extends React.Component {
       <div className="navbar-container">
         <AppBar position="static">
           <Toolbar>
-            <IconButton edge="start" color="inherit" aria-label="menu">
-              <MenuIcon />
-            </IconButton>
-
             <Typography variant="h6" className="navbar-container-title">
               <Link
                 style={{ color: 'white', textDecoration: 'none' }}
@@ -29,6 +27,16 @@ class NavBar extends React.Component {
                 MemeWizard
               </Link>
             </Typography>
+            <Link to={{ pathname: '/imagememe' }}>
+              <Button
+                style={{ margin: 5 }}
+                variant="contained"
+                color="secondary"
+                startIcon={<BrushIcon />}
+              >
+                Meme Editor
+              </Button>
+            </Link>
             <div>
               <NavAccountMenu />
             </div>
