@@ -147,8 +147,8 @@ class Overview extends React.Component {
         )
       case 'date':
         return items.sort((a, b) => {
-          bTime = b.timestamp ? Date.parse(b.timestamp) : 0
-          aTime = a.timestamp ? Date.parse(a.timestamp) : 0
+          let bTime = b.timestamp ? Date.parse(b.timestamp) : 0
+          let aTime = a.timestamp ? Date.parse(a.timestamp) : 0
           return bTime - aTime
         })
       case 'random':
