@@ -2,8 +2,7 @@
 
 Project repository for the lecture Online Multimedia (WS2020/21).
 
-## Libraries used
-
+## Libraries
 - [React](https://github.com/facebook/react)
   - React is a JavaScript library for building user interfaces.
   - MIT License
@@ -21,8 +20,6 @@ Project repository for the lecture Online Multimedia (WS2020/21).
   - Draft.js is a JavaScript rich text editor framework, built for React and backed by an immutable model.
   - MIT License
 
-## More Front End Modules
-
 - [react-share](https://github.com/nygardk/react-share)
   - react-share is a module which preloads social media share buttons
   - MIT License
@@ -37,6 +34,10 @@ Project repository for the lecture Online Multimedia (WS2020/21).
   - MIT License
 - [react-html5-camera-photo](https://github.com/mabelanger/react-html5-camera-photo)
   - Image capture module allowing use of connected camera or webcam to create images
+  - MIT License
+
+- [html2canvas](https://github.com/niklasvh/html2canvas)
+  - Converts DOM element to canvas element
   - MIT License
 
 ###

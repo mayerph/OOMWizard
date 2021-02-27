@@ -27,6 +27,9 @@ import GalleryView from './GalleryView'
 
 import { randomizeTD } from '../../reducers/apigetter'
 
+import * as config from '../../config.json'
+const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
+
 class Overview extends React.Component {
   constructor(props) {
     super(props)
@@ -36,7 +39,7 @@ class Overview extends React.Component {
       gallery_autoplay: false,
       ownedOnly: false,
       sort_by: 'rating',
-      source: 'omm',
+      source: 'omm_memes',
       data: undefined,
       filter: undefined,
     }
@@ -45,7 +48,7 @@ class Overview extends React.Component {
   expand_with_meta_info(source, data) {
     let formData = new FormData()
     formData.set('identifiers', JSON.stringify(data.map((e) => e.id)))
-    fetch('http://localhost:2000/meta/', {
+    fetch(`${destination}/meta/`, {
       method: 'POST',
       body: formData,
     })
@@ -67,60 +70,56 @@ class Overview extends React.Component {
   }
 
   load_img_flip() {
-    //TODO with config
     fetch('https://api.imgflip.com/get_memes', {
       method: 'GET',
     })
       .then((res) => res.json())
       .then((results) => {
         for (var meme of results.data.memes) {
-          meme.type = 'img_meme'
+          meme.type = 'template'
           meme.foreign = true
+          meme.file_type = 'img'
         }
         this.expand_with_meta_info('ImgFlip', results.data.memes)
       })
   }
 
-  load_omm_wizard() {
-    fetch('http://localhost:2000/memes/', {
+  load_omm_wizard(key, base, is_meme, file_type) {
+    fetch(`${destination}${base}${is_meme ? '/memes/' : '/templates/'}`, {
       method: 'GET',
       credentials: 'include',
     })
       .then((res) => res.json())
       .then((results) => {
-        for (var meme of results) {
-          meme['route'] = 'http://localhost:2000' + meme.route
-          meme.url = meme.route
-          meme.type = 'img_meme'
+        for (var e of results) {
+          e['route'] = destination + e.route
+          e.url = e.route
+          e.type = is_meme ? 'meme' : 'template'
+          e.file_type = file_type
         }
-        this.expand_with_meta_info('omm', results)
-      })
-  }
-
-  load_omm_wizard_templates() {
-    fetch('http://localhost:2000/templates/', {
-      method: 'GET',
-      credentials: 'include',
-    })
-      .then((res) => res.json())
-      .then((results) => {
-        for (var template of results) {
-          template.route = 'http://localhost:2000' + template.route //FIXME add some other information?
-          template.url = template.route
-          template.type = 'img_template'
-        }
-        console.log(results)
-        this.expand_with_meta_info('omm_templates', results)
+        this.expand_with_meta_info(key, results)
       })
   }
 
   load_data(source = this.state.source) {
     switch (source) {
-      case 'omm':
-        this.load_omm_wizard()
+      case 'omm_memes':
+        this.load_omm_wizard(source, '', true, 'img')
         break
       case 'omm_templates':
-        this.load_omm_wizard_templates()
+        this.load_omm_wizard(source, '', false, 'img')
+        break
+      case 'omm_gif_templates':
+        this.load_omm_wizard(source, '/gif', true, 'gif')
+        break
+      case 'omm_gif_memes':
+        this.load_omm_wizard(source, '/gif', false, 'gif')
+        break
+      case 'omm_video_memes':
+        this.load_omm_wizard(source, '/video', true, 'video')
+        break
+      case 'omm_video_templates':
+        this.load_omm_wizard(source, '/video', false, 'video')
         break
       case 'ImgFlip':
         this.load_img_flip()
@@ -245,9 +244,17 @@ class Overview extends React.Component {
                     this.setSource(e.target.value)
                   }}
                 >
-                  <option value={'omm'}>Wizard Memes</option>
+                  <option value={'omm_memes'}>Wizard Memes</option>
                   <option value={'omm_templates'}>Wizard Templates</option>
-                  <option value={'ImgFlip'}>ImgFlip Memes</option>
+                  <option value={'omm_gif_memes'}>Wizard Gif Memes</option>
+                  <option value={'omm_gif_templates'}>
+                    Wizard Gif Templates
+                  </option>
+                  <option value={'omm_video_memes'}>Wizard Video Memes</option>
+                  <option value={'omm_video_templates'}>
+                    Wizard Video Templates
+                  </option>
+                  <option value={'ImgFlip'}>ImgFlip Templates</option>
                 </Select>
               </Box>
 

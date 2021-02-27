@@ -39,3 +39,7 @@
   justify-content: center;
   visibility: hidden;
 }
+.urlScreenShotUpload .MuiChip-root {
+  margin: 15px;
+  margin-top: 35px;
+}

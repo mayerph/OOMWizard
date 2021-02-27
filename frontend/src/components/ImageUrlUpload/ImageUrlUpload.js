@@ -10,9 +10,12 @@ import { Redirect } from 'react-router-dom'
 import {
   speechtotext,
   speechtotextreturn,
+  speechtocontrol,
 } from '../speechtotext/speechtotext.js'
 import IconButton from '@material-ui/core/IconButton'
 import MicIcon from '@material-ui/icons/Mic'
+import Chip from '@material-ui/core/Chip'
+import { VoiceControl } from '../VoiceControl'
 
 class ImageUrlUpload extends React.Component {
   constructor(props) {
@@ -134,12 +137,26 @@ class ImageUrlUpload extends React.Component {
               variant="contained"
               color="primary"
               component="span"
-              id="uploadButtonFile"
+              id="uploadButtonOnlineImage"
               type="submit"
               onClick={this.uploadTemplate.bind(this)}
             >
               Upload File
             </Button>
+            {/*
+            <IconButton
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                speechtocontrol('uploadButtonOnlineImage')
+              }}
+            >
+              <MicIcon />
+            </IconButton>
+            
+            <Chip icon={<MicIcon />} label="Upload" color="secondary" />
+            <Chip icon={<MicIcon />} label="Cancel" color="secondary" /> */}
+            <VoiceControl tocontrol={'uploadButtonOnlineImage'} />
           </div>
         )}
       </div>

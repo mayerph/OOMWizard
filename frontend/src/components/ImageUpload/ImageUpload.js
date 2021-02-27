@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button'
 import './ImageUpload.css'
 import Input from '@material-ui/core/Input'
 import { Redirect } from 'react-router-dom'
+import { VoiceControl } from '../VoiceControl'
 
 class ImageUpload extends React.Component {
   constructor(props) {
@@ -76,6 +77,7 @@ class ImageUpload extends React.Component {
             >
               Upload File
             </Button>
+            <VoiceControl tocontrol={'uploadButtonFile'} />
           </div>
         )}
       </div>

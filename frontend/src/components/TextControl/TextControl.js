@@ -17,6 +17,9 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
 import { ShareDialog } from '../ShareDialog'
 import html2canvas from 'html2canvas'
+import { speechtocontrolfour } from '../speechtotext/speechtotext.js'
+import MicIcon from '@material-ui/icons/Mic'
+import Chip from '@material-ui/core/Chip'
 
 class TextControl extends React.Component {
   constructor(props) {
@@ -444,6 +447,7 @@ class TextControl extends React.Component {
               color="secondary"
               startIcon={<AddIcon />}
               onClick={() => this.handleMemeCanvasDialogOpen()}
+              id="canvasaddimage"
             >
               Image Template
             </Button>
@@ -453,6 +457,7 @@ class TextControl extends React.Component {
               color="secondary"
               startIcon={<AddIcon />}
               onClick={() => this.handleAddElement('text')}
+              id="canvasaddtext"
             >
               Text
             </Button>
@@ -462,6 +467,7 @@ class TextControl extends React.Component {
               color="secondary"
               startIcon={<SettingsIcon />}
               onClick={() => this.handleGenerate()}
+              id="canvasgenback"
             >
               Generate (Backend)
             </Button>
@@ -471,9 +477,45 @@ class TextControl extends React.Component {
               color="secondary"
               startIcon={<SettingsIcon />}
               onClick={() => this.browserGeneration()}
+              id="canvasgenfront"
             >
               Generate (Frontend)
             </Button>
+
+            <IconButton
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                speechtocontrolfour(
+                  'canvasaddimage',
+                  'canvasaddtext',
+                  'canvasgenback',
+                  'canvasgenfront',
+                  [
+                    'add image',
+                    'add text',
+                    'generate back-end',
+                    'generate backend',
+                    'generate front-end',
+                    'generate frontend',
+                  ],
+                )
+              }}
+            >
+              <MicIcon />
+            </IconButton>
+            <Chip icon={<MicIcon />} label="add image" color="secondary" />
+            <Chip icon={<MicIcon />} label="add text" color="secondary" />
+            <Chip
+              icon={<MicIcon />}
+              label="generate backend"
+              color="secondary"
+            />
+            <Chip
+              icon={<MicIcon />}
+              label="generate frontend"
+              color="secondary"
+            />
           </div>
         </Card>
       </div>

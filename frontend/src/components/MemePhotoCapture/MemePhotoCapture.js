@@ -7,6 +7,7 @@ import { getApi } from '../../actions'
 import Camera from 'react-html5-camera-photo'
 import 'react-html5-camera-photo/build/css/index.css'
 import { Redirect } from 'react-router-dom'
+import { VoiceControl } from '../VoiceControl'
 
 //https://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
 //got partially stuck when understanding how javascript handles datauri, here how I understanded the code snippet in the onTakePhoto function

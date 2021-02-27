@@ -8,6 +8,11 @@ import { ImagePainter } from '../ImagePainter'
 import { MemePhotoCapture } from '../MemePhotoCapture'
 import { Link } from 'react-router-dom'
 import { Overview } from '../Overview'
+import Accordion from '@material-ui/core/Accordion'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
+import AccordionDetails from '@material-ui/core/AccordionDetails'
+import Typography from '@material-ui/core/Typography'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -30,6 +35,7 @@ import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye'
 import { VideoTemplates } from '../VideoTemplates'
 import { VideoMemes } from '../VideoMemes'
 import { GifTemplates } from '../GifTemplates'
+import Card from '@material-ui/core/Card'
 
 class MainApp extends React.Component {
   constructor(props) {
@@ -56,35 +62,81 @@ class MainApp extends React.Component {
               centered
             >
               <Tab label="Overview" icon={<RemoveRedEyeIcon />} />
-              <Tab label="Upload Image" icon={<CloudUpload />} />
-              <Tab label="Link Image" icon={<LinkIcon />} />
-              <Tab label="Take Picture" icon={<CameraAlt />} />
-              <Tab label="Draw Image" icon={<Brush />} />
-              <Tab label="Gif Templates" icon={<Gif />} />
-              <Tab label="Video Templates" icon={<Movie />} />
-              <Tab label="Video Memes" icon={<VideoLibrary />} />
-              <Tab label="Gif Memes" icon={<CollectionsBookmark />} />
+              <Tab label="Add Image Template" icon={<CloudUpload />} />
+              <Tab label="Create Gif Meme" icon={<Gif />} />
+              <Tab label="Create Video Meme" icon={<Movie />} />
+              <Tab label="REMOVE?? Video Memes" icon={<VideoLibrary />} />
+              <Tab label="REMOVE?? Gif Memes" icon={<CollectionsBookmark />} />
             </Tabs>
           </Paper>
           <div hidden={this.state.newValue !== 0}>
             <Overview />
           </div>
           <div hidden={this.state.newValue !== 1}>
-            <ImageUpload />
+            <div className="image-templates">
+              <Accordion defaultExpanded>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>Upload template</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <ImageUpload />
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel2a-content"
+                  id="panel2a-header"
+                >
+                  <Typography>Upload template from url</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <ImageUrlUpload />
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel2a-content"
+                  id="panel2a-header"
+                >
+                  <Typography>Screenshot template from url</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <ImageScreenshotUpload />
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel2a-content"
+                  id="panel2a-header"
+                >
+                  <Typography>Create template from webcam picture</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <MemePhotoCapture />
+                </AccordionDetails>
+              </Accordion>
+              <Accordion>
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel2a-content"
+                  id="panel2a-header"
+                >
+                  <Typography>Draw template</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <ImagePainter />
+                </AccordionDetails>
+              </Accordion>
+            </div>
           </div>
           <div hidden={this.state.newValue !== 2}>
-            <h1>Upload an image from the internet!</h1>
-            <ImageUrlUpload />
-            <h1>Take a Screenshot!</h1>
-            <ImageScreenshotUpload />
-          </div>
-          <div hidden={this.state.newValue !== 3}>
-            <MemePhotoCapture />
-          </div>
-          <div hidden={this.state.newValue !== 4}>
-            <ImagePainter />
-          </div>
-          <div hidden={this.state.newValue !== 5}>
             <Link
               to={{
                 pathname: '/imagememe',
@@ -94,13 +146,13 @@ class MainApp extends React.Component {
             </Link>
             <GifTemplates></GifTemplates>
           </div>
-          <div hidden={this.state.newValue !== 6}>
+          <div hidden={this.state.newValue !== 3}>
             <VideoTemplates></VideoTemplates>
           </div>
-          <div hidden={this.state.newValue !== 7}>
+          <div hidden={this.state.newValue !== 4}>
             <VideoMemes></VideoMemes>
           </div>
-          <div hidden={this.state.newValue !== 8}>Gif Memes</div>
+          <div hidden={this.state.newValue !== 5}>Gif Memes</div>
         </div>
       </div>
     )

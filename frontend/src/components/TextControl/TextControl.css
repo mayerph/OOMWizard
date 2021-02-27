@@ -1,22 +1,27 @@
-.text-control-card{
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding: 5px;
-    display: flex;
+.text-control-card {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 5px;
+  display: flex;
 }
 
 .meme-canvas-templates {
-    cursor: pointer;
-    width: calc(33% - 20px);
-    margin: 10px;
-    vertical-align: top;
+  cursor: pointer;
+  width: calc(33% - 20px);
+  margin: 10px;
+  vertical-align: top;
 }
 
 .meme-canvas-templates:hover {
-    box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
-    outline: #3f51b5 solid;
+  box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+  outline: #3f51b5 solid;
 }
 
-.resizeable-text-container{
-    font-family: Arial;
+.resizeable-text-container {
+  font-family: Arial;
+}
+
+.text-control-card .MuiChip-root {
+  margin: 3px;
 }
