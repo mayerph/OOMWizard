@@ -1,0 +1,45 @@
+.active-border {
+  border: 5px solid #3f51b5 !important;
+}
+
+.default-border {
+  border: 5px solid white;
+}
+
+.special-border {
+  border: 1px solid lightgrey;
+}
+
+.no-margin {
+  margin: 0 !important;
+}
+
+.template-upload {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-button {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+}
+
+.upload-button > button {
+  width: 100%;
+}
+
+.test2 > div {
+  overflow: auto !important;
+  width: calc(100%);
+}
+
+.custom-grid-tile {
+  width: 300px !important;
+}
+
+.MuiAccordionDetails-root {
+  overflow: auto !important;
+}

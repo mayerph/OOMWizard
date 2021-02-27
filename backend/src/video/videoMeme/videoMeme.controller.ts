@@ -105,7 +105,8 @@ export class VideoMemeController {
         const modFrames = await this.writeFramesToFile(meme, pathToFrames)
         const videoMeta = {
           file: "",
-          frames: modFrames as any
+          frames: modFrames as any,
+          timestamp: new Date()
         }
         // encode modified images to video
         const destinationPath = path.resolve(
@@ -148,7 +149,8 @@ export class VideoMemeController {
       const memeDestinationPath = path.resolve(memeDestination)
 
       // command-line commands
-      const decodeMemeCmd = `${config.ffmpeg.ffmpeg} -r ${fps} -i "${framesSourcePath}/%d.png" -i "${audioSourcePath}" -c:v mpeg4 -pix_fmt yuv420p -crf 23 -r ${fps} -y ${memeDestinationPath}`
+      const decodeMemeCmd = `${config.ffmpeg.ffmpeg} -r ${fps} -i "${framesSourcePath}/%d.png" -i "${audioSourcePath}" -c:v libx264 -pix_fmt yuv420p  -crf 23 -r ${fps} -y ${memeDestinationPath}`
+      console.log("decodeMemeCmd", decodeMemeCmd)
       const promises = []
 
       promises.push(

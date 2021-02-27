@@ -21,7 +21,11 @@ router.get(
       var limit = req.query.limit ? parseInt(req.query.limit as string) : 10
       var query = req.query.query as string
       const memes = await memeController.query_memes(query, limit, req.user)
-      memes.forEach(e => console.log(`Meme query result ${e.name} with ${e.owner} and ${e.access}`))
+      memes.forEach((e) =>
+        console.log(
+          `Meme query result ${e.name} with ${e.owner} and ${e.access}`
+        )
+      )
       const { zip, filename } = await memeController.zipFile(memes)
       res.attachment(`${filename}`)
       res.setHeader("Content-Disposition", `attachment; filename=${filename}`)
@@ -65,7 +69,11 @@ router.delete(
  */
 router.post("", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const meme = await memeController.addMeme(req.body.memes, req.user, req.body.access)
+    const meme = await memeController.addMeme(
+      req.body.memes,
+      req.user,
+      req.body.access
+    )
     res.json(meme)
   } catch (err) {
     res.status(500)

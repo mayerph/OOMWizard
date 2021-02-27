@@ -115,7 +115,7 @@ export class GifMemeController {
         const destinationPath = path.resolve(
           `./${config.storage.gifs.memes.path}/result`
         )
-        const newMeme = new GifMeme({ file: "", route: "" })
+        const newMeme = new GifMeme({ file: "", route: "", timestamp: new Date()})
         const filename = `${newMeme.id}.gif`
         const filepath = `${destinationPath}/${filename}`
 

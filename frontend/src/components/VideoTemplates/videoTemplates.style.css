@@ -2,6 +2,10 @@
   background-color: red !important;
 }
 
+.root-elm {
+  width: 300px;
+}
+
 canvas {
   border: none;
 }
@@ -22,4 +26,43 @@ canvas {
 
 .active-item {
   border: 5px solid #3f51b5;
+}
+
+.action-bar {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  width: 600px;
+}
+
+.action-btn {
+  margin-right: 10px !important;
+}
+
+.caption-container-parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.caption-option {
+  margin-bottom: 20px;
+}
+
+.frame-show {
+  margin-top: 20px;
+}
+
+.template-video {
+  height: 100%;
+  width: auto;
+}
+
+.meme-video {
+  height: 100%;
+  width: auto;
+}
+
+.video-presentation {
+  float: left;
+  margin-right: 10px;
 }

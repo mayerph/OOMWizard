@@ -192,10 +192,12 @@ export class VideoTemplateController {
           file: "..",
           route: "..",
           audio: "..",
+          timestamp: new Date(),
           frames: {
             frames: [],
             fps: ".."
-          }
+          },
+          thumbnail: ".."
         }
 
         const videoTemplate = new VideoTemplate(videoTemplateDoc)
@@ -226,6 +228,7 @@ export class VideoTemplateController {
         videoTemplate.audio = `${config.storage.videos.templates.path}/${videoTemplate.id}/audio/${this.audioFileName}`
         videoTemplate.file = video.name
         videoTemplate.route = `${config.storage.videos.templates.route}/${videoTemplate.id}/${video.name}`
+        videoTemplate.thumbnail = frames.frames[0].route
         console.log(
           "videoTemplate.audio",
           videoTemplate.audio,

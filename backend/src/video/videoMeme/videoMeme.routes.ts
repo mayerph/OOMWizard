@@ -4,7 +4,7 @@ import { VideoMemeController } from "./videoMeme.controller"
 import { IVideoMeme } from "./videoMeme.interface"
 
 const router = express.Router()
-const videoTemplateController = new VideoMemeController()
+const videoMemeController = new VideoMemeController()
 
 router.post(
   "/gencaption",
@@ -28,30 +28,33 @@ router.post(
   }
 )
 /**
- * route to all available video templates
+ * route to all available video memes
  */
 router.get("", async (req: Request, res: Response, next: NextFunction) => {
-  const templates = await videoTemplateController.videoMemes()
-  res.json(templates)
+  const memes = await videoMemeController.videoMemes()
+  res.json(memes)
 })
 
 /**
- * route to a certain video template
+ * route to a certain video meme
  */
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
-  const template = await videoTemplateController.videoMeme(id)
-  res.json(template)
+  const meme = await videoMemeController.videoMeme(id)
+  res.json(meme)
 })
 
 /**
- * route for uploading video templates
+ * route for uploading video meme
  */
 router.post("", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const result = await videoTemplateController.addVideoMeme(req.body.meme)
+    console.log("Kommt heir was an")
+    console.log(req.body)
+    const result = await videoMemeController.addVideoMeme(req.body.meme)
     res.json(result)
   } catch (err) {
+    console.log("the err is", err)
     res.status(500)
     res.json(err)
   }

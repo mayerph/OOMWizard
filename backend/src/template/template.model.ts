@@ -41,6 +41,10 @@ export const templateSchema = new Schema(
       type: String,
       required: true,
       dropDups: true
+    },
+    timestamp: {
+      type: Date,
+      required: false
     }
   },
   {

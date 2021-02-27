@@ -91,7 +91,7 @@ class StatsView extends React.Component {
         return { x: e.timestamp, y: e.rating }
       })
       let nr_comments = this.state.data.stats.nr_comments.map((e) => {
-        return { x: e.timestamp, y: e.nr_comments }
+        return { x: e.timestamp, y: e.comments }
       })
       return (
         <Card>

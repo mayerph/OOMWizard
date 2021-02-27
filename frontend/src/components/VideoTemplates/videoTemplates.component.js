@@ -7,7 +7,7 @@ import React, {
   useLayoutEffect,
 } from 'react'
 import { connect } from 'react-redux'
-
+import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core'
@@ -22,77 +22,38 @@ import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import IconButton from '@material-ui/core/IconButton'
 import CloseButton from '@material-ui/icons/Close'
+
+import Button from '@material-ui/core/Button'
+
+import {
+  AddOutlined,
+  ArrowUpward,
+  ArrowDownward,
+  ArrowForward,
+  ArrowBack,
+  CloudDownload,
+  PlayCircleFilled,
+} from '@material-ui/icons/'
+import {
+  getVideoTemplates,
+  addCaptionToActiveTemplate,
+  updateFramesOfActiveTemplate,
+  updateCaptions,
+  setActiveTemplate,
+  generateVideoMeme,
+} from '../../actions/videoTemplate.action'
 import { v4 as uuidv4 } from 'uuid'
 import * as _ from 'lodash'
 import { speechtotext } from '../speechtotext/speechtotext.js'
-import Button from '@material-ui/core/Button'
 import MicIcon from '@material-ui/icons/Mic'
 
-function FrameSelector(props) {
-  const { frames, callback } = props
-  const valuetext = (value) => {
-    return `${value + 1}`
-  }
-  const classes = useStyles()
+import RangeSlider from './helper/rangeSlider.component'
+import FrameSelector from './helper/frameSelector.component'
+import VideoTemplateList from './helper/videoTemplateList.component'
+import CustomAccordion from './helper/accordion.component'
+import * as config from '../../config.json'
 
-  const handleChange = (event, newValue) => {
-    callback(newValue)
-  }
-
-  return (
-    <div className={classes.root}>
-      <Typography id="continuous-slider" gutterBottom>
-        Small steps
-      </Typography>
-      <Slider
-        defaultValue={0}
-        getAriaValueText={valuetext}
-        aria-labelledby="continuous-slider"
-        step={1}
-        min={0}
-        max={frames.length - 1}
-        onChange={handleChange}
-        valueLabelDisplay="auto"
-        valueLabelFormat={(value) => value + 1}
-      />
-    </div>
-  )
-}
-
-function RangeSlider(props) {
-  const { frames, callback, config } = props
-
-  const classes = useStyles()
-  const [value, setValue] = React.useState(config)
-
-  const valuetext = (value) => {
-    return `${value + 1}`
-  }
-
-  const handleChange = (event, newValue) => {
-    console.log('new value is', newValue)
-    setValue(newValue)
-    callback({ old: value, new: newValue })
-  }
-
-  return (
-    <div className={classes.root}>
-      <Typography id="range-slider" gutterBottom>
-        Select Frames
-      </Typography>
-      <Slider
-        value={value}
-        getAriaValueText={valuetext}
-        onChange={handleChange}
-        valueLabelDisplay="auto"
-        aria-labelledby="range-slider"
-        max={frames - 1}
-        step={1}
-        valueLabelFormat={(value) => value + 1}
-      />
-    </div>
-  )
-}
+const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -101,88 +62,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const VideoTemplates = (props) => {
-  const tileData = [
-    {
-      id: uuidv4(),
-      text: 'hello world',
-      x: 10,
-      y: 50,
-      frames: [0, 2],
-    },
-    {
-      id: uuidv4(),
-      text: 'hello universe',
-      x: 20,
-      y: 60,
-      frames: [0, 2],
-    },
-    {
-      id: uuidv4(),
-      text: 'hello mars',
-      x: 30,
-      y: 70,
-      frames: [0, 2],
-    },
-  ]
-
-  const frames = [
-    {
-      id: uuidv4(),
-      url:
-        'https://nyc3.digitaloceanspaces.com/memecreator-cdn/media/__processed__/cd4/template-is-this-a-pigeon-0c6db91aec9c.jpg',
-      captions: [],
-    },
-    {
-      id: uuidv4(),
-      url:
-        'https://i0.wp.com/comicsandmemes.com/wp-content/uploads/blank-meme-template-115-rick-and-morty-wall-tear-open.jpg?fit=580%2C600&ssl=1',
-      captions: [],
-    },
-    {
-      id: uuidv4(),
-      url:
-        'https://nyc3.digitaloceanspaces.com/memecreator-cdn/media/__processed__/cd4/template-is-this-a-pigeon-0c6db91aec9c.jpg',
-      captions: [],
-    },
-    {
-      id: uuidv4(),
-      url:
-        'https://nyc3.digitaloceanspaces.com/memecreator-cdn/media/__processed__/cd4/template-is-this-a-pigeon-0c6db91aec9c.jpg',
-      captions: [],
-    },
-    {
-      id: uuidv4(),
-      url:
-        'https://nyc3.digitaloceanspaces.com/memecreator-cdn/media/__processed__/cd4/template-is-this-a-pigeon-0c6db91aec9c.jpg',
-      captions: [],
-    },
-    {
-      id: uuidv4(),
-      url:
-        'https://nyc3.digitaloceanspaces.com/memecreator-cdn/media/__processed__/cd4/template-is-this-a-pigeon-0c6db91aec9c.jpg',
-      captions: [],
-    },
-    {
-      id: uuidv4(),
-      url:
-        'https://i0.wp.com/comicsandmemes.com/wp-content/uploads/blank-meme-template-115-rick-and-morty-wall-tear-open.jpg?fit=580%2C600&ssl=1',
-      captions: [],
-    },
-    {
-      id: uuidv4(),
-      url:
-        'https://nyc3.digitaloceanspaces.com/memecreator-cdn/media/__processed__/cd4/template-is-this-a-pigeon-0c6db91aec9c.jpg',
-      captions: [],
-    },
-  ]
-
-  const [drawing, setDrawing] = useState(false)
-  const [captionList, setCaptionList] = useState(tileData)
-  const [frameList, setFrameList] = useState(frames)
   const [stepSize, setStepSize] = useState(10)
   const [activeCaption, setActiveCaption] = useState(0)
   const [activeFrame, setActiveFrame] = useState(0)
+  const debug = false
+  let templateVideo = React.useRef(null)
+  let templateVideoSource = React.useRef(null)
 
+  const dispatch = useDispatch()
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
@@ -194,37 +81,55 @@ const VideoTemplates = (props) => {
     },
   }))
 
-  const baseImage = new Image()
-  console.log('_------>', frameList[activeFrame].url)
+  let baseImage = new Image()
 
+  const getCaptions = () => {
+    return videoTemplateState.data.captions
+  }
+
+  const getMeme = () => {
+    return videoTemplateState.data.meme
+  }
+  const getActiveTemplate = () => {
+    return videoTemplateState.data.activeTemplate
+  }
+
+  const getActiveFrame = () => {
+    return getActiveTemplate().frames.frames[activeFrame]
+  }
   const drawImage = () => {
-    baseImage.src = frameList[activeFrame].url
-    const canvas = document.getElementById('meme')
-    const context = canvas.getContext('2d')
+    if (videoTemplateState.data.activeTemplate) {
+      baseImage = getActiveFrame().image
+      //baseImage.src = `${destination}/${getActiveFrame().route}`
 
-    context.clearRect(0, 0, baseImage.width, baseImage.height)
+      const canvas = document.getElementById('meme')
+      const context = canvas.getContext('2d')
 
-    context.canvas.width = baseImage.width
-    context.canvas.height = baseImage.height
-    context.drawImage(baseImage, 0, 0)
-    frameList[activeFrame].captions.forEach((e) => {
-      context.font = '30px Arial'
-      context.fillText(e.text, e.x, e.y)
-    })
-    //setDrawing(!drawing)
+      context.clearRect(0, 0, baseImage.width, baseImage.height)
+
+      context.canvas.width = baseImage.width
+      context.canvas.height = baseImage.height
+      context.drawImage(baseImage, 0, 0)
+      getActiveFrame().captions.forEach((e) => {
+        context.font = '30px Arial'
+        context.fillText(e.text, e.x, e.y)
+      })
+
+      //setDrawing(!drawing)
+    }
   }
 
   const add = () => {
     const newCaption = {
       id: uuidv4(),
-      text: 'hello hello',
+      text: 'placeholder',
       x: 40,
       y: 80,
-      frames: [0, frameList.length - 1],
+      frames: [0, _.values(getActiveTemplate().frames.frames).length - 1],
     }
-    captionList.push(newCaption)
 
-    setCaptionList([...captionList])
+    dispatch(addCaptionToActiveTemplate(newCaption))
+
     updateCaptionsInFrames(
       { new: newCaption.frames, old: undefined },
       newCaption,
@@ -232,64 +137,47 @@ const VideoTemplates = (props) => {
   }
 
   const up = () => {
-    captionList[activeCaption].y = captionList[activeCaption].y - stepSize
-    const temp = [...captionList]
-    setCaptionList(temp)
+    const captionsTemp = [...getCaptions()]
+    captionsTemp[activeCaption].y = captionsTemp[activeCaption].y - stepSize
+    dispatch(updateCaptions(captionsTemp))
   }
 
   const down = () => {
-    captionList[activeCaption].y = captionList[activeCaption].y + stepSize
-    const temp = [...captionList]
-    setCaptionList(temp)
+    const captionsTemp = [...getCaptions()]
+    captionsTemp[activeCaption].y = captionsTemp[activeCaption].y + stepSize
+
+    dispatch(updateCaptions(captionsTemp))
   }
 
   const right = () => {
-    captionList[activeCaption].x = captionList[activeCaption].x + stepSize
-    const temp = [...captionList]
-    setCaptionList(temp)
+    const captionsTemp = [...getCaptions()]
+    captionsTemp[activeCaption].x = captionsTemp[activeCaption].x + stepSize
+    dispatch(updateCaptions(captionsTemp))
   }
 
   const left = () => {
-    captionList[activeCaption].x = captionList[activeCaption].x - stepSize
-    const temp = [...captionList]
-    setCaptionList(temp)
-  }
+    const captionsTemp = [...getCaptions()]
+    captionsTemp[activeCaption].x = captionsTemp[activeCaption].x - stepSize
 
-  useEffect(() => {
-    initDrawing()
-    drawImage()
-  }, [])
+    dispatch(updateCaptions(captionsTemp))
+  }
 
   const setActive = (index) => {
     setActiveCaption(index)
   }
 
-  const initDrawing = () => {
-    for (var i = 0; i < captionList.length; i++) {
-      for (
-        let j = captionList[i].frames[0];
-        j <= captionList[i].frames[1];
-        j++
-      ) {
-        frameList[j].captions = _.uniqBy(
-          [].concat(frameList[j].captions).concat(captionList[i]),
-        )
-      }
-    }
-    setFrameList(frameList)
-    console.log('frameList', frameList)
-    console.log('the active frame', frameList[activeFrame])
-  }
-
   const updateCaptionsInFrames = (frames, itemToDelete) => {
+    const frameVector = [...getActiveTemplate().frames.frames]
     if (frames.new != frames.old) {
       // delete items
       if (frames.old !== undefined) {
         for (let i = frames.old[0]; i <= frames.old[1]; i++) {
-          frameList[i].captions = frameList[i].captions.filter((item) => {
+          frameVector[i].captions = frameVector[i].captions.filter((item) => {
             if (
               item.id !=
-              (itemToDelete ? itemToDelete.id : captionList[activeCaption].id)
+              (itemToDelete
+                ? itemToDelete.id
+                : getActiveFrame().captions[activeCaption].id)
             ) {
               return item
             }
@@ -300,46 +188,46 @@ const VideoTemplates = (props) => {
       // add items
       if (frames.new !== undefined) {
         for (let i = frames.new[0]; i <= frames.new[1]; i++) {
-          frameList[i].captions = _.uniqBy(
+          frameVector[i].captions = _.uniqBy(
             []
-              .concat(frameList[i].captions)
-              .concat(itemToDelete ? itemToDelete : captionList[activeCaption]),
+              .concat(frameVector[i].captions)
+              .concat(itemToDelete ? itemToDelete : frameVector[activeCaption]),
             'id',
           )
         }
       }
-      setFrameList(frameList)
+
+      dispatch(updateFramesOfActiveTemplate(frameVector))
+      // ---> todo setFrameList(frameList)
     }
   }
 
   const handleChange = (e, index) => {
+    const captionVec = [...getCaptions()]
     const { value } = e.target
-    captionList[index].text = value
-    const temp = [...captionList]
-    setCaptionList(temp)
+    captionVec[index].text = value
+    dispatch(updateCaptions(captionVec))
   }
 
-  // update captionList
   // update captions in frameList (only for rendering)
   const redefineFrameRange = (e, index) => {
-    captionList[index].frames = e.new
-    updateCaptionsInFrames(e, captionList[index])
-    setCaptionList([...captionList])
+    const captionVec = [...getCaptions()]
+    captionVec[index].frames = e.new
+    updateCaptionsInFrames(e, captionVec[index])
+    dispatch(updateCaptions(captionVec))
   }
 
   const deleteCaption = (index, id) => {
-    console.log('delete')
-    const newList = [...captionList]
+    const newList = [...getCaptions()]
     const itemToDelete = { ...newList[index] }
-    console.log('itemToDelete', itemToDelete)
 
     const t = newList.filter((e, i) => e.id !== id)
-    setCaptionList(t)
+    dispatch(updateCaptions(t))
+
     updateCaptionsInFrames(
       { new: undefined, old: itemToDelete.frames },
       itemToDelete,
     )
-    console.log('--<y<jö', t)
   }
 
   const setVisibleFrame = (index) => {
@@ -347,146 +235,343 @@ const VideoTemplates = (props) => {
   }
 
   useEffect(() => {
-    console.log('activeFrame')
     drawImage()
   }, [activeFrame])
 
-  useEffect(() => {
-    drawImage()
-  }, [captionList])
+  // Allows you to extract data from the Redux store state, using a selector function.
+  const videoTemplateState = useSelector((state) => {
+    if (
+      !state.videoTemplatesReducer.error &&
+      state.videoTemplatesReducer.data.videoTemplates
+    ) {
+      return state.videoTemplatesReducer
+    }
+  })
+
+  //setFrameList(templates[0].frames.frames)
+
+  React.useEffect(() => {
+    if (videoTemplateState.data.videoTemplates.length > 0) {
+      if (videoTemplateState.data.captions.length > 0) {
+        //initDrawing()
+      }
+      console.log('dafda', templateVideo.current)
+      if (
+        templateVideo &&
+        templateVideo.current &&
+        videoTemplateState.action == 'SET_ACTIVE_TEMPLATE'
+      ) {
+        //templateVideoSource.current.src = getActiveTemplate().route
+        templateVideo.current.load()
+      }
+      drawImage()
+    }
+
+    setTimeout(() => {
+      drawImage()
+    }, 1000)
+    //drawImage()
+  }, [videoTemplateState])
+
+  // enables side effects like http requests
+  React.useEffect(() => {
+    dispatch(getVideoTemplates())
+  }, [dispatch])
 
   useEffect(() => {
-    console.log('------------------------captionList', captionList)
-    const newList = captionList.map((item) => {
-      if (item.id == captionList[activeCaption].id) {
-        return captionList[activeCaption]
+    const captionVec = [...getCaptions()]
+    captionVec.map((item) => {
+      if (item.id == captionVec[activeCaption].id) {
+        return captionVec[activeCaption]
       }
       return item
     })
-    setCaptionList(newList)
+    dispatch(updateCaptions(captionVec))
   }, [activeCaption])
 
   const classes = useStyles()
   let trying = false
 
-  return (
-    <div className="meme-generator-body">
-      <div>
-        <FrameSelector
-          frames={frameList}
-          callback={(e) => {
-            setVisibleFrame(e)
-          }}
-        ></FrameSelector>
-        <canvas id="meme"></canvas>
-      </div>
+  const setActiveTemplate_ = (index) => {
+    dispatch(setActiveTemplate(index))
+  }
 
-      <div>
-        <button onClick={add}>Add</button>
-        <button
-          onClick={() => {
-            left()
-          }}
-        >
-          Left
-        </button>
-        <button
-          onClick={() => {
-            right()
-          }}
-        >
-          Right
-        </button>
-        <button
-          onClick={() => {
-            up()
-          }}
-        >
-          Up
-        </button>
-        <button
-          onClick={() => {
-            down()
-          }}
-        >
-          Down
-        </button>
-      </div>
-      <div>
-        {captionList.map((item, index) => (
-          <>
-            <Card
-              className={`caption-card ${
-                item.id ==
-                (captionList[activeCaption]
-                  ? captionList[activeCaption].id
-                  : '')
-                  ? 'active-item'
-                  : ''
-              }`}
-              key={item.id}
-              onClick={(e) => {
-                setActive(index)
+  const prepare = () => {
+    const memeTemplate = _.cloneDeep({ ...getActiveTemplate() })
+    const frames_temp = []
+    memeTemplate.frames.frames.forEach((e) => {
+      const cap = []
+      e.captions.forEach((c) => {
+        cap.push({
+          text: c.text,
+          position: {
+            x: c.x,
+            y: c.y,
+          },
+          color: 'black',
+          size: 30,
+        })
+      })
+      e.captions = cap
+      frames_temp.push(e)
+    })
+    memeTemplate.frames.frames = frames_temp
+
+    return {
+      meme: memeTemplate,
+    }
+  }
+
+  const generateMeme = () => {
+    dispatch(generateVideoMeme(prepare()))
+  }
+
+  const Debug = () => {
+    if (debug) {
+      return (
+        <span>
+          {videoTemplateState.data.activeTemplate.frames.frames.length}
+          {videoTemplateState.data.videoTemplates.map((e) => (
+            <div key={uuidv4()}>
+              {JSON.stringify(videoTemplateState.data.captions)}
+            </div>
+          ))}
+
+          <button
+            onClick={() => {
+              console.log('prepare', JSON.stringify(prepare()))
+            }}
+          >
+            test2
+          </button>
+          <button
+            onClick={() => {
+              dispatch(
+                addCaptionToActiveTemplate({
+                  id: uuidv4(),
+                  text: 'hello test',
+                  x: 30,
+                  y: 70,
+                  frames: [0, 2],
+                }),
+              )
+            }}
+          >
+            test
+          </button>
+        </span>
+      )
+    } else {
+      return <span></span>
+    }
+  }
+
+  const Videoplayer = () => {
+    if (getMeme()) {
+      return (
+        <video className="meme-video" controls>
+          <source src={`${destination}${getMeme().route}`} type="video/mp4" />
+        </video>
+      )
+    } else {
+      return ''
+    }
+  }
+  let memePart
+  if (videoTemplateState.data.activeTemplate != undefined) {
+    memePart = (
+      <span>
+        <Card className="frame-show">
+          <CardContent>
+            <Typography variant="body2" color="textSecondary" component="p">
+              <div className="video-presentation">
+                <canvas id="meme"></canvas>
+              </div>
+
+              <div className="video-presentation">
+                <video controls className="template-video" ref={templateVideo}>
+                  <source
+                    ref={templateVideoSource}
+                    src={`${destination}${videoTemplateState.data.activeTemplate.route}`}
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+              <div className="video-presentation">
+                <Videoplayer></Videoplayer>
+              </div>
+            </Typography>
+          </CardContent>
+
+          <CardContent>
+            <FrameSelector
+              frames={getActiveTemplate().frames.frames}
+              callback={(e) => {
+                setVisibleFrame(e)
               }}
-            >
-              <CardHeader
-                action={
-                  <IconButton aria-label="settings">
-                    <CloseButton
-                      onClick={() => {
-                        deleteCaption(index, item.id)
-                      }}
-                    />
-                  </IconButton>
-                }
-                title={`Caption ${index + 1}`}
-              />
-              <CardContent>
-                <Typography
-                  className={classes.title}
-                  color="textSecondary"
-                  gutterBottom
-                >
-                  <div>
-                    <TextField
-                      className="caption-input"
-                      label="Caption"
-                      defaultValue={captionList[index].text}
-                      onChange={(e) => {
-                        handleChange(e, index)
-                      }}
-                      variant="outlined"
-                      id={item.id}
-                    />
-                  </div>
-                  <IconButton
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      console.log(trying)
-                      speechtotext(item.id, trying)
-                      console.log(trying)
-                      trying = !trying
+            ></FrameSelector>
+          </CardContent>
+        </Card>
+        <div className="caption-container-parent">
+          <div className="caption-container-child">
+            <div className="action-bar">
+              <Button
+                onClick={add}
+                variant="contained"
+                color="primary"
+                className="action-btn"
+              >
+                <AddOutlined />
+              </Button>
+              <Button
+                className="action-btn"
+                variant="contained"
+                onClick={() => {
+                  left()
+                }}
+              >
+                <ArrowBack />
+              </Button>
+              <Button
+                className="action-btn"
+                variant="contained"
+                onClick={() => {
+                  right()
+                }}
+              >
+                <ArrowForward />
+              </Button>
+              <Button
+                className="action-btn"
+                variant="contained"
+                onClick={() => {
+                  up()
+                }}
+              >
+                <ArrowUpward />
+              </Button>
+              <Button
+                className="action-btn"
+                variant="contained"
+                onClick={() => {
+                  down()
+                }}
+              >
+                <ArrowDownward />
+              </Button>
+              <Button
+                className="action-btn"
+                variant="contained"
+                onClick={generateMeme}
+              >
+                <CloudDownload />
+              </Button>
+            </div>
+            <div>
+              {getCaptions().map((item, index) => (
+                <>
+                  <div
+                    key={item.id}
+                    onClick={(e) => {
+                      setActive(index)
                     }}
                   >
-                    <MicIcon />
-                  </IconButton>
-                  <div>
-                    <RangeSlider
-                      frames={frameList.length}
-                      callback={(e) => {
-                        redefineFrameRange(e, index)
-                      }}
-                      config={item.frames}
-                    ></RangeSlider>
+                    <Card
+                      className={`caption-card ${
+                        item.id ==
+                        (getCaptions()[activeCaption]
+                          ? getCaptions()[activeCaption].id
+                          : '')
+                          ? 'active-item'
+                          : ''
+                      }`}
+                    >
+                      <CardHeader
+                        action={
+                          <IconButton aria-label="settings">
+                            <CloseButton
+                              onClick={() => {
+                                deleteCaption(index, item.id)
+                              }}
+                            />
+                          </IconButton>
+                        }
+                        title={`Caption ${index + 1}`}
+                      />
+                      <CardContent>
+                        <Typography
+                          component={'span'}
+                          className={classes.title}
+                          color="textSecondary"
+                          gutterBottom
+                        >
+                          <div className="caption-option">
+                            <TextField
+                              className="caption-input"
+                              label="Caption"
+                              defaultValue={getCaptions()[index].text}
+                              onChange={(e) => {
+                                handleChange(e, index)
+                              }}
+                              variant="outlined"
+                            />
+                            <IconButton
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                console.log(trying)
+                                speechtotext(item.id, trying)
+                                console.log(trying)
+                                trying = !trying
+                              }}
+                            >
+                              <MicIcon />
+                            </IconButton>
+                          </div>
+                          <div className="caption-option">
+                            {
+                              <RangeSlider
+                                index={index}
+                                frames={getActiveTemplate().frames.frames}
+                                callback={(e) => {
+                                  redefineFrameRange(e, index)
+                                }}
+                                config={getCaptions()[index].frames}
+                              ></RangeSlider>
+                            }
+                          </div>
+                        </Typography>
+                      </CardContent>
+                    </Card>
                   </div>
-                </Typography>
-              </CardContent>
-            </Card>
-          </>
-        ))}
-        <div></div>
-      </div>
+                </>
+              ))}
+              <div></div>
+            </div>
+          </div>
+        </div>
+        ;
+      </span>
+    )
+  } else {
+    memePart = <span></span>
+  }
+
+  return (
+    <div className="meme-generator-body">
+      <Debug></Debug>
+      <CustomAccordion className="der-test">
+        <VideoTemplateList
+          videos={videoTemplateState.data.videoTemplates}
+          active={
+            videoTemplateState.data.activeIndex
+              ? videoTemplateState.data.activeIndex
+              : -1
+          }
+          callback={setActiveTemplate_}
+        ></VideoTemplateList>
+      </CustomAccordion>
+      {memePart}
     </div>
   )
 }
