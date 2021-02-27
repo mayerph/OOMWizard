@@ -7,7 +7,8 @@ import * as gif from "gifEndecoder"
 import * as path from "path"
 
 import { filter_accessible, is_accessible } from "../../user/ownership"
-import { ViewsController } from '../../meta/views.controller'
+import { ViewsController } from "../../meta/views.controller"
+import { IFrame } from "../../imageVector/imageVector.interface"
 const viewsController = new ViewsController()
 
 export class GifTemplateController {
@@ -60,7 +61,7 @@ export class GifTemplateController {
   async gifTemplates(username?: String): Promise<IGifTemplate[]> {
     var gifTemplates: IGifTemplate[] = await GifTemplate.find()
     gifTemplates = filter_accessible(gifTemplates, false, username)
-    for(var meme of gifTemplates){
+    for (var meme of gifTemplates) {
       viewsController.notify_view(meme.id, username)
     }
     return gifTemplates
@@ -69,10 +70,16 @@ export class GifTemplateController {
   /**
    * returns certain gif template
    */
-  async gifTemplate(id: string, username?: String): Promise<IGifTemplate | null> {
+  async gifTemplate(
+    id: string,
+    username?: String
+  ): Promise<IGifTemplate | null> {
     var gifTemplate = await GifTemplate.findById(id)
-    gifTemplate = gifTemplate && is_accessible(gifTemplate, true, username) ? gifTemplate : null
-    if(gifTemplate){
+    gifTemplate =
+      gifTemplate && is_accessible(gifTemplate, true, username)
+        ? gifTemplate
+        : null
+    if (gifTemplate) {
       viewsController.notify_view(gifTemplate.id, username)
     }
     return gifTemplate
@@ -184,11 +191,14 @@ export class GifTemplateController {
       if (!image.data || !image.name) {
         reject(new Error("no image data"))
       }
+
+      console.log("halli hallo wie gehts denn so")
       const gifTemplateDoc: IGifTemplate = {
         file: "",
         route: "",
         frames: [],
-        timestamp: new Date(),
+        thumbnail: "..",
+        timestamp: new Date()
       }
 
       const gifTemplate = new GifTemplate(gifTemplateDoc)
@@ -206,12 +216,33 @@ export class GifTemplateController {
 
       fs.writeFileSync(srcFile, image.data)
       const gifMeta = await this.decodeGif(srcFile, dstDirectory)
-      gifTemplate.frames = gifMeta.frames
+
       gifTemplate.file = gifMeta.file
       gifTemplate.route = `${config.storage.gifs.templates.route}/${gifTemplate.id}/${image.name}`
 
+      const framesTemp: IFrame[] = []
+      const t = [...gifMeta.frames]
+
+      t.forEach((f) => {
+        framesTemp.push({
+          delay: f.delay,
+          file: f.file,
+          left: f.left,
+          top: f.top,
+
+          route: `${config.storage.gifs.templates.route}/${
+            gifTemplate.id
+          }/frames/${path.basename(f.file)}`
+        })
+      })
+
+      gifTemplate.frames = framesTemp
+
+      gifTemplate.thumbnail = gifTemplate.frames[0].route
+
       try {
         await gifTemplate.save()
+
         resolve(gifTemplate)
       } catch (err) {
         reject(err)

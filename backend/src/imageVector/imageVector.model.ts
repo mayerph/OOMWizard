@@ -46,7 +46,8 @@ export const frameSchema = new Schema(
     delay: { type: delaySchema, required: true },
     file: { type: String, required: true },
     left: { type: Number, required: true },
-    top: { type: Number, required: true }
+    top: { type: Number, required: true },
+    route: { type: String, required: true }
   },
   {
     toJSON: {

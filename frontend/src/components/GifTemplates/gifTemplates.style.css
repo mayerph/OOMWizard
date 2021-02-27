@@ -1,0 +1,85 @@
+.test {
+  background-color: red !important;
+}
+
+.root-elm {
+  width: 100%;
+}
+
+canvas {
+  border: none;
+}
+
+.caption-card {
+  width: 600px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  border: 5px solid white;
+}
+.meme-generator-body {
+  padding: 10px;
+}
+
+.caption-input {
+  width: 100%;
+}
+
+.active-item {
+  border: 5px solid #3f51b5;
+}
+
+.frame-selector {
+  width: 100%;
+}
+
+.action-bar {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  width: 100%;
+  background-color: #eeeeee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.action-btn {
+  margin-right: 10px !important;
+}
+
+.caption-container-parent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.caption-option {
+  margin-bottom: 20px;
+}
+
+.frame-show {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.template-gif {
+  height: 100%;
+  width: auto;
+}
+
+.meme-gif {
+  height: 100%;
+  width: auto;
+}
+
+.gif-presentation {
+  float: left;
+  margin-right: 10px;
+}
+
+.sticky-container {
+  position: sticky;
+  top: 0px;
+  z-index: 10;
+}

@@ -34,6 +34,7 @@ import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye'
 
 import { VideoTemplates } from '../VideoTemplates'
 import { VideoMemes } from '../VideoMemes'
+import { GifTemplates } from '../GifTemplates'
 import Card from '@material-ui/core/Card'
 
 class MainApp extends React.Component {
@@ -143,6 +144,7 @@ class MainApp extends React.Component {
             >
               image
             </Link>
+            <GifTemplates></GifTemplates>
           </div>
           <div hidden={this.state.newValue !== 3}>
             <VideoTemplates></VideoTemplates>

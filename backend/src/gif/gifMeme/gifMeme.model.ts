@@ -35,20 +35,20 @@ const gifMemeSchema = new Schema(
     },
     timestamp: {
       type: Date,
-      required: false,
+      required: false
     },
     route: {
       type: String
     },
-    owner: { 
+    owner: {
       type: String,
-      required: false 
+      required: false
     },
     access: {
       type: String,
       enum: ["private", "unlisted", "public"],
       required: false
-    },
+    }
   },
   {
     toJSON: {

@@ -4,6 +4,7 @@ import focusEditorState from './focusEditorState'
 import apiGetter from './apigetter'
 import memeReducer from './memeReducer'
 import videoTemplatesReducer from './videoTemplatesReducer'
+import gifTemplatesReducer from './gifTemplatesReducer'
 import auth from './auth'
 import navigation from './navigation'
 
@@ -15,4 +16,5 @@ export default combineReducers({
   api: apiGetter,
   memeReducer,
   videoTemplatesReducer,
+  gifTemplatesReducer,
 })

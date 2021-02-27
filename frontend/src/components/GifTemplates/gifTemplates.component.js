@@ -12,7 +12,7 @@ import { useDispatch, useSelector, shallowEqual } from 'react-redux'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core'
-import './videoTemplates.style.css'
+import './gifTemplates.style.css'
 import { MemeCanvas } from '../MemeCanvas'
 import Typography from '@material-ui/core/Typography'
 import Slider from '@material-ui/core/Slider'
@@ -38,14 +38,14 @@ import {
   Palette,
 } from '@material-ui/icons/'
 import {
-  getVideoTemplates,
+  getGifTemplates,
   addCaptionToActiveTemplate,
   updateFramesOfActiveTemplate,
   updateCaptions,
   setActiveTemplate,
-  generateVideoMeme,
+  generateGifMeme,
   setActiveFrame,
-} from '../../actions/videoTemplate.action'
+} from '../../actions/gifTemplate.action'
 import { v4 as uuidv4 } from 'uuid'
 import * as _ from 'lodash'
 import { speechtotextreturn } from '../speechtotext/speechtotext.js'
@@ -53,7 +53,7 @@ import MicIcon from '@material-ui/icons/Mic'
 
 import RangeSlider from './helper/rangeSlider.component'
 import FrameSelector from './helper/frameSelector.component'
-import VideoTemplateList from './helper/videoTemplateList.component'
+import GifTemplateList from './helper/gifTemplateList.component'
 import CustomAccordion from './helper/accordion.component'
 import * as config from '../../config.json'
 import ColorPickerDialog from './helper/colorpickerDialog.component'
@@ -67,17 +67,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const VideoTemplates = (props) => {
+const GifTemplates = (props) => {
   const [stepSize, setStepSize] = useState(10)
   const [activeCaption, setActiveCaption] = useState(0)
 
   const debug = false
   const [colorpickerOpen, setColorpickerOpen] = useState(false)
-  let templateVideo = React.useRef(null)
-  let templateVideoSource = React.useRef(null)
-  const videoplayerRef = useRef()
-  const videosrcRef = useRef()
-  let videoplayer
+  let templateGif = React.useRef(null)
+  let templateGifSource = React.useRef(null)
+  const gifplayerRef = useRef()
+  const gifsrcRef = useRef()
+  let gifplayer
 
   const dispatch = useDispatch()
   const useStyles = makeStyles((theme) => ({
@@ -94,29 +94,30 @@ const VideoTemplates = (props) => {
   let baseImage = new Image()
 
   const getCaptions = () => {
-    return videoTemplateState.data.captions
+    return gifTemplateState.data.captions
   }
 
   const getMeme = () => {
-    return videoTemplateState.data.meme
+    return gifTemplateState.data.meme
   }
   const getActiveTemplate = () => {
-    return videoTemplateState.data.activeTemplate
+    return gifTemplateState.data.activeTemplate
   }
 
   const getActiveFrameIndex = () => {
-    return videoTemplateState.data.activeFrame
+    return gifTemplateState.data.activeFrame
   }
 
   const getActiveFrame = () => {
-    return getActiveTemplate().frames.frames[getActiveFrameIndex()]
+    return getActiveTemplate().frames[getActiveFrameIndex()]
   }
   const drawImage = () => {
-    if (videoTemplateState.data.activeTemplate) {
+    if (gifTemplateState.data.activeTemplate) {
+      console.log('nun sind wir hier richtig')
       baseImage = getActiveFrame().image
       //baseImage.src = `${destination}/${getActiveFrame().route}`
-
-      const canvas = document.getElementById('meme')
+      console.log('the baseimage is', baseImage)
+      const canvas = document.getElementById('meme2')
       const context = canvas.getContext('2d')
 
       context.clearRect(0, 0, baseImage.width, baseImage.height)
@@ -140,7 +141,7 @@ const VideoTemplates = (props) => {
       text: 'placeholder',
       x: 40,
       y: 80,
-      frames: [0, _.values(getActiveTemplate().frames.frames).length - 1],
+      frames: [0, _.values(getActiveTemplate().frames).length - 1],
       color: '#000000',
       size: 30,
     }
@@ -184,7 +185,7 @@ const VideoTemplates = (props) => {
   }
 
   const updateCaptionsInFrames = (frames, itemToDelete) => {
-    const frameVector = [...getActiveTemplate().frames.frames]
+    const frameVector = [...getActiveTemplate().frames]
     if (frames.new != frames.old) {
       // delete items
       if (frames.old !== undefined) {
@@ -248,43 +249,28 @@ const VideoTemplates = (props) => {
   }
 
   const setVisibleFrame = (index) => {
-    setActiveFrame(index)
+    dispatch(setActiveFrame(index))
   }
 
   // Allows you to extract data from the Redux store state, using a selector function.
-  const videoTemplateState = useSelector((state) => {
+  const gifTemplateState = useSelector((state) => {
     if (
-      !state.videoTemplatesReducer.error &&
-      state.videoTemplatesReducer.data.videoTemplates
+      !state.gifTemplatesReducer.error &&
+      state.gifTemplatesReducer.data.gifTemplates
     ) {
-      return state.videoTemplatesReducer
+      return state.gifTemplatesReducer
     }
   })
 
   //setFrameList(templates[0].frames.frames)
 
   React.useEffect(() => {
-    if (videoTemplateState.data.videoTemplates.length > 0) {
-      if (videoTemplateState.data.captions.length > 0) {
+    if (gifTemplateState.data.gifTemplates.length > 0) {
+      if (gifTemplateState.data.captions.length > 0) {
         //initDrawing()
       }
-
-      if (
-        templateVideo &&
-        templateVideo.current &&
-        videoTemplateState.action == 'SET_ACTIVE_TEMPLATE'
-      ) {
-        //templateVideoSource.current.src = getActiveTemplate().route
-        templateVideo.current.load()
-      }
-
-      if (
-        videoplayerRef &&
-        videoplayerRef.current &&
-        videoTemplateState.action == 'GENERATE_VIDEO_MEME'
-      ) {
-        //templateVideoSource.current.src = getActiveTemplate().route
-        videoplayerRef.current.load()
+      if (gifTemplateState.action == 'SET_ACTIVE_TEMPLATE_GIF') {
+        //setActiveFrame(0)
       }
 
       drawImage()
@@ -294,11 +280,11 @@ const VideoTemplates = (props) => {
       drawImage()
     }, 1000)
     //drawImage()
-  }, [videoTemplateState])
+  }, [gifTemplateState])
 
   // enables side effects like http requests
   React.useEffect(() => {
-    dispatch(getVideoTemplates())
+    dispatch(getGifTemplates())
   }, [dispatch])
 
   useEffect(() => {
@@ -322,7 +308,7 @@ const VideoTemplates = (props) => {
   const prepare = () => {
     const memeTemplate = _.cloneDeep({ ...getActiveTemplate() })
     const frames_temp = []
-    memeTemplate.frames.frames.forEach((e) => {
+    memeTemplate.frames.forEach((e) => {
       const cap = []
       e.captions.forEach((c) => {
         cap.push({
@@ -338,7 +324,7 @@ const VideoTemplates = (props) => {
       e.captions = cap
       frames_temp.push(e)
     })
-    memeTemplate.frames.frames = frames_temp
+    memeTemplate.frames = frames_temp
 
     return {
       meme: memeTemplate,
@@ -346,17 +332,17 @@ const VideoTemplates = (props) => {
   }
 
   const generateMeme = () => {
-    dispatch(generateVideoMeme(prepare()))
+    dispatch(generateGifMeme(prepare()))
   }
 
   const Debug = () => {
     if (debug) {
       return (
         <span>
-          {videoTemplateState.data.activeTemplate.frames.frames.length}
-          {videoTemplateState.data.videoTemplates.map((e) => (
+          {gifTemplateState.data.activeTemplate.frames.length}
+          {gifTemplateState.data.gifTemplates.map((e) => (
             <div key={uuidv4()}>
-              {JSON.stringify(videoTemplateState.data.captions)}
+              {JSON.stringify(gifTemplateState.data.captions)}
             </div>
           ))}
 
@@ -390,59 +376,48 @@ const VideoTemplates = (props) => {
   }
 
   if (getMeme()) {
-    videoplayer = (
-      <video className="meme-video" controls ref={videoplayerRef}>
-        <source
-          ref={videosrcRef}
-          src={`${destination}${getMeme().route}`}
-          type="video/mp4"
-        />
-      </video>
+    gifplayer = (
+      <>
+        {' '}
+        <img src={`${destination}${getMeme().route}`}></img>
+      </>
     )
   } else {
-    videoplayer = ''
+    gifplayer = ''
   }
 
   let memePart
-  if (videoTemplateState.data.activeTemplate != undefined) {
+  if (gifTemplateState.data.activeTemplate != undefined) {
     memePart = (
       <span>
         <div className="sticky-container">
           <Card className="frame-show">
             <CardContent>
               <Typography variant="body2" color="textSecondary" component="p">
-                <div className="video-presentation">
-                  <canvas id="meme"></canvas>
+                <div className="gif-presentation">
+                  <canvas id="meme2"></canvas>
                   <FrameSelector
                     className="frame-selector"
-                    frames={getActiveTemplate().frames.frames}
+                    frames={getActiveTemplate().frames}
                     callback={(e) => {
                       setVisibleFrame(e)
                     }}
                   ></FrameSelector>
                 </div>
 
-                <div className="video-presentation">
-                  <video
-                    controls
-                    className="template-video"
-                    ref={templateVideo}
-                  >
-                    <source
-                      ref={templateVideoSource}
-                      src={`${destination}${videoTemplateState.data.activeTemplate.route}`}
-                      type="video/mp4"
-                    />
-                  </video>
+                <div className="gif-presentation">
+                  <img
+                    src={`${destination}${gifTemplateState.data.activeTemplate.route}`}
+                  ></img>
                 </div>
-                <div className="video-presentation">
+                <div className="gif-presentation">
                   <div
                     style={{
                       height: '100%',
                       width: 'auto',
                     }}
                   ></div>
-                  {videoplayer}
+                  {gifplayer}
                 </div>
               </Typography>
             </CardContent>
@@ -585,7 +560,7 @@ const VideoTemplates = (props) => {
                             {
                               <RangeSlider
                                 index={index}
-                                frames={getActiveTemplate().frames.frames}
+                                frames={getActiveTemplate().frames}
                                 callback={(e) => {
                                   redefineFrameRange(e, index)
                                 }}
@@ -652,19 +627,19 @@ const VideoTemplates = (props) => {
     <div className="meme-generator-body">
       <Debug></Debug>
       <CustomAccordion className="der-test">
-        <VideoTemplateList
-          videos={videoTemplateState.data.videoTemplates}
+        <GifTemplateList
+          gifs={gifTemplateState.data.gifTemplates}
           active={
-            videoTemplateState.data.activeIndex
-              ? videoTemplateState.data.activeIndex
+            gifTemplateState.data.activeIndex
+              ? gifTemplateState.data.activeIndex
               : -1
           }
           callback={setActiveTemplate_}
-        ></VideoTemplateList>
+        ></GifTemplateList>
       </CustomAccordion>
       {memePart}
     </div>
   )
 }
 
-export default VideoTemplates
+export default GifTemplates
