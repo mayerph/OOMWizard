@@ -569,8 +569,10 @@ const VideoTemplates = (props) => {
                                 variant="contained"
                                 color="primary"
                                 onClick={() => {
-                                  speechtotext(item.id, trying)
-
+                                  speechtotextreturn(trying)
+                                  const results = document.getElementById(
+                                    'results',
+                                  ).innerHTML
                                   trying = !trying
                                 }}
                               >

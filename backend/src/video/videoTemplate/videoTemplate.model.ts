@@ -76,7 +76,7 @@ export const videoTemplateSchema = new Schema(
       type: String,
       enum: ["private", "unlisted", "public"],
       required: false
-    },
+    }
   },
   {
     toJSON: {
