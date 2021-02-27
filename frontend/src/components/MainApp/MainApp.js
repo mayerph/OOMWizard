@@ -1,15 +1,13 @@
 import React from 'react'
 import './MainApp.css'
-import Grid from '@material-ui/core/Grid'
 
-import { MemesList } from '../MemesList'
-import { MemeSlideShow } from '../MemeSlideShow'
 import { ImageUpload } from '../ImageUpload'
 import { ImageUrlUpload } from '../ImageUrlUpload'
 import { ImageScreenshotUpload } from '../ImageScreenshotUpload'
 import { ImagePainter } from '../ImagePainter'
 import { MemePhotoCapture } from '../MemePhotoCapture'
 import { Link } from 'react-router-dom'
+import { Overview } from '../Overview'
 
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -27,6 +25,8 @@ import {
   CloudUpload,
 } from '@material-ui/icons'
 import LinkIcon from '@material-ui/icons/Link'
+import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye'
+
 import { VideoTemplates } from '../VideoTemplates'
 import { VideoMemes } from '../VideoMemes'
 
@@ -54,27 +54,19 @@ class MainApp extends React.Component {
               aria-label="tabs"
               centered
             >
-              <Tab label="Image Templates" icon={<InsertPhoto />} />
+              <Tab label="Overview" icon={<RemoveRedEyeIcon />} />
               <Tab label="Upload Image" icon={<CloudUpload />} />
               <Tab label="Link Image" icon={<LinkIcon />} />
               <Tab label="Take Picture" icon={<CameraAlt />} />
               <Tab label="Draw Image" icon={<Brush />} />
               <Tab label="Gif Templates" icon={<Gif />} />
               <Tab label="Video Templates" icon={<Movie />} />
-              <Tab label="Image Memes" icon={<PhotoLibrary />} />
               <Tab label="Video Memes" icon={<VideoLibrary />} />
               <Tab label="Gif Memes" icon={<CollectionsBookmark />} />
             </Tabs>
           </Paper>
           <div hidden={this.state.newValue !== 0}>
-            <Grid container id="memes-list-container">
-              <Grid item xs={4}>
-                <MemeSlideShow type="template" />
-              </Grid>
-              <Grid item xs={8}>
-                <MemesList type="template" />
-              </Grid>
-            </Grid>
+            <Overview />
           </div>
           <div hidden={this.state.newValue !== 1}>
             <ImageUpload />
@@ -95,12 +87,6 @@ class MainApp extends React.Component {
             <Link
               to={{
                 pathname: '/imagememe',
-                state: {
-                  imageUrls: [
-                    'https://i.kym-cdn.com/photos/images/newsfeed/001/733/354/be4.jpg',
-                    'https://i.kym-cdn.com/photos/images/newsfeed/001/733/354/be4.jpg',
-                  ],
-                },
               }}
             >
               image
@@ -110,35 +96,9 @@ class MainApp extends React.Component {
             <VideoTemplates></VideoTemplates>
           </div>
           <div hidden={this.state.newValue !== 7}>
-            {/* <Link
-              to={{
-                pathname: '/memeslist',
-                state: {
-                  tileData: {
-                    route: '/images/templates/Drake-Hotline-Bling.jpg',
-                    name: 'Image',
-                    author: ' author',
-                  },
-                  apitype: 'default',
-                  type: 'meme',
-                },
-              }}
-            >
-              To list of created Memes
-            </Link> */}
-            <Grid container id="memes-list-container">
-              <Grid item xs={4}>
-                <MemeSlideShow type="meme" />
-              </Grid>
-              <Grid item xs={8}>
-                <MemesList type="meme" />
-              </Grid>
-            </Grid>
-          </div>
-          <div hidden={this.state.newValue !== 8}>
             <VideoMemes></VideoMemes>
           </div>
-          <div hidden={this.state.newValue !== 9}>Gif Memes</div>
+          <div hidden={this.state.newValue !== 8}>Gif Memes</div>
         </div>
       </div>
     )

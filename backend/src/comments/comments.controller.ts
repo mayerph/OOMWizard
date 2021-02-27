@@ -1,31 +1,31 @@
 import { IComment, Comment } from "./comments.model"
-import { Meme} from "../meme/meme.model"
+import { Meme } from "../meme/meme.model"
 var xss = require("xss")
 
 export class CommentsController {
-
-  async comment(meme_id: string, username: string, comment: string) {
+  async comment(identifier: string, username: string, comment: string) {
+    //prevent xss
     let escaped_comment = xss(comment)
-    //check whether meme_id exists // we omit this check for, so we can just easily comment templates and memes in on go
-    //if (!await Meme.findById(meme_id)){
-      //throw new Error(`Meme with id ${meme_id} does not exist`)
-    //}
-
     let com = new Comment({
-      meme_id: meme_id,
+      identifier: identifier,
       username: username,
       timestamp: Date.now(),
-      comment: comment
+      comment: escaped_comment
     })
     await com.save()
   }
 
-  async list_comments(meme_id: string): Promise<IComment[]>{
-    let comments = await Comment.find({meme_id: meme_id}).exec()
-    //FIXME this may be necessary but is borked right now to lazy to fix 
-    //comments = comments.sort((a: IComment,b: IComment): boolean=> {
-      //return a.timestamp <= b.timestamp
-    //})
-    return comments
+  async list_comments(identifier: string): Promise<IComment[]> {
+    return await Comment.find({ identifier: identifier }).exec()
+  }
+
+  async nr_comments(identifier?: string) {
+    return await Comment.countDocuments({ identifier: identifier }).exec()
+  }
+  async nr_comments_timeline(identifier?: string) {
+    let comments = await Comment.find({ identifier: identifier }).exec()
+    return comments.map((com, index) => {
+      return { timestamp: com.timestamp, comments: index }
+    })
   }
 }

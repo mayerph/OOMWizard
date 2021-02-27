@@ -9,8 +9,17 @@ import './ImageScreenshotUpload.css'
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
+import { speechtotext } from '../speechtotext/speechtotext.js'
+import IconButton from '@material-ui/core/IconButton'
+import MicIcon from '@material-ui/icons/Mic'
 
 class ImageScreenshotUpload extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      screenshotnameinput: 'Enter Name',
+    }
+  }
   //check if url is legit, regex from https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
   //RegExp matches the text to a regular expression
   //added personal explainations to the regexp after the original comments -> in ImageUrlUpload as code is the same
@@ -21,7 +30,7 @@ class ImageScreenshotUpload extends React.Component {
         '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' +
         '((\\d{1,3}\\.){3}\\d{1,3}))' +
         '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' +
-        '(\\?[;&a-z\\d%_.~+=-]*)?' +
+        '(\\?[;F&a-z\\d%_.~+=-]*)?' +
         '(\\#[-a-z\\d_]*)?$',
       'i',
     ) // fragment locator
@@ -75,42 +84,9 @@ class ImageScreenshotUpload extends React.Component {
   }
 
   render() {
-    //sppech implementation from
+    //speech implementation from
     //https://www.twilio.com/blog/speech-recognition-browser-web-speech-api
-    const button = document.getElementById('start_button')
-    const field = document.getElementById('screennameinput')
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition
     let trying = false
-    const speech = new SpeechRecognition()
-    console.log(speech)
-    speech.onresult = console.log
-    const start = () => {
-      console.log('started')
-      speech.start()
-    }
-    const stop = () => {
-      console.log('stoped')
-      speech.stop()
-    }
-    const onResult = (event) => {
-      const results = document.getElementById('results')
-      results.innerHTML = ''
-      for (const res of event.results) {
-        let result = res[0].transcript
-        const text = document.createTextNode(res[0].transcript)
-        const p = document.createElement('p')
-        console.log(result)
-        if (res.isFinal) {
-          p.classList.add('final')
-        }
-        p.appendChild(text)
-        results.appendChild(p)
-      }
-    }
-    speech.continuous = true
-    speech.interimResults = true
-    speech.addEventListener('result', onResult)
     return (
       <div className="urlScreenShotUpload" id="urlScreenShotUpload">
         {/*         <input type="text" id="urlinput" placeholder="Image Url" />
@@ -126,6 +102,7 @@ class ImageScreenshotUpload extends React.Component {
           id="screennameinput"
           label="Image Name"
           variant="outlined"
+          value={this.state.screenshotnameinput}
         />
         {/*         <button
           id="uploadButtonFile"
@@ -134,6 +111,18 @@ class ImageScreenshotUpload extends React.Component {
         >
           Upload File
         </button> */}
+        <IconButton
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            console.log(trying)
+            speechtotext('screennameinput', trying)
+            console.log(trying)
+            trying = !trying
+          }}
+        >
+          <MicIcon />
+        </IconButton>
 
         <Button
           variant="contained"
@@ -145,13 +134,7 @@ class ImageScreenshotUpload extends React.Component {
         >
           Upload File
         </Button>
-        <button
-          id="start_button"
-          onClick={() => {
-            trying ? stop() : start()
-            trying = !trying
-          }}
-        ></button>
+
         <div id="results"></div>
       </div>
     )

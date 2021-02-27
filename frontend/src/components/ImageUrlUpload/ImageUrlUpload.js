@@ -7,12 +7,19 @@ import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import './ImageUrlUpload.css'
 import { Redirect } from 'react-router-dom'
+import {
+  speechtotext,
+  speechtotextreturn,
+} from '../speechtotext/speechtotext.js'
+import IconButton from '@material-ui/core/IconButton'
+import MicIcon from '@material-ui/icons/Mic'
 
 class ImageUrlUpload extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       pictureUrl: null,
+      nameinput: 'Enter Name',
     }
   }
   //check if url is legit, regex from https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
@@ -75,6 +82,7 @@ class ImageUrlUpload extends React.Component {
   }
 
   render() {
+    let trying = false
     return (
       <div>
         {this.state.pictureUrl ? (
@@ -101,6 +109,7 @@ class ImageUrlUpload extends React.Component {
               id="nameinput"
               label="Image Name"
               variant="outlined"
+              value={this.state.nameinput}
             />
             {/*         <button
           id="uploadButtonFile"
@@ -109,6 +118,17 @@ class ImageUrlUpload extends React.Component {
         >
           Upload File
         </button> */}
+            <IconButton
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                console.log(trying)
+                speechtotext('nameinput', trying)
+                trying = !trying
+              }}
+            >
+              <MicIcon />
+            </IconButton>
 
             <Button
               variant="contained"

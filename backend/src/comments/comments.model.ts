@@ -21,7 +21,7 @@ const transform = (doc: any, ret: any) => {
 
 const commentSchema = new mongoose.Schema(
   {
-    meme_id: {
+    identifier: {
       type: String,
       required: true
     },

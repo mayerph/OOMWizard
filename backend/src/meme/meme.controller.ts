@@ -1,7 +1,7 @@
 import * as fs from "fs"
 import * as config from "../config.json"
 import { Canvas, createCanvas, Image, loadImage } from "canvas"
-import { ICaption, IMeme } from "./meme.interface"
+import { ICanvas, ICaption, IImage, IMeme } from "./meme.interface"
 import { captionSchema, Meme } from "./meme.model"
 import { Duplex } from "stream"
 import * as uuid from "uuid"
@@ -48,6 +48,7 @@ export class MemeController {
         route: "/images/memes/d5703be0-4f5c-11eb-af94-1d9a1453b140.png",
         owner: "test1234",
         access: "unlisted",
+        timestamp: new Date(),
         template: {
           name: "Drake-Hotline-Bling.jpg",
           route: "/images/templates/Drake-Hotline-Bling.jpg",
@@ -162,6 +163,7 @@ export class MemeController {
         name: filename,
         owner: owner,
         access: access,
+        timestamp: new Date(),
         route: config.storage.images.memes.route + "/" + filename,
         template: meme.template,
         captions: meme.captions
@@ -232,10 +234,16 @@ export class MemeController {
       const filename = this.createFilename()
 
       // create canvas
-      const canvas = await this.createMemeCanvas(
-        meme.captions,
-        meme.template.name
-      )
+      let canvas
+      if (meme.images) {
+        canvas = await this.createMultiImageMemeCanvas(
+          meme.captions,
+          meme.images,
+          meme.canvas
+        )
+      } else {
+        canvas = await this.createMemeCanvas(meme.captions, meme.template.name)
+      }
 
       // write meme to filesystem
       if (toFS) {
@@ -358,7 +366,63 @@ export class MemeController {
 
       // for each caption write to file
       captions.forEach((caption) => {
-        ctx.font = `${caption.size}pt Impact`
+        ctx.font = `bold ${caption.size}pt Arial`
+        ctx.fillStyle = caption.color
+
+        // write text
+        const text = caption.text
+        ctx.fillText(
+          text,
+          caption.position.x,
+          caption.position.y + caption.size
+        )
+      })
+      resolve(canvas)
+      return
+    })
+  }
+
+  createMultiImageMemeCanvas(
+    captions: ICaption[],
+    images: IImage[],
+    canvasDim?: ICanvas,
+    fullpath?: boolean
+  ): Promise<Canvas> {
+    return new Promise(async (resolve, reject) => {
+      const canvasWidth = canvasDim ? canvasDim.width : 0
+      const cnavasHeight = canvasDim ? canvasDim.height : 0
+      const canvas = createCanvas(canvasWidth, cnavasHeight)
+      const ctx = canvas.getContext("2d")
+      ctx.fillStyle = "white"
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      for (let i = 0; i < images.length; i++) {
+        let img: Image = new Image()
+        try {
+          img = await loadImage(
+            (!fullpath ? "./" + config.storage.images.templates.path : "") +
+              images[i].name
+          )
+        } catch (err) {
+          reject(err)
+          return
+        }
+
+        // draw image
+        ctx.drawImage(
+          img,
+          images[i].position.x,
+          images[i].position.y,
+          images[i].width,
+          images[i].height
+        )
+      }
+
+      // for each caption write to file
+      captions.forEach((caption) => {
+        const fontStyle = caption.style ? caption.style : "normal"
+        const fontWeight = caption.weight ? caption.weight : "700"
+        ctx.font = `${fontStyle} ${fontWeight} ${caption.size}px Arial`
         ctx.fillStyle = caption.color
 
         // write text

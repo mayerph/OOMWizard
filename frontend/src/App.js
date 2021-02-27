@@ -9,9 +9,6 @@ import { applyMiddleware, createStore } from 'redux'
 import reducers from './reducers'
 import ReduxThunk from 'redux-thunk'
 import MemeCanvas from './components/MemeCanvas/MemeCanvas'
-import MemesList from './components/MemesList/MemesList'
-import MemeSlideShow from './components/MemeSlideShow/MemeSlideShow'
-import Grid from '@material-ui/core/Grid'
 
 function App() {
   return (
@@ -22,6 +19,7 @@ function App() {
           <Route path={'/'} exact component={MainApp} />
           <Route path={'/meme/:id'} exact component={SharedMeme} />
           <Route path={'/imagememe/'} exact component={MemeCanvas} />
+          {/** 
           <Route
             path={'/memeslist/'}
             render={(props) => (
@@ -35,6 +33,7 @@ function App() {
               </Grid>
             )}
           />
+            */}
           <Redirect to="/" />
         </Switch>
       </div>

@@ -7,10 +7,9 @@ import Typography from '@material-ui/core/Typography'
 import Box from '@material-ui/core/Box'
 import FavoriteIcon from '@material-ui/icons/Favorite'
 import Skeleton from '@material-ui/lab/Skeleton'
-import {
-  post_rating,
-  load_rating as get_rating,
-} from '../../actions/rating.actions'
+
+import * as config from '../../config.json'
+const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 
 const StyledRating = withStyles({
   iconFilled: {
@@ -22,13 +21,55 @@ const StyledRating = withStyles({
 })(Rating)
 
 class HeartRating extends React.Component {
-  render() {
-    if (
-      !this.props.rating ||
-      (this.props.username && !this.props.user_rating)
-    ) {
-      this.props.load_rating()
+  constructor(props) {
+    super(props)
+    this.state = {
+      meta: undefined,
+      meta_user: undefined,
     }
+  }
+
+  componentDidMount() {
+    fetch(`${backend_uri}/meta/${this.props.identifier}`, {
+      method: 'GET',
+      credentials: 'include',
+    }).then(async (res) => {
+      if (res.ok) {
+        let json = await res.json()
+        this.setState({
+          meta: json.meta_info,
+          meta_user: json.user_meta,
+        })
+      }
+    })
+  }
+
+  post_rating(rating) {
+    let formData = new FormData()
+    formData.set('identifier', this.props.identifier)
+    formData.set('rating', rating)
+    let url = `${backend_uri}/meta/rate`
+
+    fetch(url, {
+      method: 'POST',
+      body: formData,
+      credentials: 'include',
+    }).then(async (res) => {
+      if (res.ok) {
+        let json = await res.json()
+        this.setState({
+          meta: json.meta_info,
+          meta_user: json.user_meta,
+        })
+      } else {
+        console.log(
+          `Response to post ratings failed with ${res.status}:${res.statusText}.`,
+        )
+      }
+    })
+  }
+
+  render() {
     return (
       <Box
         style={{ textAlign: 'center' }}
@@ -38,34 +79,35 @@ class HeartRating extends React.Component {
       >
         {
           // only display user rating if present
-          this.props.user_rating ? (
+          this.props.username && this.state.meta_user ? (
             <Typography>
-              Your rating: {this.props.user_rating.rating}/10
+              Your rating: {this.state.meta_user.rating}/10
             </Typography>
           ) : null
         }
 
         {
           //display skeleton while loading rating
-          this.props.rating ? (
+          this.state.meta ? (
             <>
               <StyledRating
                 name="customized-color"
-                value={this.props.rating.rating}
+                value={this.state.meta.avg_rating}
                 getLabelText={(value) =>
                   `${value} Heart${value !== 1 ? 's' : ''}`
                 }
                 max={10}
                 min={1}
                 precision={0.1}
-                disabled={this.props.username ? false : true}
+                readOnly={this.props.username ? false : true}
                 icon={<FavoriteIcon fontSize="inherit" />}
                 onChange={(event, newValue) => {
-                  this.props.submit_rating(newValue)
+                  this.post_rating(newValue)
                 }}
               />
               <Typography>
-                with {this.props.rating.nr_ratings} {this.props.rating.nr_ratings == 1? "rating": "ratings"} 
+                with {this.state.meta.nr_ratings}{' '}
+                {this.state.meta.nr_ratings == 1 ? 'rating' : 'ratings'}
               </Typography>
             </>
           ) : (
@@ -77,24 +119,12 @@ class HeartRating extends React.Component {
   }
 }
 const mapStateToProps = (state, ownProps) => {
-  let meme_id = ownProps.meme_id
   return {
     username: state.auth.username,
-    meme_id: meme_id,
-    rating: state.ratings.overall[meme_id],
-    user_rating: state.ratings.cur_user[meme_id],
   }
 }
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    load_rating: () => {
-      get_rating(ownProps.meme_id)(dispatch)
-    },
-    submit_rating: (newValue) => {
-      console.log('posting new rating')
-      post_rating(ownProps.meme_id, newValue)(dispatch)
-    },
-  }
+const mapDispatchToProps = (dispatch) => {
+  return {}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(HeartRating)

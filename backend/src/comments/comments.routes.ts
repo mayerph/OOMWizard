@@ -1,23 +1,25 @@
 import * as express from "express"
 import { Router, Request, NextFunction, Response } from "express"
+import { util } from "prettier"
 import { CommentsController } from "./comments.controller"
+import { require_query_param,require_form_param, require_user } from "../utils"
 
 const router = express.Router()
 const commentsController = new CommentsController()
 
 router.get(
   "/",
+  require_query_param("identifier"),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      let meme = req.query.meme_id as string
-      if (!meme) {
-        return res.status(400).send("query param 'meme_id' is required.").end()
-      }
-      let comments = await commentsController.list_comments(meme)
-      return res.json({
-        meme_id: meme,
-        comments: comments,
-      }).end()
+      let identifier = req.query.identifier as string
+      let comments = await commentsController.list_comments(identifier)
+      return res
+        .json({
+          identifier: identifier,
+          comments: comments
+        })
+        .end()
     } catch (err) {
       return res.status(500).json(err).end()
     }
@@ -26,23 +28,25 @@ router.get(
 
 router.post(
   "/",
+  require_user(),
+  require_form_param("identifier"),
+  require_form_param("comment"),
   async (req: Request, res: Response, next: NextFunction) => {
-    if (!req.user) {
-      return res.status(403).send("Log in to submit a comment.").end()
-    }
     try {
       await commentsController.comment(
-        req.body.meme_id as string,
-        req.user,
+        req.body.identifier as string,
+        req.user as string,
         req.body.comment as string
       )
       let comments = await commentsController.list_comments(
-        req.body.meme_id as string
+        req.body.identifier as string
       )
-      return res.json({
-        meme_id: req.body.meme_id,
-        comments:comments,
-      }).end()
+      return res
+        .json({
+          identifier: req.body.identifier,
+          comments: comments
+        })
+        .end()
     } catch (err) {
       console.log(err)
       return res.status(500).json(err).end()
