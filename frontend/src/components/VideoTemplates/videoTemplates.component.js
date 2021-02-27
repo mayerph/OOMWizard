@@ -515,6 +515,18 @@ const VideoTemplates = (props) => {
                               }}
                               variant="outlined"
                             />
+                            <IconButton
+                              variant="contained"
+                              color="primary"
+                              onClick={() => {
+                                console.log(trying)
+                                speechtotext(item.id, trying)
+                                console.log(trying)
+                                trying = !trying
+                              }}
+                            >
+                              <MicIcon />
+                            </IconButton>
                           </div>
                           <div className="caption-option">
                             {
