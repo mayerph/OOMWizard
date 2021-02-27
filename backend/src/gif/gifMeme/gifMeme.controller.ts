@@ -8,6 +8,8 @@ import * as uuid from "uuid"
 import { GifMeme } from "./gifMeme.model"
 
 import { filter_accessible, is_accessible } from "../../user/ownership"
+import {ViewsController} from '../../meta/views.controller'
+const viewsController = new ViewsController()
 
 export class GifMemeController {
   /**
@@ -32,6 +34,9 @@ export class GifMemeController {
       GifMeme.find()
         .then((gifMemes: IGifMeme[]) => {
           gifMemes = filter_accessible(gifMemes, false, username)
+          for(var meme of gifMemes){
+            viewsController.notify_view(meme.id, username)
+          }
           resolve(gifMemes)
         })
         .catch((err) => {
@@ -48,6 +53,9 @@ export class GifMemeController {
       GifMeme.findById(id)
         .then((data) => {
           data = data && is_accessible(data, true, username) ? data : null
+          if(data){
+            viewsController.notify_view(data.id,username)
+          }
           resolve(data)
         })
         .catch((err) => {

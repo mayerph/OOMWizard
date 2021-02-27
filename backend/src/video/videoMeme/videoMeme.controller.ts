@@ -8,6 +8,8 @@ import { VideoMeme } from "./videoMeme.model"
 import { exec } from "child_process"
 
 import { filter_accessible, is_accessible } from "../../user/ownership"
+import {ViewsController} from '../../meta/views.controller'
+const viewsController = new ViewsController()
 
 export class VideoMemeController {
   memeController: MemeController
@@ -24,6 +26,9 @@ export class VideoMemeController {
       VideoMeme.find()
         .then((videoMemes: IVideoMeme[]) => {
           videoMemes = filter_accessible(videoMemes, false, username)
+          for(var meme of videoMemes){
+            viewsController.notify_view(meme.id, username)
+          }
           resolve(videoMemes)
         })
         .catch((err) => {
@@ -40,6 +45,9 @@ export class VideoMemeController {
       VideoMeme.findById(id)
         .then((data) => {
           data = data && is_accessible(data, true, username) ? data : null
+          if(data){
+            viewsController.notify_view(data.id, username)
+          }
           resolve(data)
         })
         .catch((err) => {

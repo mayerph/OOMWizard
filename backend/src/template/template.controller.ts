@@ -6,6 +6,9 @@ import * as mongoose from "mongoose"
 
 import { filter_accessible, is_accessible } from "../user/ownership"
 
+import {ViewsController} from '../meta/views.controller'
+const viewsController = new ViewsController()
+
 export class TemplateController {
   constructor() {
     this.insertTestData()
@@ -51,6 +54,9 @@ export class TemplateController {
   async templates(username?: String): Promise<ITemplate[]> {
     var templates: ITemplate[] = await Template.find()
     templates = filter_accessible(templates, false, username)
+    for (var item of templates){
+      viewsController.notify_view(item.id, username)
+    }
     return templates
   }
 
@@ -58,8 +64,12 @@ export class TemplateController {
    * returns certain meme template
    */
   async template(id: string, username?: string): Promise<ITemplate | null> {
-    const template = await Template.findById(id)
-    return template && is_accessible(template, true, username)? template: null
+    var template = await Template.findById(id)
+    template = template && is_accessible(template, true, username)? template: null
+    if (template){
+      viewsController.notify_view(template.id, username)
+    }
+    return template
   }
 
   /**
