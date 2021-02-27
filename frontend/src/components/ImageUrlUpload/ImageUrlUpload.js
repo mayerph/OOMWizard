@@ -109,7 +109,7 @@ class ImageUrlUpload extends React.Component {
               id="nameinput"
               label="Image Name"
               variant="outlined"
-              value={this.state.nameinput}
+              defaultValue={this.state.nameinput}
             />
             {/*         <button
           id="uploadButtonFile"

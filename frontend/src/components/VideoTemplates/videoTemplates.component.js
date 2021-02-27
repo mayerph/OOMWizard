@@ -44,7 +44,7 @@ import {
 } from '../../actions/videoTemplate.action'
 import { v4 as uuidv4 } from 'uuid'
 import * as _ from 'lodash'
-import { speechtotext } from '../speechtotext/speechtotext.js'
+import { speechtotextreturn } from '../speechtotext/speechtotext.js'
 import MicIcon from '@material-ui/icons/Mic'
 
 import RangeSlider from './helper/rangeSlider.component'
@@ -519,14 +519,23 @@ const VideoTemplates = (props) => {
                               variant="contained"
                               color="primary"
                               onClick={() => {
-                                console.log(trying)
-                                speechtotext(item.id, trying)
-                                console.log(trying)
+                                //console.log(trying)
+                                //let test = speechtotextreturn(item.id, trying)
+                                //console.log(test)
+                                //trying = !trying
+                                speechtotextreturn(trying)
+                                const results = document.getElementById(
+                                  'results',
+                                ).innerHTML
                                 trying = !trying
                               }}
                             >
                               <MicIcon />
                             </IconButton>
+                            <p
+                              id="results"
+                              style={{ visibility: 'hidden' }}
+                            ></p>
                           </div>
                           <div className="caption-option">
                             {
