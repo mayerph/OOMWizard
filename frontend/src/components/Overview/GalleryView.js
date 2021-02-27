@@ -27,7 +27,7 @@ class GalleryView extends React.Component {
     this.state = {
       current: undefined,
       autoplay: false,
-      focus_index: props.data.findIndex(e => e.id === props.focus),
+      focus_index: props.data.findIndex((e) => e.id === props.focus),
     }
   }
 
@@ -58,7 +58,9 @@ class GalleryView extends React.Component {
               <h2>{tile.name}</h2>
               <img
                 className="slideImage"
-                onClick={() => { alert('implement meme creation here', tile.id)}} 
+                onClick={() => {
+                  alert('implement meme creation here', tile.id)
+                }}
                 src={tile.url}
                 alt={tile.name}
               />
