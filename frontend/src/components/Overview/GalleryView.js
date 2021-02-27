@@ -31,6 +31,30 @@ class GalleryView extends React.Component {
     }
   }
 
+  render_content(tile) {
+    switch (tile.file_type) {
+      case 'video':
+        return (
+          <video autoPlay loop controls height="400vh">
+            <source src={tile.route} type="video/mp4" />
+          </video>
+        )
+      case 'img':
+      case 'gif':
+      default:
+        return (
+          <img
+            className="slideImage"
+            onClick={() => {
+              alert('implement meme creation here', tile.id)
+            }}
+            src={tile.url}
+            alt={tile.name}
+          />
+        )
+    }
+  }
+
   render_carousel() {
     return (
       <>
@@ -56,15 +80,7 @@ class GalleryView extends React.Component {
           {this.props.data.map((tile) => (
             <Box key={tile.id} align={'center'} m={1}>
               <h2>{tile.name}</h2>
-              <img
-                className="slideImage"
-                onClick={() => {
-                  alert('implement meme creation here', tile.id)
-                }}
-                src={tile.url}
-                alt={tile.name}
-              />
-
+              {this.render_content(tile)}
               <HeartRating style={{}} identifier={tile.id} />
 
               {/** stats */}

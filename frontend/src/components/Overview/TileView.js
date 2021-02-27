@@ -19,10 +19,14 @@ import Speech from 'react-speech'
 import { Redirect } from 'react-router-dom'
 import { Typography } from '@material-ui/core'
 
+import * as config from '../../config.json'
+const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
+
 /**
  * supported props:
  * - data: list of memes
  * - type: template/meme
+ * - file_type: 'video' | 'img'
  */
 class TileView extends React.Component {
   constructor(props) {
@@ -90,7 +94,7 @@ class TileView extends React.Component {
         var newfile = new File([blob], tile.name + '.jpg', { type: blob.type })
         var fd = new FormData()
         fd.append('template', newfile)
-        axios.post('http://localhost:2000/templates/', fd, {}).then((res) => {
+        axios.post(`${destination}/templates/`, fd, {}).then((res) => {
           console.log(res.statusText)
         })
       })
@@ -110,15 +114,30 @@ class TileView extends React.Component {
     )
   }
 
+  render_content(tile) {
+    switch (tile.file_type) {
+      case 'video':
+        return (
+          <video
+            className="meme-video"
+            autoPlay
+            loop
+            muted
+            onClick={() => this.props.triggerFocus(tile.id)}
+          >
+            <source src={tile.route} type="video/mp4" />
+          </video>
+        )
+      case 'img':
+      default:
+        return <img src={tile.url} alt={tile.name} className="gridImg" />
+    }
+  }
+
   render_img_template(tile, index) {
     return (
       <GridListTile key={tile.id} cols={tile.cols || 1}>
-        <img
-          src={tile.url}
-          alt={tile.name}
-          className="gridImg"
-          onClick={() => this.props.triggerFocus(tile.id)}
-        />
+        {this.render_content(tile)}
         <GridListTileBar
           title={tile.name}
           subtitle={this.render_meta_info_subtitle(tile)}
@@ -128,6 +147,16 @@ class TileView extends React.Component {
               <IconButton>
                 <Speech text={`The template title is ${tile.name}`} />
               </IconButton>
+
+              {/**Add upload button for imageflip */}
+              {tile.foreign ? (
+                <IconButton>
+                  <CloudUploadIcon
+                    aria-label="upload"
+                    onClick={() => this.upload_img_flip(tile)}
+                  ></CloudUploadIcon>
+                </IconButton>
+              ) : null}
             </div>
           }
         />
@@ -154,35 +183,24 @@ class TileView extends React.Component {
                 <Speech text={this.get_img_speech(tile)} />
               </IconButton>
 
-              {tile.foreign ? (
-                // upload button
-                <IconButton>
-                  <CloudUploadIcon
-                    aria-label="upload"
-                    onClick={() => this.upload_img_flip(tile)}
-                  ></CloudUploadIcon>
-                </IconButton>
-              ) : (
-                // download button
-                // download button
-                <IconButton
-                  aria-label="download"
-                  onClick={() => {
-                    this.prompt_download(tile)
+              {/** download button*/}
+              <IconButton
+                aria-label="download"
+                onClick={() => {
+                  this.prompt_download(tile)
+                }}
+                download
+              >
+                <GetAppIcon
+                  style={{
+                    color: '#fafafa',
+                    fontSize: 15,
+                    backgroundColor: '#2196f3',
+                    borderRadius: 5,
+                    padding: 2,
                   }}
-                  download
-                >
-                  <GetAppIcon
-                    style={{
-                      color: '#fafafa',
-                      fontSize: 15,
-                      backgroundColor: '#2196f3',
-                      borderRadius: 5,
-                      padding: 2,
-                    }}
-                  />
-                </IconButton>
-              )}
+                />
+              </IconButton>
 
               {/** share button */}
               <IconButton
@@ -210,9 +228,9 @@ class TileView extends React.Component {
 
   render_tile(tile, index) {
     switch (tile.type) {
-      case 'img_meme':
+      case 'meme':
         return this.render_img_meme(tile, index)
-      case 'img_template':
+      case 'template':
         return this.render_img_template(tile, index)
       default:
         console.log('unsupported meme type', tile)
