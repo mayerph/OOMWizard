@@ -13,6 +13,8 @@ import {
 } from '@material-ui/core'
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import IconButton from '@material-ui/core/IconButton'
+import GetAppIcon from '@material-ui/icons/GetApp'
 
 import CommentSection from '../Comments/CommentList'
 import HeartRating from '../Rating/HeartRating'
@@ -30,6 +32,17 @@ class GalleryView extends React.Component {
       focus_index: props.data.findIndex((e) => e.id === props.focus),
     }
   }
+
+  downloadGeneratedImage(url) {
+    const saveImg = document.createElement('a')
+    saveImg.href = url
+    saveImg.target = '_blank'
+    saveImg.download = 'meme.jpg'
+    document.body.appendChild(saveImg)
+    saveImg.click()
+    document.body.removeChild(saveImg)
+  }
+
 
   render_content(tile) {
     switch (tile.file_type) {
@@ -82,6 +95,23 @@ class GalleryView extends React.Component {
               <h2>{tile.name}</h2>
               {this.render_content(tile)}
               <HeartRating style={{}} identifier={tile.id} />
+
+              {/** download button*/}
+              <IconButton
+                aria-label="download"
+                onClick={() => this.downloadGeneratedImage(tile.url)}
+                download
+              >
+                <GetAppIcon
+                  style={{
+                    color: '#fafafa',
+                    fontSize: 15,
+                    backgroundColor: '#2196f3',
+                    borderRadius: 5,
+                    padding: 2,
+                  }}
+                />
+              </IconButton>
 
               {/** stats */}
               <Accordion>

@@ -195,14 +195,12 @@ class TextControl extends React.Component {
     }
   }
 
-  canvasElementCounter = 0
   handleAddElement(type, url) {
     const element = {
       x: 0,
       y: 0,
       width: 400,
       bounds: '#meme-canvas',
-      id: this.canvasElementCounter++,
       type: type,
       imageUrl: url,
     }

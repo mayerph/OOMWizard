@@ -130,7 +130,14 @@ class TileView extends React.Component {
         )
       case 'img':
       default:
-        return <img src={tile.url} alt={tile.name} className="gridImg" />
+        return (
+          <img
+            src={tile.url}
+            onClick={() => this.props.triggerFocus(tile.id)}
+            alt={tile.name}
+            className="gridImg"
+          />
+        )
     }
   }
 
@@ -164,6 +171,16 @@ class TileView extends React.Component {
     )
   }
 
+  downloadGeneratedImage(url) {
+    const saveImg = document.createElement('a')
+    saveImg.href = url
+    saveImg.target = '_blank'
+    saveImg.download = 'meme.jpg'
+    document.body.appendChild(saveImg)
+    saveImg.click()
+    document.body.removeChild(saveImg)
+  }
+
   render_img_meme(tile, index) {
     return (
       <GridListTile key={tile.id} cols={tile.cols || 1}>
@@ -186,9 +203,7 @@ class TileView extends React.Component {
               {/** download button*/}
               <IconButton
                 aria-label="download"
-                onClick={() => {
-                  this.prompt_download(tile)
-                }}
+                onClick={() => this.downloadGeneratedImage(tile.url)}
                 download
               >
                 <GetAppIcon
