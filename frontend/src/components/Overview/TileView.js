@@ -95,6 +95,20 @@ class TileView extends React.Component {
         })
       })
   }
+  render_meta_info_subtitle(tile) {
+    return (
+      <>
+        <div>
+          <span>{`Rating: ${tile.meta_info.avg_rating} `}</span>
+          <span>{`Views: ${tile.meta_info.views} `}</span>
+        </div>
+        <div>
+          <span>{`Comments: ${tile.meta_info.comments} `}</span>
+          {tile.timestamp ? <span>{`Created: ${tile.timestamp} `}</span> : null}
+        </div>
+      </>
+    )
+  }
 
   render_img_template(tile, index) {
     return (
@@ -107,7 +121,7 @@ class TileView extends React.Component {
         />
         <GridListTileBar
           title={tile.name}
-          subtitle={`Rating: ${tile.meta_info.avg_rating}, Views: ${tile.meta_info.views}, Comments: ${tile.meta_info.comments}`}
+          subtitle={this.render_meta_info_subtitle(tile)}
           actionIcon={
             <div className="actionButtons">
               {/** text to speech */}
@@ -132,7 +146,7 @@ class TileView extends React.Component {
         />
         <GridListTileBar
           title={tile.name}
-          subtitle={`Rating: ${tile.meta_info.avg_rating}, Views: ${tile.meta_info.views}, Comments: ${tile.meta_info.comments}`}
+          subtitle={this.render_meta_info_subtitle(tile)}
           actionIcon={
             <div className="actionButtons">
               {/** text to speech */}
