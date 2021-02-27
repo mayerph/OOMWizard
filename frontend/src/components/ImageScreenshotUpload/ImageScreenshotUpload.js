@@ -41,6 +41,10 @@ class ImageScreenshotUpload extends React.Component {
     ) // fragment locator
     return !!pattern.test(str)
   }
+  //using an online api to fetch screenshots from urls given by the user, since it takes a while, there is a loading screen shown
+  // axios is used on the first url to grab the url forwarded image (since the screenshotapi need to generate and forward the user to the image stored on their servers)
+  // then using fetch we create a blob and turn that into a file to upload
+  // where we use axios again like in the other upload components
   uploadTemplate() {
     const loading = document.getElementById('loadback')
     loading.style.visibility = 'visible'
@@ -92,8 +96,6 @@ class ImageScreenshotUpload extends React.Component {
   }
 
   render() {
-    //speech implementation from
-    //https://www.twilio.com/blog/speech-recognition-browser-web-speech-api
     let trying = false
     return (
       <div className="urlScreenShotUpload" id="urlScreenShotUpload">
