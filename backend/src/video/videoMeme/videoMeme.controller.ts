@@ -8,7 +8,7 @@ import { VideoMeme } from "./videoMeme.model"
 import { exec } from "child_process"
 
 import { filter_accessible, is_accessible } from "../../user/ownership"
-import {ViewsController} from '../../meta/views.controller'
+import { ViewsController } from "../../meta/views.controller"
 const viewsController = new ViewsController()
 
 export class VideoMemeController {
@@ -26,7 +26,7 @@ export class VideoMemeController {
       VideoMeme.find()
         .then((videoMemes: IVideoMeme[]) => {
           videoMemes = filter_accessible(videoMemes, false, username)
-          for(var meme of videoMemes){
+          for (var meme of videoMemes) {
             viewsController.notify_view(meme.id, username)
           }
           resolve(videoMemes)
@@ -45,7 +45,7 @@ export class VideoMemeController {
       VideoMeme.findById(id)
         .then((data) => {
           data = data && is_accessible(data, true, username) ? data : null
-          if(data){
+          if (data) {
             viewsController.notify_view(data.id, username)
           }
           resolve(data)
@@ -98,7 +98,11 @@ export class VideoMemeController {
    * create and add new video meme
    * @param meme metadata of the video meme
    */
-  async addVideoMeme(meme: IVideoMeme, owner?: string, access?: string): Promise<any> {
+  async addVideoMeme(
+    meme: IVideoMeme,
+    owner?: string,
+    access?: string
+  ): Promise<any> {
     //console.log("the meme is", meme)
     return new Promise(async (resolve, reject) => {
       try {
@@ -120,7 +124,7 @@ export class VideoMemeController {
           frames: modFrames as any,
           timestamp: new Date(),
           owner: owner,
-          access: access,
+          access: access
         }
         // encode modified images to video
         const destinationPath = path.resolve(

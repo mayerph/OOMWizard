@@ -1,4 +1,4 @@
-import { IOwned } from "../../user/ownership";
+import { IOwned } from "../../user/ownership"
 
 export interface IVideoFrame {
   id?: any

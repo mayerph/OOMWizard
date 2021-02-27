@@ -58,7 +58,6 @@ const videoTemplatesReducer = (state = DefaultState, action) => {
         error: undefined,
       }
     case 'ADD_CAPTION_TO_VIDEO':
-      console.log('Kommt was an')
       const newState_ = {
         ...state,
         action: 'ADD_CAPTION_TO_VIDEO',
@@ -78,7 +77,6 @@ const videoTemplatesReducer = (state = DefaultState, action) => {
 
       return temp_1
     case 'UPDATE_CAPTIONS':
-      console.log('UPDATE_CAPTIONS', action.payload)
       const temp_2 = { ...state }
       temp_2.action = 'UPDATE_CAPTIONS'
       temp_2.data.captions = action.payload
@@ -95,7 +93,7 @@ const videoTemplatesReducer = (state = DefaultState, action) => {
       })
 
       // add captions to new one
-      console.log('-afdöad', temp_3.data.activeTemplate.frames)
+
       temp_3.data.activeTemplate.frames.frames.map((e) => {
         e['captions'] = []
         const newImage = new Image()
@@ -109,8 +107,9 @@ const videoTemplatesReducer = (state = DefaultState, action) => {
       return temp_3
     case 'GENERATE_VIDEO_MEME':
       const temp_4 = { ...state }
-      console.log('datapayload', action.payload)
+      temp_4.action = 'GENERATE_VIDEO_MEME'
       temp_4.data.meme = action.payload
+
       return temp_4
 
     case 'ADD_NEW_TEMPLATE':

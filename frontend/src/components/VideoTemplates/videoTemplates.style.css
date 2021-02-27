@@ -3,7 +3,7 @@
 }
 
 .root-elm {
-  width: 300px;
+  width: 100%;
 }
 
 canvas {
@@ -28,10 +28,18 @@ canvas {
   border: 5px solid #3f51b5;
 }
 
+.frame-selector {
+  width: 100%;
+}
+
 .action-bar {
   padding-top: 30px;
   padding-bottom: 30px;
-  width: 600px;
+  width: 100%;
+  background-color: #eeeeee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .action-btn {
@@ -50,6 +58,9 @@ canvas {
 
 .frame-show {
   margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .template-video {
@@ -65,4 +76,10 @@ canvas {
 .video-presentation {
   float: left;
   margin-right: 10px;
+}
+
+.sticky-container {
+  position: sticky;
+  top: 0px;
+  z-index: 10;
 }
