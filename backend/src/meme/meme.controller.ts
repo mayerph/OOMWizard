@@ -11,6 +11,9 @@ import * as mongoose from "mongoose"
 import e = require("express")
 import { filter_accessible, is_accessible } from "../user/ownership"
 
+import { ViewsController } from "../meta/views.controller"
+const viewsController = new ViewsController()
+
 export class MemeController {
   constructor(insert: boolean) {
     if (insert) {
@@ -78,6 +81,9 @@ export class MemeController {
   async memes(username?: String): Promise<IMeme[]> {
     var memes: IMeme[] = await Meme.find()
     memes = filter_accessible(memes, false, username)
+    for (var m of memes) {
+      viewsController.notify_view(m.id, username)
+    }
     return memes
   }
 
@@ -89,8 +95,12 @@ export class MemeController {
     username?: String,
     show_unlisted: boolean = false
   ): Promise<IMeme | null> {
-    const meme = await Meme.findById(id)
-    return meme && is_accessible(meme, show_unlisted, username) ? meme : null
+    var meme = await Meme.findById(id)
+    meme = meme && is_accessible(meme, show_unlisted, username) ? meme : null
+    if (meme) {
+      viewsController.notify_view(meme.id, username)
+    }
+    return meme
   }
 
   /**
@@ -356,16 +366,14 @@ export class MemeController {
 
       // for each caption write to file
       captions.forEach((caption) => {
+        console.log("the caption size is", caption.size)
         ctx.font = `bold ${caption.size}pt Arial`
+
         ctx.fillStyle = caption.color
 
         // write text
         const text = caption.text
-        ctx.fillText(
-          text,
-          caption.position.x,
-          caption.position.y + caption.size
-        )
+        ctx.fillText(text, caption.position.x, caption.position.y)
       })
       resolve(canvas)
       return

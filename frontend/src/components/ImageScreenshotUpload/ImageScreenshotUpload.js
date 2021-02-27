@@ -122,15 +122,15 @@ class ImageScreenshotUpload extends React.Component {
           color="primary"
           onClick={() => {
             //console.log(trying)
-            //speechtotext('screennameinput', trying)
+            speechtotext('screennameinput', trying)
             //console.log(trying)
-            //trying = !trying
-            let test
-            test = speechtotextreturn(trying)
-            console.log(test)
-            const results = document.getElementById('results').innerHTML
-            console.log(results)
             trying = !trying
+            //let test
+            //test = speechtotextreturn(trying)
+            //console.log(test)
+            //const results = document.getElementById('results').innerHTML
+            //console.log(results)
+            //trying = !trying
           }}
         >
           <MicIcon />

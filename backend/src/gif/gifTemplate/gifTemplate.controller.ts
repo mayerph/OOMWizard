@@ -7,6 +7,8 @@ import * as gif from "gifEndecoder"
 import * as path from "path"
 
 import { filter_accessible, is_accessible } from "../../user/ownership"
+import { ViewsController } from '../../meta/views.controller'
+const viewsController = new ViewsController()
 
 export class GifTemplateController {
   constructor() {
@@ -58,6 +60,9 @@ export class GifTemplateController {
   async gifTemplates(username?: String): Promise<IGifTemplate[]> {
     var gifTemplates: IGifTemplate[] = await GifTemplate.find()
     gifTemplates = filter_accessible(gifTemplates, false, username)
+    for(var meme of gifTemplates){
+      viewsController.notify_view(meme.id, username)
+    }
     return gifTemplates
   }
 
@@ -65,8 +70,12 @@ export class GifTemplateController {
    * returns certain gif template
    */
   async gifTemplate(id: string, username?: String): Promise<IGifTemplate | null> {
-    const gifTemplate = await GifTemplate.findById(id)
-    return gifTemplate && is_accessible(gifTemplate, true, username) ? gifTemplate : null
+    var gifTemplate = await GifTemplate.findById(id)
+    gifTemplate = gifTemplate && is_accessible(gifTemplate, true, username) ? gifTemplate : null
+    if(gifTemplate){
+      viewsController.notify_view(gifTemplate.id, username)
+    }
+    return gifTemplate
   }
 
   /**

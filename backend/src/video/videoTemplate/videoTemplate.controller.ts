@@ -15,7 +15,9 @@ import * as config from "../../config.json"
 
 import { filter_accessible, is_accessible } from "../../user/ownership"
 import { exec } from "child_process"
-import { IOwned } from '../../user/ownership'
+import { IOwned } from "../../user/ownership"
+import { ViewsController } from "../../meta/views.controller"
+const viewsController = new ViewsController()
 
 export class VideoTemplateController {
   audioFileName: string = "audio.wav"
@@ -68,16 +70,29 @@ export class VideoTemplateController {
    */
   async gifTemplates(username?: String): Promise<IVideoTemplate[]> {
     var gifTemplates: IVideoTemplate[] = await VideoTemplate.find()
-    gifTemplates = filter_accessible(gifTemplates,false, username)
+    gifTemplates = filter_accessible(gifTemplates, false, username)
+    for (var template of gifTemplates) {
+      viewsController.notify_view(template.id, username)
+    }
     return gifTemplates
   }
 
   /**
    * returns certain gif template
    */
-  async gifTemplate(id: string, username?: String): Promise<IVideoTemplate | null> {
-    const gifTemplate = await VideoTemplate.findById(id)
-    return gifTemplate && is_accessible(gifTemplate,true,username)?gifTemplate: null
+  async gifTemplate(
+    id: string,
+    username?: String
+  ): Promise<IVideoTemplate | null> {
+    var gifTemplate = await VideoTemplate.findById(id)
+    gifTemplate =
+      gifTemplate && is_accessible(gifTemplate, true, username)
+        ? gifTemplate
+        : null
+    if (gifTemplate) {
+      viewsController.notify_view(gifTemplate.id, username)
+    }
+    return gifTemplate
   }
 
   /**
@@ -183,7 +198,11 @@ export class VideoTemplateController {
    * write image to file
    * @param video object with the image (meta)data
    */
-  writeVideoTemplate(video: any, owner?: string, access?: string): Promise<IVideoTemplate> {
+  writeVideoTemplate(
+    video: any,
+    owner?: string,
+    access?: string
+  ): Promise<IVideoTemplate> {
     return new Promise(async (resolve, reject) => {
       try {
         if (!video.data || !video.name) {
@@ -201,7 +220,7 @@ export class VideoTemplateController {
           },
           thumbnail: "..",
           owner: owner,
-          access: access,
+          access: access
         }
 
         const videoTemplate = new VideoTemplate(videoTemplateDoc)

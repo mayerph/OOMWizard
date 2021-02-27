@@ -8,6 +8,8 @@ import * as uuid from "uuid"
 import { GifMeme } from "./gifMeme.model"
 
 import { filter_accessible, is_accessible } from "../../user/ownership"
+import { ViewsController } from "../../meta/views.controller"
+const viewsController = new ViewsController()
 
 export class GifMemeController {
   /**
@@ -32,6 +34,9 @@ export class GifMemeController {
       GifMeme.find()
         .then((gifMemes: IGifMeme[]) => {
           gifMemes = filter_accessible(gifMemes, false, username)
+          for (var meme of gifMemes) {
+            viewsController.notify_view(meme.id, username)
+          }
           resolve(gifMemes)
         })
         .catch((err) => {
@@ -48,6 +53,9 @@ export class GifMemeController {
       GifMeme.findById(id)
         .then((data) => {
           data = data && is_accessible(data, true, username) ? data : null
+          if (data) {
+            viewsController.notify_view(data.id, username)
+          }
           resolve(data)
         })
         .catch((err) => {
@@ -98,7 +106,11 @@ export class GifMemeController {
    * create and add new gif meme
    * @param meme metadata of the gif meme
    */
-  async addGifMeme(meme: IGifMeme, owner?: String, access?: String): Promise<any> {
+  async addGifMeme(
+    meme: IGifMeme,
+    owner?: String,
+    access?: String
+  ): Promise<any> {
     //console.log("the meme is", meme)
     return new Promise(async (resolve, reject) => {
       // create filepath to the modified frames
@@ -124,7 +136,7 @@ export class GifMemeController {
           route: "",
           timestamp: new Date(),
           owner: owner,
-          access: access,
+          access: access
         })
         const filename = `${newMeme.id}.gif`
         const filepath = `${destinationPath}/${filename}`

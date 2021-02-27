@@ -51,7 +51,11 @@ router.post("", async (req: Request, res: Response, next: NextFunction) => {
   try {
     console.log("Kommt heir was an")
     console.log(req.body)
-    const result = await videoMemeController.addVideoMeme(req.body.meme, req.user, req.body.access)
+    const result = await videoMemeController.addVideoMeme(
+      req.body.meme,
+      req.user,
+      req.body.access
+    )
     res.json(result)
   } catch (err) {
     console.log("the err is", err)
