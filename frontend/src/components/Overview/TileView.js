@@ -107,7 +107,7 @@ class TileView extends React.Component {
         />
         <GridListTileBar
           title={tile.name}
-          subtitle={''}
+          subtitle={`Rating: ${tile.meta_info.avg_rating}, Views: ${tile.meta_info.views}, Comments: ${tile.meta_info.comments}`}
           actionIcon={
             <div className="actionButtons">
               {/** text to speech */}
@@ -132,7 +132,7 @@ class TileView extends React.Component {
         />
         <GridListTileBar
           title={tile.name}
-          subtitle={''}
+          subtitle={`Rating: ${tile.meta_info.avg_rating}, Views: ${tile.meta_info.views}, Comments: ${tile.meta_info.comments}`}
           actionIcon={
             <div className="actionButtons">
               {/** text to speech */}
