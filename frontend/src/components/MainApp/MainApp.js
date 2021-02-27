@@ -61,11 +61,11 @@ class MainApp extends React.Component {
               centered
             >
               <Tab label="Overview" icon={<RemoveRedEyeIcon />} />
-              <Tab label="Image Templates" icon={<CloudUpload />} />
-              <Tab label="Gif Templates" icon={<Gif />} />
-              <Tab label="Video Templates" icon={<Movie />} />
-              <Tab label="Video Memes" icon={<VideoLibrary />} />
-              <Tab label="Gif Memes" icon={<CollectionsBookmark />} />
+              <Tab label="Create Image Template" icon={<CloudUpload />} />
+              <Tab label="Create Gif Meme" icon={<Gif />} />
+              <Tab label="Create Video Meme" icon={<Movie />} />
+              <Tab label="REMOVE?? Video Memes" icon={<VideoLibrary />} />
+              <Tab label="REMOVE?? Gif Memes" icon={<CollectionsBookmark />} />
             </Tabs>
           </Paper>
           <div hidden={this.state.newValue !== 0}>
