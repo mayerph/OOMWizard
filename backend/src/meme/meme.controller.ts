@@ -9,6 +9,7 @@ import * as archiver from "archiver"
 import { PassThrough } from "stream"
 import * as mongoose from "mongoose"
 import e = require("express")
+import { filter_accessible, is_accessible } from "../user/ownership"
 
 export class MemeController {
   constructor(insert: boolean) {
@@ -76,18 +77,8 @@ export class MemeController {
    */
   async memes(username?: String): Promise<IMeme[]> {
     var memes: IMeme[] = await Meme.find()
-    console.log(`${memes.length} memes before user filtering`)
-    memes = memes.filter((m) => m.is_accessible(false, username))
-    console.log(`${memes.length} memes after user filtering`)
+    memes = filter_accessible(memes, false, username)
     return memes
-  }
-
-  async user_memes(username?: string): Promise<IMeme[]> {
-    if (username) {
-      return await Meme.find({ owner: username })
-    } else {
-      return []
-    }
   }
 
   /**
@@ -102,7 +93,7 @@ export class MemeController {
     if (!meme) {
       return null
     }
-    return meme.is_accessible(show_unlisted, username) ? meme : null
+    return is_accessible(meme, show_unlisted, username) ? meme : null
   }
 
   /**

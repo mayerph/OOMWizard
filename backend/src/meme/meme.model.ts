@@ -98,16 +98,4 @@ const memeSchema = new Schema(
   }
 )
 
-memeSchema.methods.is_accessible = function (
-  show_unlisted: boolean,
-  username?: String
-) {
-  return (
-    this.owner == undefined ||
-    this.owner === username ||
-    this.access == "public" ||
-    (show_unlisted && this.access == "unlisted")
-  )
-}
-
 export const Meme = model<IMemeMongoose, IMemeModelMongoose>("Meme", memeSchema)
