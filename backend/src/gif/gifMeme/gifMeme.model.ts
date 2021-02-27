@@ -39,7 +39,16 @@ const gifMemeSchema = new Schema(
     },
     route: {
       type: String
-    }
+    },
+    owner: { 
+      type: String,
+      required: false 
+    },
+    access: {
+      type: String,
+      enum: ["private", "unlisted", "public"],
+      required: false
+    },
   },
   {
     toJSON: {

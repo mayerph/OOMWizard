@@ -90,10 +90,7 @@ export class MemeController {
     show_unlisted: boolean = false
   ): Promise<IMeme | null> {
     const meme = await Meme.findById(id)
-    if (!meme) {
-      return null
-    }
-    return is_accessible(meme, show_unlisted, username) ? meme : null
+    return meme && is_accessible(meme, show_unlisted, username) ? meme : null
   }
 
   /**

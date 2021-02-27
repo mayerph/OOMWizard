@@ -7,6 +7,8 @@ import * as uuid from "uuid"
 import { VideoMeme } from "./videoMeme.model"
 import { exec } from "child_process"
 
+import { filter_accessible, is_accessible } from "../../user/ownership"
+
 export class VideoMemeController {
   memeController: MemeController
   constructor() {
@@ -17,10 +19,11 @@ export class VideoMemeController {
   /**
    * returns a list of all videoMemes
    */
-  async videoMemes(): Promise<IVideoMeme[]> {
+  async videoMemes(username?: String): Promise<IVideoMeme[]> {
     return new Promise((resolve, reject) => {
       VideoMeme.find()
         .then((videoMemes: IVideoMeme[]) => {
+          videoMemes = filter_accessible(videoMemes, false, username)
           resolve(videoMemes)
         })
         .catch((err) => {
@@ -32,10 +35,11 @@ export class VideoMemeController {
   /**
    * returns certain video meme
    */
-  async videoMeme(id: string): Promise<IVideoMeme | null> {
+  async videoMeme(id: string, username?: String): Promise<IVideoMeme | null> {
     return new Promise((resolve, reject) => {
       VideoMeme.findById(id)
         .then((data) => {
+          data = data && is_accessible(data, true, username) ? data : null
           resolve(data)
         })
         .catch((err) => {
@@ -86,7 +90,7 @@ export class VideoMemeController {
    * create and add new video meme
    * @param meme metadata of the video meme
    */
-  async addVideoMeme(meme: IVideoMeme): Promise<any> {
+  async addVideoMeme(meme: IVideoMeme, owner?: string, access?: string): Promise<any> {
     //console.log("the meme is", meme)
     return new Promise(async (resolve, reject) => {
       try {
@@ -106,7 +110,9 @@ export class VideoMemeController {
         const videoMeta = {
           file: "",
           frames: modFrames as any,
-          timestamp: new Date()
+          timestamp: new Date(),
+          owner: owner,
+          access: access,
         }
         // encode modified images to video
         const destinationPath = path.resolve(

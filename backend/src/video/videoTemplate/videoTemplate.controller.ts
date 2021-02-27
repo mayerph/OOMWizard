@@ -13,7 +13,9 @@ import * as gif from "gifEndecoder"
 import * as path from "path"
 import * as config from "../../config.json"
 
+import { filter_accessible, is_accessible } from "../../user/ownership"
 import { exec } from "child_process"
+import { IOwned } from '../../user/ownership'
 
 export class VideoTemplateController {
   audioFileName: string = "audio.wav"
@@ -64,18 +66,18 @@ export class VideoTemplateController {
   /**
    * returns all available gif templates
    */
-  async gifTemplates(): Promise<IVideoTemplate[]> {
-    const gifTemplates: IVideoTemplate[] = await VideoTemplate.find()
+  async gifTemplates(username?: String): Promise<IVideoTemplate[]> {
+    var gifTemplates: IVideoTemplate[] = await VideoTemplate.find()
+    gifTemplates = filter_accessible(gifTemplates,false, username)
     return gifTemplates
   }
 
   /**
    * returns certain gif template
    */
-  async gifTemplate(id: string): Promise<IVideoTemplate | null> {
+  async gifTemplate(id: string, username?: String): Promise<IVideoTemplate | null> {
     const gifTemplate = await VideoTemplate.findById(id)
-
-    return gifTemplate
+    return gifTemplate && is_accessible(gifTemplate,true,username)?gifTemplate: null
   }
 
   /**
@@ -181,7 +183,7 @@ export class VideoTemplateController {
    * write image to file
    * @param video object with the image (meta)data
    */
-  writeVideoTemplate(video: any): Promise<IVideoTemplate> {
+  writeVideoTemplate(video: any, owner?: string, access?: string): Promise<IVideoTemplate> {
     return new Promise(async (resolve, reject) => {
       try {
         if (!video.data || !video.name) {
@@ -197,7 +199,9 @@ export class VideoTemplateController {
             frames: [],
             fps: ".."
           },
-          thumbnail: ".."
+          thumbnail: "..",
+          owner: owner,
+          access: access,
         }
 
         const videoTemplate = new VideoTemplate(videoTemplateDoc)
