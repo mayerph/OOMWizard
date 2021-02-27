@@ -241,6 +241,8 @@ export class MemeController {
           meme.images,
           meme.canvas
         )
+        toFS = true
+        toDB = true
       } else {
         canvas = await this.createMemeCanvas(meme.captions, meme.template.name)
       }

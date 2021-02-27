@@ -14,6 +14,8 @@ import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
+import DialogActions from '@material-ui/core/DialogActions'
+import { ShareDialog } from '../ShareDialog'
 
 class TextControl extends React.Component {
   constructor(props) {
@@ -23,6 +25,7 @@ class TextControl extends React.Component {
       memeTemplates: null,
       isImageGenerated: false,
       generatedImageUrl: null,
+      promptShare: false,
     }
   }
   handleClose() {
@@ -49,24 +52,78 @@ class TextControl extends React.Component {
         onClose={() => this.handleClose()}
         open={this.state.isDialogOpened}
         aria-labelledby="login-form-title"
+        maxWidth={'md'}
       >
         <DialogTitle id="login-form-title">Select Image Template</DialogTitle>
-        <DialogContent>
+        <DialogContent style={{ backgroundColor: '#eeeeee' }}>
           {this.state.memeTemplates && this.templateList()}
         </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              this.setState({ isDialogOpened: false })
+            }}
+            color="primary"
+          >
+            Close
+          </Button>
+        </DialogActions>
       </Dialog>
     )
   }
+
+  downloadGeneratedImage() {
+    const image = document.getElementById('generated-image')
+    const saveImg = document.createElement('a')
+    saveImg.href = image.src
+    saveImg.download = 'meme.jpg'
+    document.body.appendChild(saveImg)
+    saveImg.click()
+    document.body.removeChild(saveImg)
+  }
+
+  shareDialog() {
+    return (
+      <ShareDialog
+        open={this.state.promptShare ? this.state.promptShare : false}
+        onClose={() => {
+          this.setState({ promptShare: false })
+        }}
+      />
+    )
+  }
+  handleShare() {
+    this.setState({ promptShare: true })
+  }
+
   generatedImageDialog() {
     return (
       <Dialog
         onClose={() => this.handleClose()}
         open={this.state.isImageGenerated}
         aria-labelledby="login-form-title"
+        maxWidth={false}
       >
         <DialogContent>
-          <img src={this.state.generatedImageUrl} />
+          <img id="generated-image" src={this.state.generatedImageUrl} />
         </DialogContent>
+        {/* eslint-disable-next-line react/jsx-no-undef */}
+        <DialogActions>
+          <Button onClick={() => this.downloadGeneratedImage()} color="primary">
+            Download
+          </Button>
+          <Button onClick={() => this.handleShare()} color="primary">
+            Share
+          </Button>
+          <Button
+            onClick={() => {
+              this.setState({ isImageGenerated: false })
+            }}
+            color="secondary"
+          >
+            Close
+          </Button>
+        </DialogActions>
       </Dialog>
     )
   }
@@ -248,8 +305,9 @@ class TextControl extends React.Component {
 
     return (
       <div>
-        {this.generatedImageDialog()}
         {this.memeCanvasDialog()}
+        {this.generatedImageDialog()}
+        {this.shareDialog()}
         <Card className="text-control-card">
           <div style={{ opacity: controlVisibility }}>
             <IconButton
