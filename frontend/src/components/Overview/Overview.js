@@ -55,6 +55,7 @@ class Overview extends React.Component {
           return {
             ...e,
             ...meta_infos[i],
+            fileending: '.' + e.url.split('.').slice(-1)[0],
           }
         })
         console.log('Loaded:', result)
@@ -166,7 +167,13 @@ class Overview extends React.Component {
   create_memes_list() {
     var result = this.state.data
     if (this.state.filter && this.state.filter != '') {
-      result = result.filter((e, i) => e.name.includes(this.state.filter))
+      let filter = this.state.filter.toLowerCase()
+      result = result.filter((e, i) => {
+        return (
+          e.name.toLowerCase().includes(filter) ||
+          e.fileending.toLowerCase().includes(filter)
+        )
+      })
     }
     if (this.state.ownedOnly) {
       result = result.filter((e, i) => {
