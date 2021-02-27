@@ -31,7 +31,7 @@ router.post(
  * route to all available video memes
  */
 router.get("", async (req: Request, res: Response, next: NextFunction) => {
-  const memes = await videoMemeController.videoMemes()
+  const memes = await videoMemeController.videoMemes(req.user)
   res.json(memes)
 })
 
@@ -40,7 +40,7 @@ router.get("", async (req: Request, res: Response, next: NextFunction) => {
  */
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
-  const meme = await videoMemeController.videoMeme(id)
+  const meme = await videoMemeController.videoMeme(id, req.user)
   res.json(meme)
 })
 
@@ -51,7 +51,7 @@ router.post("", async (req: Request, res: Response, next: NextFunction) => {
   try {
     console.log("Kommt heir was an")
     console.log(req.body)
-    const result = await videoMemeController.addVideoMeme(req.body.meme)
+    const result = await videoMemeController.addVideoMeme(req.body.meme, req.user, req.body.access)
     res.json(result)
   } catch (err) {
     console.log("the err is", err)

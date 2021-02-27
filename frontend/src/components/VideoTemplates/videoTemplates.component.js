@@ -47,7 +47,7 @@ import {
 } from '../../actions/videoTemplate.action'
 import { v4 as uuidv4 } from 'uuid'
 import * as _ from 'lodash'
-import { speechtotext } from '../speechtotext/speechtotext.js'
+import { speechtotextreturn } from '../speechtotext/speechtotext.js'
 import MicIcon from '@material-ui/icons/Mic'
 
 import RangeSlider from './helper/rangeSlider.component'

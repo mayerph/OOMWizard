@@ -68,7 +68,14 @@ export const gifTemplateSchema = new Schema(
   {
     file: { type: String, required: true },
     route: { type: String, required: true },
-    frames: { type: [frameSchema], required: true }
+    frames: { type: [frameSchema], required: true },
+    timestamp: { type: Date, required: false },
+    owner: { type: String, required: false },
+    access: {
+      type: String,
+      enum: ["private", "unlisted", "public"],
+      required: false
+    },
   },
   {
     toJSON: {

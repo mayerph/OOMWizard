@@ -1,4 +1,5 @@
 import { ITemplate } from "../template/template.interface"
+import { IOwned } from "../user/ownership"
 
 /**
  * Interface for the position
@@ -40,18 +41,15 @@ export interface ICanvas {
 /**
  * Interface for a meme
  */
-export interface IMeme {
+export interface IMeme extends IOwned {
   id?: any
   name?: string
-  owner?: string
-  access?: string
   timestamp?: Date
   route?: string
   captions: ICaption[]
   images?: IImage[]
   canvas?: ICanvas
   template: ITemplate
-  is_accessible(show_unlisted: boolean, username?: String): boolean
 }
 
 export interface IMemeModel {}

@@ -8,7 +8,7 @@ const gifTemplateController = new GifTemplateController()
  * route to all available gif templates
  */
 router.get("", async (req: Request, res: Response, next: NextFunction) => {
-  const templates = await gifTemplateController.gifTemplates()
+  const templates = await gifTemplateController.gifTemplates(req.user)
   res.json(templates)
 })
 
@@ -17,7 +17,7 @@ router.get("", async (req: Request, res: Response, next: NextFunction) => {
  */
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
-  const template = await gifTemplateController.gifTemplate(id)
+  const template = await gifTemplateController.gifTemplate(id, req.user)
   res.json(template)
 })
 

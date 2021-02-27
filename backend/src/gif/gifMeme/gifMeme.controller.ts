@@ -7,6 +7,10 @@ import * as config from "../../config.json"
 import * as uuid from "uuid"
 import { GifMeme } from "./gifMeme.model"
 
+import { filter_accessible, is_accessible } from "../../user/ownership"
+import {ViewsController} from '../../meta/views.controller'
+const viewsController = new ViewsController()
+
 export class GifMemeController {
   /**
    * meme controller for canvas funtionality
@@ -25,10 +29,14 @@ export class GifMemeController {
   /**
    * returns a list of all gifMemes
    */
-  async gifMemes(): Promise<IGifMeme[]> {
+  async gifMemes(username?: String): Promise<IGifMeme[]> {
     return new Promise((resolve, reject) => {
       GifMeme.find()
         .then((gifMemes: IGifMeme[]) => {
+          gifMemes = filter_accessible(gifMemes, false, username)
+          for(var meme of gifMemes){
+            viewsController.notify_view(meme.id, username)
+          }
           resolve(gifMemes)
         })
         .catch((err) => {
@@ -40,10 +48,14 @@ export class GifMemeController {
   /**
    * returns certain gif meme
    */
-  async gifMeme(id: string): Promise<IGifMeme | null> {
+  async gifMeme(id: string, username?: string): Promise<IGifMeme | null> {
     return new Promise((resolve, reject) => {
       GifMeme.findById(id)
         .then((data) => {
+          data = data && is_accessible(data, true, username) ? data : null
+          if(data){
+            viewsController.notify_view(data.id,username)
+          }
           resolve(data)
         })
         .catch((err) => {
@@ -94,7 +106,7 @@ export class GifMemeController {
    * create and add new gif meme
    * @param meme metadata of the gif meme
    */
-  async addGifMeme(meme: IGifMeme): Promise<any> {
+  async addGifMeme(meme: IGifMeme, owner?: String, access?: String): Promise<any> {
     //console.log("the meme is", meme)
     return new Promise(async (resolve, reject) => {
       // create filepath to the modified frames
@@ -115,7 +127,13 @@ export class GifMemeController {
         const destinationPath = path.resolve(
           `./${config.storage.gifs.memes.path}/result`
         )
-        const newMeme = new GifMeme({ file: "", route: "" })
+        const newMeme = new GifMeme({
+          file: "",
+          route: "",
+          timestamp: new Date(),
+          owner: owner,
+          access: access,
+        })
         const filename = `${newMeme.id}.gif`
         const filepath = `${destinationPath}/${filename}`
 

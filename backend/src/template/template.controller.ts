@@ -4,6 +4,11 @@ import * as config from "../config.json"
 import * as fs from "fs"
 import * as mongoose from "mongoose"
 
+import { filter_accessible, is_accessible } from "../user/ownership"
+
+import {ViewsController} from '../meta/views.controller'
+const viewsController = new ViewsController()
+
 export class TemplateController {
   constructor() {
     this.insertTestData()
@@ -17,22 +22,26 @@ export class TemplateController {
       {
         _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfac"),
         name: "Drake-Hotline-Bling.jpg",
+        timestamp: new Date(),
         route:
           config.storage.images.templates.route + "/Drake-Hotline-Bling.jpg"
       },
       {
         _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfad"),
         name: "Is-This-A-Pigeon.jpg",
+        timestamp: new Date(),
         route: config.storage.images.templates.route + "/Is-This-A-Pigeon.jpg"
       },
       {
         _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfae"),
         name: "Monkey-Puppet.jpg",
+        timestamp: new Date(),
         route: config.storage.images.templates.route + "/Monkey-Puppet.jpg"
       },
       {
         _id: mongoose.Types.ObjectId("5ff446fa4de819687770bfaf"),
         name: "Running-Away-Balloon.jpg",
+        timestamp: new Date(),
         route:
           config.storage.images.templates.route + "/Running-Away-Balloon.jpg"
       }
@@ -42,17 +51,24 @@ export class TemplateController {
   /**
    * returns all available meme template
    */
-  async templates(): Promise<ITemplate[]> {
-    const templates: ITemplate[] = await Template.find()
+  async templates(username?: String): Promise<ITemplate[]> {
+    var templates: ITemplate[] = await Template.find()
+    templates = filter_accessible(templates, false, username)
+    for (var item of templates){
+      viewsController.notify_view(item.id, username)
+    }
     return templates
   }
 
   /**
    * returns certain meme template
    */
-  async template(id: string): Promise<ITemplate | null> {
-    const template = await Template.findById(id)
-
+  async template(id: string, username?: string): Promise<ITemplate | null> {
+    var template = await Template.findById(id)
+    template = template && is_accessible(template, true, username)? template: null
+    if (template){
+      viewsController.notify_view(template.id, username)
+    }
     return template
   }
 
@@ -147,7 +163,7 @@ export class TemplateController {
    * write image to file
    * @param image object with the image (meta)data
    */
-  writeMemeTemplate(image: any): Promise<ITemplate> {
+  writeMemeTemplate(image: any, owner?: string, access?: string): Promise<ITemplate> {
     return new Promise((resolve, reject) => {
       if (!image.data || !image.name) {
         reject(new Error("no image data"))
@@ -161,7 +177,10 @@ export class TemplateController {
           }
           const memeDoc: ITemplate = {
             name: image.name,
-            route: config.storage.images.templates.route + "/" + image.name
+            timestamp: new Date(),
+            route: config.storage.images.templates.route + "/" + image.name,
+            owner: owner,
+            access: access,
           }
           try {
             const meme = await new Template(memeDoc).save()

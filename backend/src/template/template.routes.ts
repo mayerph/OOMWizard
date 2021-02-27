@@ -9,7 +9,7 @@ const templateController = new TemplateController()
  * route to all available meme templates
  */
 router.get("", async (req: Request, res: Response, next: NextFunction) => {
-  const templates = await templateController.templates()
+  const templates = await templateController.templates(req.user)
   res.json(templates)
 })
 
@@ -18,7 +18,7 @@ router.get("", async (req: Request, res: Response, next: NextFunction) => {
  */
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id
-  const template = await templateController.template(id)
+  const template = await templateController.template(id, req.user)
   res.json(template)
 })
 
@@ -67,7 +67,9 @@ router.post("", async (req: Request, res: Response, next: NextFunction) => {
   }
   try {
     const result = await templateController.writeMemeTemplate(
-      req.files?.template
+      req.files?.template,
+      req.user,
+      req.body.access
     )
     res.json(result)
   } catch (err) {

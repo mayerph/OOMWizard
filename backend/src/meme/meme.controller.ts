@@ -9,6 +9,10 @@ import * as archiver from "archiver"
 import { PassThrough } from "stream"
 import * as mongoose from "mongoose"
 import e = require("express")
+import { filter_accessible, is_accessible } from "../user/ownership"
+
+import {ViewsController} from '../meta/views.controller'
+const viewsController = new ViewsController()
 
 export class MemeController {
   constructor(insert: boolean) {
@@ -76,18 +80,11 @@ export class MemeController {
    */
   async memes(username?: String): Promise<IMeme[]> {
     var memes: IMeme[] = await Meme.find()
-    console.log(`${memes.length} memes before user filtering`)
-    memes = memes.filter((m) => m.is_accessible(false, username))
-    console.log(`${memes.length} memes after user filtering`)
-    return memes
-  }
-
-  async user_memes(username?: string): Promise<IMeme[]> {
-    if (username) {
-      return await Meme.find({ owner: username })
-    } else {
-      return []
+    memes = filter_accessible(memes, false, username)
+    for(var m of memes){
+      viewsController.notify_view(m.id, username)
     }
+    return memes
   }
 
   /**
@@ -98,11 +95,12 @@ export class MemeController {
     username?: String,
     show_unlisted: boolean = false
   ): Promise<IMeme | null> {
-    const meme = await Meme.findById(id)
-    if (!meme) {
-      return null
+    var meme = await Meme.findById(id)
+    meme =  meme && is_accessible(meme, show_unlisted, username) ? meme : null
+    if (meme) {
+      viewsController.notify_view(meme.id, username)
     }
-    return meme.is_accessible(show_unlisted, username) ? meme : null
+    return meme
   }
 
   /**
@@ -241,6 +239,8 @@ export class MemeController {
           meme.images,
           meme.canvas
         )
+        toFS = true
+        toDB = true
       } else {
         canvas = await this.createMemeCanvas(meme.captions, meme.template.name)
       }

@@ -9,7 +9,10 @@ import './ImageScreenshotUpload.css'
 import SpeechRecognition, {
   useSpeechRecognition,
 } from 'react-speech-recognition'
-import { speechtotext } from '../speechtotext/speechtotext.js'
+import {
+  speechtotext,
+  speechtotextreturn,
+} from '../speechtotext/speechtotext.js'
 import IconButton from '@material-ui/core/IconButton'
 import MicIcon from '@material-ui/icons/Mic'
 
@@ -37,6 +40,8 @@ class ImageScreenshotUpload extends React.Component {
     return !!pattern.test(str)
   }
   uploadTemplate() {
+    const loading = document.getElementById('loadback')
+    loading.style.visibility = 'visible'
     const con = document.getElementById('screenurlinput').value
     const containername = document.getElementById('screennameinput').value
     const container =
@@ -72,6 +77,7 @@ class ImageScreenshotUpload extends React.Component {
               })
               .then((result) => {
                 this.onApiLoad()
+                loading.style.visibility = 'hidden'
               })
           })
       })
@@ -102,7 +108,7 @@ class ImageScreenshotUpload extends React.Component {
           id="screennameinput"
           label="Image Name"
           variant="outlined"
-          value={this.state.screenshotnameinput}
+          defaultValue={this.state.screenshotnameinput}
         />
         {/*         <button
           id="uploadButtonFile"
@@ -115,9 +121,15 @@ class ImageScreenshotUpload extends React.Component {
           variant="contained"
           color="primary"
           onClick={() => {
-            console.log(trying)
-            speechtotext('screennameinput', trying)
-            console.log(trying)
+            //console.log(trying)
+            //speechtotext('screennameinput', trying)
+            //console.log(trying)
+            //trying = !trying
+            let test
+            test = speechtotextreturn(trying)
+            console.log(test)
+            const results = document.getElementById('results').innerHTML
+            console.log(results)
             trying = !trying
           }}
         >
@@ -134,8 +146,11 @@ class ImageScreenshotUpload extends React.Component {
         >
           Upload File
         </Button>
+        <div id="loadback">
+          <div id="loading"></div>
+        </div>
 
-        <div id="results"></div>
+        <p id="results" style={{ visibility: 'hidden' }}></p>
       </div>
     )
   }

@@ -31,7 +31,20 @@ const videoMemeSchema = new Schema(
     },
     route: {
       type: String
-    }
+    },
+    timestamp: {
+      type: Date,
+      required: false
+    },
+    owner: {
+      type: String,
+      required: false
+    },
+    access: {
+      type: String,
+      enum: ["private", "unlisted", "public"],
+      required: false
+    },
   },
   {
     toJSON: {

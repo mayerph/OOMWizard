@@ -31,7 +31,7 @@ const commentSchema = new mongoose.Schema(
     },
     timestamp: {
       type: Date,
-      required: true
+      required: false
     },
     comment: {
       type: String,

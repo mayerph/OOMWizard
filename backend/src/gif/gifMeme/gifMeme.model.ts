@@ -33,9 +33,22 @@ const gifMemeSchema = new Schema(
     file: {
       type: String
     },
+    timestamp: {
+      type: Date,
+      required: false,
+    },
     route: {
       type: String
-    }
+    },
+    owner: { 
+      type: String,
+      required: false 
+    },
+    access: {
+      type: String,
+      enum: ["private", "unlisted", "public"],
+      required: false
+    },
   },
   {
     toJSON: {
