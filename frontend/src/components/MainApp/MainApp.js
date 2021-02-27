@@ -29,6 +29,7 @@ import RemoveRedEyeIcon from '@material-ui/icons/RemoveRedEye'
 
 import { VideoTemplates } from '../VideoTemplates'
 import { VideoMemes } from '../VideoMemes'
+import { GifTemplates } from '../GifTemplates'
 
 class MainApp extends React.Component {
   constructor(props) {
@@ -91,6 +92,7 @@ class MainApp extends React.Component {
             >
               image
             </Link>
+            <GifTemplates></GifTemplates>
           </div>
           <div hidden={this.state.newValue !== 6}>
             <VideoTemplates></VideoTemplates>

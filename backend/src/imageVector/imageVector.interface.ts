@@ -10,6 +10,7 @@ export interface IFrame {
   file: string
   left: number
   top: number
+  route: string
 }
 
 export interface IImageVector {

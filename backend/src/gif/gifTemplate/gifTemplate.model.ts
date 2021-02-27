@@ -49,7 +49,8 @@ export const frameSchema = new Schema(
     delay: { type: delaySchema, required: true },
     file: { type: String, required: true },
     left: { type: Number, required: true },
-    top: { type: Number, required: true }
+    top: { type: Number, required: true },
+    route: { type: String, required: true }
   },
   {
     toJSON: {
@@ -70,12 +71,13 @@ export const gifTemplateSchema = new Schema(
     route: { type: String, required: true },
     frames: { type: [frameSchema], required: true },
     timestamp: { type: Date, required: false },
+    thumbnail: { type: String, required: true },
     owner: { type: String, required: false },
     access: {
       type: String,
       enum: ["private", "unlisted", "public"],
       required: false
-    },
+    }
   },
   {
     toJSON: {

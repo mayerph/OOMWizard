@@ -4,97 +4,86 @@ import * as config from '../config.json'
 const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 
 const addCaptionToActiveTemplate = (caption) => (dispatch) => {
+  console.log('the fucking captions is', caption)
   dispatch({
-    type: 'ADD_CAPTION_TO_VIDEO',
+    type: 'ADD_CAPTION_TO_GIF',
     payload: caption,
   })
 }
 
 const updateFramesOfActiveTemplate = (frames) => (dispatch) => {
   dispatch({
-    type: 'UPDATE_FRAMES_ACTIVE_TEMPLATE',
+    type: 'UPDATE_FRAMES_ACTIVE_TEMPLATE_GIF',
     payload: frames,
   })
 }
 
 const updateCaptions = (captions) => (dispatch) => {
+  console.log('the fucking captions are', captions)
   dispatch({
-    type: 'UPDATE_CAPTIONS',
+    type: 'UPDATE_CAPTIONS_GIF',
     payload: captions,
+  })
+}
+
+const setActiveFrame = (index) => (dispatch) => {
+  dispatch({
+    type: 'SET_ACTIVE_FRAME_GIF',
+    payload: index,
   })
 }
 
 const setActiveTemplate = (index) => (dispatch) => {
   dispatch({
-    type: 'SET_ACTIVE_TEMPLATE',
+    type: 'SET_ACTIVE_TEMPLATE_GIF',
     payload: index,
   })
 }
 /**
  * action to request all memes
  */
-const getVideoTemplates = () => (dispatch) => {
-  fetch(`${destination}/video/templates`, {
-    method: 'GET',
-  }).then(async (response) => {
-    dispatch({
-      type: 'GET_VIDEO_TEMPLATES_LOADING',
-    })
-    try {
-      const data = await response.json()
 
-      dispatch({
-        type: 'GET_VIDEO_TEMPLATES_SUCCESS',
-        payload: data,
-      })
-    } catch (err) {
-      dispatch({
-        type: 'GET_VIDEO_TEMPLATES_ERROR',
-      })
-    }
+const getGifTemplates = () => (dispatch) => {
+  axios.get(`${destination}/gif/templates`).then(async (response) => {
+    console.log('the response is', response)
+    dispatch({
+      type: 'GET_GIF_TEMPLATES_SUCCESS',
+      payload: response.data,
+    })
   })
 }
 
-const generateVideoMeme = (meme) => (dispatch) => {
-  axios.post(`${destination}/video/memes`, meme).then(async (response) => {
+const generateGifMeme = (meme) => (dispatch) => {
+  axios.post(`${destination}/gif/memes`, meme).then(async (response) => {
     dispatch({
-      type: 'GENERATE_VIDEO_MEME',
+      type: 'GENERATE_GIF_MEME',
       payload: response.data,
     })
   })
 }
 
 const addNewTemplate = (formData) => (dispatch) => {
-  console.log('the form data is', formData)
   axios
-    .post(`${destination}/video/templates`, formData, {
+    .post(`${destination}/gif/templates`, formData, {
       headers: {
         'content-type': 'multipart/form-data',
       },
     })
     .then(async (response) => {
-      console.log('response', response.data)
       dispatch({
-        type: 'ADD_NEW_TEMPLATE',
+        type: 'ADD_NEW_TEMPLATE_GIF',
         payload: response.data,
       })
     })
 }
 
-const setActiveFrame = (index) => (dispatch) => {
-  dispatch({
-    type: 'SET_ACTIVE_FRAME_VIDEO',
-    payload: index,
-  })
-}
-
 export {
-  getVideoTemplates,
+  getGifTemplates,
   addCaptionToActiveTemplate,
   updateFramesOfActiveTemplate,
   updateCaptions,
   setActiveTemplate,
-  generateVideoMeme,
+  generateGifMeme,
   addNewTemplate,
   setActiveFrame,
 }
