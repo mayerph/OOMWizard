@@ -90,6 +90,57 @@ export function speechtocontrol(fieldid) {
         testinput.click()
       } else if (result === 'cancel') {
         alert('cancelling text control')
+      } else {
+        alert('unknown command')
+      }
+    }
+
+    speech.addEventListener('result', onResult)
+  }
+}
+
+export function speechtocontrolfour(one, two, three, four, com) {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition
+  const SpeechGrammarList =
+    window.SpeechGrammarList || window.webkitSpeechGrammarList
+  const SpeechRecognitionEvent =
+    window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent
+
+  let commands = com
+  let grammar =
+    '#JSGF V1.0; grammar commands; public <command> = ' +
+    commands.join(' | ') +
+    ' ;'
+
+  if (typeof SpeechRecognition === 'undefined') {
+  } else {
+    const speech = new SpeechRecognition()
+    const recogList = new SpeechGrammarList()
+    recogList.addFromString(grammar, 1)
+    speech.continuous = false
+    speech.interimResults = false
+    speech.grammar = recogList
+
+    speech.start()
+
+    const onResult = (event) => {
+      let result = event.results[0][0].transcript
+      console.log(result)
+      if (result === commands[0]) {
+        console.log(one)
+        document.getElementById(one).click()
+      } else if (result === commands[1]) {
+        console.log(two)
+        document.getElementById(two).click()
+      } else if (result === commands[2] || result === commands[3]) {
+        console.log(three)
+        document.getElementById(three).click()
+      } else if (result === commands[4] || result === commands[5]) {
+        console.log(four)
+        document.getElementById(four).click()
+      } else {
+        alert('unknown command')
       }
     }
 

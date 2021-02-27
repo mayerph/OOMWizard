@@ -5,6 +5,8 @@ import axios from 'axios'
 import { getApi } from '../../actions'
 import { ReactPainter } from 'react-painter'
 import { Link, Redirect } from 'react-router-dom'
+import Button from '@material-ui/core/Button'
+import { VoiceControl } from '../VoiceControl'
 
 import './ImagePainter.css'
 
@@ -63,7 +65,15 @@ class ImagePainter extends React.Component {
               ) : (
                 <div>
                   <div>{canvas}</div>
-                  <button onClick={triggerSave}>Save as Template</button>
+                  <Button
+                    onClick={triggerSave}
+                    id="imagepaintupload"
+                    variant="contained"
+                    color="primary"
+                  >
+                    Save as Template
+                  </Button>
+                  <VoiceControl tocontrol={'imagepaintupload'} />
                 </div>
               )}
             </div>
