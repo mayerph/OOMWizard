@@ -70,6 +70,8 @@ router.post("", async (req: Request, res: Response, next: NextFunction) => {
     )
     res.json(result)
   } catch (err) {
+    console.log("the error is", err)
+
     res.status(500)
     res.json(err)
   }

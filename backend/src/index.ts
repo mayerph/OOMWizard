@@ -9,7 +9,7 @@ import { default as loginRoutes } from "./login/login.routes"
 import { default as memesRoutes } from "./meme/meme.routes"
 import { default as templateRoutes } from "./template/template.routes"
 import { default as commentRoutes } from "./comments/comments.routes"
-import { default as ratingRoutes} from "./rating/rating.routes"
+import { default as ratingRoutes } from "./rating/rating.routes"
 import { default as gifRoutes } from "./gif"
 import { default as videoRoutes } from "./video"
 import * as config from "./config.json"
@@ -28,7 +28,7 @@ const cors_options = {
 }
 
 app.use(cors(cors_options))
-app.use(bodyParser.json())
+app.use(bodyParser.json({ limit: "50mb" }))
 app.use(cookieParser())
 app.use(loginController.verify_and_inject_user())
 app.use(express.static("storage"))

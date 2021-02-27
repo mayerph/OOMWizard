@@ -68,7 +68,8 @@ export const videoTemplateSchema = new Schema(
     file: { type: String, required: true },
     route: { type: String, required: true },
     audio: { type: String, required: true },
-    frames: { type: frameVector, required: true }
+    frames: { type: frameVector, required: true },
+    thumbnail: { type: String, required: true }
   },
   {
     toJSON: {

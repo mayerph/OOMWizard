@@ -65,7 +65,7 @@ export class MemeController {
           }
         ],
         _id: mongoose.Types.ObjectId("aff46e6a4b03de6df1d420a5")
-      },
+      }
     ]
     template_tmp.forEach((e) => new Meme(e).save())
   }
@@ -81,19 +81,22 @@ export class MemeController {
     return memes
   }
 
-  async user_memes(username?: string): Promise<IMeme[]>{
-    if (username){
-      return await Meme.find({owner: username})
-    }else {
+  async user_memes(username?: string): Promise<IMeme[]> {
+    if (username) {
+      return await Meme.find({ owner: username })
+    } else {
       return []
     }
-
   }
 
   /**
    * returns certain meme
    */
-  async meme(id: string, username?: String, show_unlisted: boolean = false): Promise<IMeme | null> {
+  async meme(
+    id: string,
+    username?: String,
+    show_unlisted: boolean = false
+  ): Promise<IMeme | null> {
     const meme = await Meme.findById(id)
     if (!meme) {
       return null
@@ -121,7 +124,7 @@ export class MemeController {
         return
       }
       //check if a meme is owned by the user
-      if (meme.owner !== username){
+      if (meme.owner !== username) {
         reject(`cannot delete meme from another user`)
         return
       }
@@ -141,11 +144,7 @@ export class MemeController {
    * create and add new meme
    * @param meme metadata of the meme
    */
-  async addMeme(
-    meme: IMeme,
-    owner?: String,
-    access?: String,
-  ): Promise<IMeme> {
+  async addMeme(meme: IMeme, owner?: String, access?: String): Promise<IMeme> {
     try {
       // create filename
       const filename = this.createFilename()
@@ -199,7 +198,7 @@ export class MemeController {
   async query_memes(
     query_str: string,
     limit?: number,
-    username?: string,
+    username?: string
   ): Promise<IMeme[]> {
     let tokens = query_str.split(" ")
     let memes = await this.memes(username)

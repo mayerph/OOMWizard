@@ -13,7 +13,8 @@ export interface IVideoTemplate {
   file: string
   route: string
   audio: string
-  frames: IFrameVectorT
+  thumbnail: string
+  frames?: IFrameVectorT
 }
 
 export interface IVideoTemplateModel {}

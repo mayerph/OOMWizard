@@ -148,7 +148,8 @@ export class VideoMemeController {
       const memeDestinationPath = path.resolve(memeDestination)
 
       // command-line commands
-      const decodeMemeCmd = `${config.ffmpeg.ffmpeg} -r ${fps} -i "${framesSourcePath}/%d.png" -i "${audioSourcePath}" -c:v mpeg4 -pix_fmt yuv420p -crf 23 -r ${fps} -y ${memeDestinationPath}`
+      const decodeMemeCmd = `${config.ffmpeg.ffmpeg} -r ${fps} -i "${framesSourcePath}/%d.png" -i "${audioSourcePath}" -c:v libx264 -pix_fmt yuv420p  -crf 23 -r ${fps} -y ${memeDestinationPath}`
+      console.log("decodeMemeCmd", decodeMemeCmd)
       const promises = []
 
       promises.push(
