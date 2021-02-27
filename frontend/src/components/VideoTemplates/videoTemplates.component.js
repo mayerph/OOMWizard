@@ -1,6 +1,7 @@
 import React, {
   forwardRef,
   useEffect,
+  useMemo,
   useRef,
   useCallback,
   useState,
@@ -22,6 +23,7 @@ import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import IconButton from '@material-ui/core/IconButton'
 import CloseButton from '@material-ui/icons/Close'
+import { HuePicker, SketchPicker, ChromePicker } from 'react-color'
 
 import Button from '@material-ui/core/Button'
 
@@ -33,6 +35,7 @@ import {
   ArrowBack,
   CloudDownload,
   PlayCircleFilled,
+  Palette,
 } from '@material-ui/icons/'
 import {
   getVideoTemplates,
@@ -52,6 +55,8 @@ import FrameSelector from './helper/frameSelector.component'
 import VideoTemplateList from './helper/videoTemplateList.component'
 import CustomAccordion from './helper/accordion.component'
 import * as config from '../../config.json'
+import ColorPickerDialog from './helper/colorpickerDialog.component'
+import { get } from 'lodash'
 
 const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 
@@ -66,8 +71,12 @@ const VideoTemplates = (props) => {
   const [activeCaption, setActiveCaption] = useState(0)
   const [activeFrame, setActiveFrame] = useState(0)
   const debug = false
+  const [colorpickerOpen, setColorpickerOpen] = useState(false)
   let templateVideo = React.useRef(null)
   let templateVideoSource = React.useRef(null)
+  const videoplayerRef = useRef()
+  const videosrcRef = useRef()
+  let videoplayer
 
   const dispatch = useDispatch()
   const useStyles = makeStyles((theme) => ({
@@ -111,7 +120,8 @@ const VideoTemplates = (props) => {
       context.canvas.height = baseImage.height
       context.drawImage(baseImage, 0, 0)
       getActiveFrame().captions.forEach((e) => {
-        context.font = '30px Arial'
+        context.font = `bold ${e.size}pt Arial`
+        context.fillStyle = e.color
         context.fillText(e.text, e.x, e.y)
       })
 
@@ -126,6 +136,8 @@ const VideoTemplates = (props) => {
       x: 40,
       y: 80,
       frames: [0, _.values(getActiveTemplate().frames.frames).length - 1],
+      color: '#000000',
+      size: 30,
     }
 
     dispatch(addCaptionToActiveTemplate(newCaption))
@@ -255,7 +267,7 @@ const VideoTemplates = (props) => {
       if (videoTemplateState.data.captions.length > 0) {
         //initDrawing()
       }
-      console.log('dafda', templateVideo.current)
+
       if (
         templateVideo &&
         templateVideo.current &&
@@ -264,6 +276,16 @@ const VideoTemplates = (props) => {
         //templateVideoSource.current.src = getActiveTemplate().route
         templateVideo.current.load()
       }
+
+      if (
+        videoplayerRef &&
+        videoplayerRef.current &&
+        videoTemplateState.action == 'GENERATE_VIDEO_MEME'
+      ) {
+        //templateVideoSource.current.src = getActiveTemplate().route
+        videoplayerRef.current.load()
+      }
+
       drawImage()
     }
 
@@ -308,8 +330,8 @@ const VideoTemplates = (props) => {
             x: c.x,
             y: c.y,
           },
-          color: 'black',
-          size: 30,
+          color: c.color,
+          size: c.size,
         })
       })
       e.captions = cap
@@ -366,107 +388,134 @@ const VideoTemplates = (props) => {
     }
   }
 
-  const Videoplayer = () => {
-    if (getMeme()) {
-      return (
-        <video className="meme-video" controls>
-          <source src={`${destination}${getMeme().route}`} type="video/mp4" />
-        </video>
-      )
-    } else {
-      return ''
-    }
+  if (getMeme()) {
+    videoplayer = (
+      <video className="meme-video" controls ref={videoplayerRef}>
+        <source
+          ref={videosrcRef}
+          src={`${destination}${getMeme().route}`}
+          type="video/mp4"
+        />
+      </video>
+    )
+  } else {
+    videoplayer = ''
   }
+
   let memePart
   if (videoTemplateState.data.activeTemplate != undefined) {
     memePart = (
       <span>
-        <Card className="frame-show">
-          <CardContent>
-            <Typography variant="body2" color="textSecondary" component="p">
-              <div className="video-presentation">
-                <canvas id="meme"></canvas>
-              </div>
+        <div className="sticky-container">
+          <Card className="frame-show">
+            <CardContent>
+              <Typography variant="body2" color="textSecondary" component="p">
+                <div className="video-presentation">
+                  <canvas id="meme"></canvas>
+                  <FrameSelector
+                    className="frame-selector"
+                    frames={getActiveTemplate().frames.frames}
+                    callback={(e) => {
+                      setVisibleFrame(e)
+                    }}
+                  ></FrameSelector>
+                </div>
 
-              <div className="video-presentation">
-                <video controls className="template-video" ref={templateVideo}>
-                  <source
-                    ref={templateVideoSource}
-                    src={`${destination}${videoTemplateState.data.activeTemplate.route}`}
-                    type="video/mp4"
-                  />
-                </video>
-              </div>
-              <div className="video-presentation">
-                <Videoplayer></Videoplayer>
-              </div>
-            </Typography>
-          </CardContent>
+                <div className="video-presentation">
+                  <video
+                    controls
+                    className="template-video"
+                    ref={templateVideo}
+                  >
+                    <source
+                      ref={templateVideoSource}
+                      src={`${destination}${videoTemplateState.data.activeTemplate.route}`}
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+                <div className="video-presentation">
+                  <div
+                    style={{
+                      height: '100%',
+                      width: 'auto',
+                    }}
+                  ></div>
+                  {videoplayer}
+                </div>
+              </Typography>
+            </CardContent>
 
-          <CardContent>
-            <FrameSelector
-              frames={getActiveTemplate().frames.frames}
-              callback={(e) => {
-                setVisibleFrame(e)
+            <CardContent></CardContent>
+          </Card>
+          <div className="action-bar">
+            <Button
+              onClick={add}
+              variant="contained"
+              color="primary"
+              className="action-btn"
+            >
+              <AddOutlined />
+            </Button>
+            <Button
+              className="action-btn"
+              variant="contained"
+              onClick={() => {
+                if (getCaptions()[activeCaption]) {
+                  left()
+                }
               }}
-            ></FrameSelector>
-          </CardContent>
-        </Card>
+            >
+              <ArrowBack />
+            </Button>
+            <Button
+              className="action-btn"
+              variant="contained"
+              onClick={() => {
+                if (getCaptions()[activeCaption]) {
+                  right()
+                }
+              }}
+            >
+              <ArrowForward />
+            </Button>
+            <Button
+              className="action-btn"
+              variant="contained"
+              onClick={() => {
+                if (getCaptions()[activeCaption]) {
+                  up()
+                }
+              }}
+            >
+              <ArrowUpward />
+            </Button>
+            <Button
+              className="action-btn"
+              variant="contained"
+              onClick={() => {
+                if (getCaptions()[activeCaption]) {
+                  down()
+                }
+              }}
+            >
+              <ArrowDownward />
+            </Button>
+            <Button
+              className="action-btn"
+              variant="contained"
+              onClick={() => {
+                if (getCaptions()[activeCaption]) {
+                  generateMeme()
+                }
+              }}
+            >
+              <CloudDownload />
+            </Button>
+          </div>
+        </div>
         <div className="caption-container-parent">
           <div className="caption-container-child">
-            <div className="action-bar">
-              <Button
-                onClick={add}
-                variant="contained"
-                color="primary"
-                className="action-btn"
-              >
-                <AddOutlined />
-              </Button>
-              <Button
-                className="action-btn"
-                variant="contained"
-                onClick={() => {
-                  left()
-                }}
-              >
-                <ArrowBack />
-              </Button>
-              <Button
-                className="action-btn"
-                variant="contained"
-                onClick={() => {
-                  right()
-                }}
-              >
-                <ArrowForward />
-              </Button>
-              <Button
-                className="action-btn"
-                variant="contained"
-                onClick={() => {
-                  up()
-                }}
-              >
-                <ArrowUpward />
-              </Button>
-              <Button
-                className="action-btn"
-                variant="contained"
-                onClick={() => {
-                  down()
-                }}
-              >
-                <ArrowDownward />
-              </Button>
-              <Button
-                className="action-btn"
-                variant="contained"
-                onClick={generateMeme}
-              >
-                <CloudDownload />
-              </Button>
-            </div>
             <div>
               {getCaptions().map((item, index) => (
                 <>
@@ -515,18 +564,19 @@ const VideoTemplates = (props) => {
                               }}
                               variant="outlined"
                             />
-                            <IconButton
-                              variant="contained"
-                              color="primary"
-                              onClick={() => {
-                                console.log(trying)
-                                speechtotext(item.id, trying)
-                                console.log(trying)
-                                trying = !trying
-                              }}
-                            >
-                              <MicIcon />
-                            </IconButton>
+                            <div>
+                              <IconButton
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                  speechtotext(item.id, trying)
+
+                                  trying = !trying
+                                }}
+                              >
+                                <MicIcon />
+                              </IconButton>
+                            </div>
                           </div>
                           <div className="caption-option">
                             {
@@ -539,6 +589,44 @@ const VideoTemplates = (props) => {
                                 config={getCaptions()[index].frames}
                               ></RangeSlider>
                             }
+                          </div>
+                          <div className="caption-option">
+                            <IconButton
+                              style={{ color: getCaptions()[index].color }}
+                              onClick={() => {
+                                setColorpickerOpen(true)
+                              }}
+                            >
+                              <Palette />
+                            </IconButton>
+
+                            <ColorPickerDialog
+                              open={colorpickerOpen}
+                              defaultColor={getCaptions()[index].color}
+                              handleClose={() => {
+                                setColorpickerOpen(false)
+                              }}
+                              handleOk={(color) => {
+                                const captionsVec = [...getCaptions()]
+                                captionsVec[index].color = color
+                                dispatch(updateCaptions(captionsVec))
+                                setColorpickerOpen(false)
+                              }}
+                            ></ColorPickerDialog>
+                            <input
+                              type="number"
+                              id="tentacles"
+                              name="tentacles"
+                              min="0"
+                              max="1000"
+                              value={getCaptions()[index].size}
+                              onChange={(a) => {
+                                const captionsVec = [...getCaptions()]
+
+                                captionsVec[index].size = a.target.value
+                                dispatch(updateCaptions(captionsVec))
+                              }}
+                            />
                           </div>
                         </Typography>
                       </CardContent>

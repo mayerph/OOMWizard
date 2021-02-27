@@ -366,16 +366,14 @@ export class MemeController {
 
       // for each caption write to file
       captions.forEach((caption) => {
+        console.log("the caption size is", caption.size)
         ctx.font = `bold ${caption.size}pt Arial`
+
         ctx.fillStyle = caption.color
 
         // write text
         const text = caption.text
-        ctx.fillText(
-          text,
-          caption.position.x,
-          caption.position.y + caption.size
-        )
+        ctx.fillText(text, caption.position.x, caption.position.y)
       })
       resolve(canvas)
       return
