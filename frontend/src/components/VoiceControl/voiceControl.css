@@ -1,4 +1,6 @@
 .voiceControl .MuiChip-root {
   margin: 15px;
-  margin-top: 35px;
+}
+.voiceControl .MuiButtonBase-root {
+  margin-top: 15px !important;
 }
