@@ -12,7 +12,10 @@ export const close_prompt = () => (dispatch) => {
 }
 
 export const logout = () => (dispatch) => {
-  fetch(`${backend_uri}/auth/logout`, { method: 'POST' }).then(
+  fetch(`${backend_uri}/auth/logout`, {
+    method: 'POST',
+    credentials: 'include',
+  }).then(
     async (res) => dispatch({ type: 'LOGGED_OUT' }),
     async (error) => dispatch({ type: 'LOGGED_OUT' }),
   )

@@ -458,12 +458,12 @@ class TextControl extends React.Component {
         },
         captions: captions,
         images: images,
-        access: this.state.generateAccess,
         canvas: {
           width: document.getElementById('meme-canvas').offsetWidth,
           height: document.getElementById('meme-canvas').offsetHeight,
         },
       },
+      access: this.state.generateAccess,
     }
     console.log(postData)
 
