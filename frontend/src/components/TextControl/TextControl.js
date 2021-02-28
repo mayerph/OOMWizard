@@ -555,9 +555,6 @@ class TextControl extends React.Component {
   chipTooltip() {
     return (
       <div className={'text-control-chips'}>
-        <Chip icon={<MicIcon />} label="add image" color="secondary" />
-        <Chip icon={<MicIcon />} label="add text" color="secondary" />
-        <Chip icon={<MicIcon />} label="generate" color="secondary" />
         <Chip icon={<MicIcon />} label="make text bigger" color="secondary" />
         <Chip icon={<MicIcon />} label="make text bold" color="secondary" />
         <Chip icon={<MicIcon />} label="make text italic" color="secondary" />
@@ -567,6 +564,9 @@ class TextControl extends React.Component {
         <Chip icon={<MicIcon />} label="make text green" color="secondary" />
         <Chip icon={<MicIcon />} label="make text blue" color="secondary" />
         <Chip icon={<MicIcon />} label="make text smaller" color="secondary" />
+        <Chip icon={<MicIcon />} label="add image" color="secondary" />
+        <Chip icon={<MicIcon />} label="add text" color="secondary" />
+        <Chip icon={<MicIcon />} label="generate" color="secondary" />
       </div>
     )
   }
