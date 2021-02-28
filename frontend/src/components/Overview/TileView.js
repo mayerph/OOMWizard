@@ -90,9 +90,7 @@ class TileView extends React.Component {
   }
 
   upload_img_flip(tile) {
-    fetch(tile.url, {
-      credentials: 'include',
-    })
+    fetch(tile.url,)
       .then((res) => res.blob())
       .then((blob) => {
         var newfile = new File([blob], tile.name + '.jpg', { type: blob.type })
