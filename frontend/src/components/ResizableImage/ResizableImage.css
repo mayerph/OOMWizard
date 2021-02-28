@@ -1,6 +1,6 @@
 
 .resizeable-image-container {
-    border: 1px dashed #ccc;
+    outline: 1px dashed #ccc;
     position: relative;
     z-index: 39;
 }

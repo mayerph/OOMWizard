@@ -370,7 +370,7 @@ class TextControl extends React.Component {
   }
 
   render() {
-    if (this.props.initialImages && this.canvasElementCounter < 1) {
+    if (this.props.initialImages && this.props.canvasElements.length < 1) {
       this.props.initialImages.forEach((image) =>
         this.handleAddElement('image', image),
       )

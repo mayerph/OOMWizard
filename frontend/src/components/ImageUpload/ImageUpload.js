@@ -13,43 +13,46 @@ class ImageUpload extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      pictureUrl: null,
+      isUploaded: false,
     }
   }
   uploadTemplate() {
     const container = document.getElementById('templateUpload')
     const file = container.querySelector('input[type="file"]').files[0]
-    console.log(file)
-    var fd = new FormData()
+    const fd = new FormData()
     fd.append('template', file)
     axios
       .post('http://localhost:2000/templates/', fd, {})
       .then((res) => {
         console.log(res.statusText)
-        this.setState({
-          pictureUrl:
+        const element = {
+          x: 0,
+          y: 0,
+          width: 400,
+          bounds: '#meme-canvas',
+          type: 'image',
+          imageUrl:
             res.config.url.replace('templates/', '') +
             res.data.route.substring(1),
-        })
+        }
+        this.props.dispatch({ type: 'ADD_ELEMENT', element: element })
+        this.setState({ isUploaded: true })
       })
       .then((result) => {
         this.onApiLoad()
       })
   }
   onApiLoad() {
-    this.props.getApi('api')
+    getApi('api')
   }
 
   render() {
     return (
       <div>
-        {this.state.pictureUrl ? (
+        {this.state.isUploaded ? (
           <Redirect
             to={{
               pathname: '/imagememe',
-              state: {
-                imageUrls: [this.state.pictureUrl],
-              },
             }}
           />
         ) : (
@@ -59,14 +62,6 @@ class ImageUpload extends React.Component {
               accept="image/png, image/jpeg, image/jpg"
               id="fileupload"
             />
-
-            {/*         <button
-          id="uploadButtonFile"
-          type="submit"
-          onClick={this.uploadTemplate.bind(this)}
-        >
-          Upload File
-        </button> */}
             <Button
               variant="contained"
               color="primary"
@@ -89,4 +84,4 @@ const mapStateToProps = (state) => {
   return {}
 }
 
-export default connect(mapStateToProps, { getApi })(ImageUpload)
+export default connect(mapStateToProps)(ImageUpload)
