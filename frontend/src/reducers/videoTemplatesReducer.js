@@ -105,6 +105,7 @@ const videoTemplatesReducer = (state = DefaultState, action) => {
       })
 
       temp_3.data.meme = undefined
+      temp_3.data.activeFrame = 0
 
       return temp_3
     case 'GENERATE_VIDEO_MEME':
