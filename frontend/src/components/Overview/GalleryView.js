@@ -15,10 +15,12 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import IconButton from '@material-ui/core/IconButton'
 import GetAppIcon from '@material-ui/icons/GetApp'
+import CreateIcon from '@material-ui/icons/Create'
 
 import CommentSection from '../Comments/CommentList'
 import HeartRating from '../Rating/HeartRating'
 import StatsView from '../StatsView/StatsView'
+import { EditMemeDialog } from '../EditMemeDialog'
 
 import Carousel from 'react-material-ui-carousel'
 import './GalleryView.css'
@@ -30,19 +32,19 @@ class GalleryView extends React.Component {
       current: undefined,
       autoplay: false,
       focus_index: props.data.findIndex((e) => e.id === props.focus),
+      prompt_edit: undefined,
     }
   }
 
-  downloadGeneratedImage(url) {
+  downloadGeneratedImage(tile) {
     const saveImg = document.createElement('a')
-    saveImg.href = url
+    saveImg.href = tile.url
     saveImg.target = '_blank'
-    saveImg.download = 'meme.jpg'
+    saveImg.download = 'meme.' + tile.fileending
     document.body.appendChild(saveImg)
     saveImg.click()
     document.body.removeChild(saveImg)
   }
-
 
   render_content(tile) {
     switch (tile.file_type) {
@@ -55,17 +57,22 @@ class GalleryView extends React.Component {
       case 'img':
       case 'gif':
       default:
-        return (
-          <img
-            className="slideImage"
-            onClick={() => {
-              alert('implement meme creation here', tile.id)
-            }}
-            src={tile.url}
-            alt={tile.name}
-          />
-        )
+        return <img className="slideImage" src={tile.url} alt={tile.name} />
     }
+  }
+  render_edit_meme_button(tile) {
+    return (
+      <IconButton>
+        <CreateIcon
+          aria-lable="edit"
+          onClick={() =>
+            this.setState({
+              prompt_edit: tile,
+            })
+          }
+        />
+      </IconButton>
+    )
   }
 
   render_carousel() {
@@ -99,7 +106,7 @@ class GalleryView extends React.Component {
               {/** download button*/}
               <IconButton
                 aria-label="download"
-                onClick={() => this.downloadGeneratedImage(tile.url)}
+                onClick={() => this.downloadGeneratedImage(tile)}
                 download
               >
                 <GetAppIcon
@@ -112,6 +119,15 @@ class GalleryView extends React.Component {
                   }}
                 />
               </IconButton>
+
+              {
+                /** add edit button, only if is template and not img flip */
+                tile.foreign ||
+                tile.type != 'template' ||
+                tile.file_type != 'img'
+                  ? null
+                  : this.render_edit_meme_button(tile)
+              }
 
               {/** stats */}
               <Accordion>
@@ -135,6 +151,13 @@ class GalleryView extends React.Component {
             </Box>
           ))}
         </Carousel>
+        <EditMemeDialog
+          meme_data={this.state.prompt_edit}
+          open={this.state.prompt_edit ? true : false}
+          onClose={() => {
+            this.setState({ prompt_edit: undefined })
+          }}
+        />
       </>
     )
   }

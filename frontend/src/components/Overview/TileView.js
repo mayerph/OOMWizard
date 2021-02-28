@@ -13,11 +13,13 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 
 import { ShareDialog } from '../ShareDialog'
 import { DownloadDialog } from '../DownloadDialog'
+import { EditMemeDialog } from '../EditMemeDialog'
 import axios from 'axios'
 
 import Speech from 'react-speech'
 import { Redirect } from 'react-router-dom'
 import { Typography } from '@material-ui/core'
+import CreateIcon from '@material-ui/icons/Create'
 
 import * as config from '../../config.json'
 const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
@@ -141,6 +143,21 @@ class TileView extends React.Component {
     }
   }
 
+  render_edit_meme_button(tile) {
+    return (
+      <IconButton>
+        <CreateIcon
+          aria-lable="edit"
+          onClick={() =>
+            this.setState({
+              prompt_edit: tile,
+            })
+          }
+        />
+      </IconButton>
+    )
+  }
+
   render_img_template(tile, index) {
     return (
       <GridListTile key={tile.id} cols={tile.cols || 1}>
@@ -154,6 +171,13 @@ class TileView extends React.Component {
               <IconButton>
                 <Speech text={`The template title is ${tile.name}`} />
               </IconButton>
+
+              {
+                /** add edit create meme button */
+                tile.foreign || tile.file_type != 'img'
+                  ? null
+                  : this.render_edit_meme_button(tile)
+              }
 
               {/**Add upload button for imageflip */}
               {tile.foreign ? (
@@ -171,11 +195,11 @@ class TileView extends React.Component {
     )
   }
 
-  downloadGeneratedImage(url) {
+  downloadGeneratedImage(tile) {
     const saveImg = document.createElement('a')
-    saveImg.href = url
+    saveImg.href = tile.url
     saveImg.target = '_blank'
-    saveImg.download = 'meme.jpg'
+    saveImg.download = 'meme.' + tile.fileending
     document.body.appendChild(saveImg)
     saveImg.click()
     document.body.removeChild(saveImg)
@@ -203,7 +227,7 @@ class TileView extends React.Component {
               {/** download button*/}
               <IconButton
                 aria-label="download"
-                onClick={() => this.downloadGeneratedImage(tile.url)}
+                onClick={() => this.downloadGeneratedImage(tile)}
                 download
               >
                 <GetAppIcon
@@ -265,6 +289,13 @@ class TileView extends React.Component {
             ) : null
           }
         </GridList>
+        <EditMemeDialog
+          meme_data={this.state.prompt_edit}
+          open={this.state.prompt_edit ? true : false}
+          onClose={() => {
+            this.setState({ prompt_edit: undefined })
+          }}
+        />
         <ShareDialog
           meme={this.state.prompt_share}
           open={this.state.prompt_share ? true : false}

@@ -54,6 +54,7 @@ class Overview extends React.Component {
     })
       .then((res) => res.json())
       .then((meta_infos) => {
+        console.log('wizard:', data)
         let result = data.map((e, i) => {
           return {
             ...e,
