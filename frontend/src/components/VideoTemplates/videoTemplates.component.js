@@ -249,7 +249,7 @@ const VideoTemplates = (props) => {
   }
 
   const setVisibleFrame = (index) => {
-    setActiveFrame(index)
+    dispatch(setActiveFrame(index))
   }
 
   // Allows you to extract data from the Redux store state, using a selector function.

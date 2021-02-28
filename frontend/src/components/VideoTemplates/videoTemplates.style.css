@@ -101,3 +101,9 @@ canvas {
 .textfield-container {
   flex: 1;
 }
+
+#meme,
+.template-video,
+.meme-video {
+  max-height: 360px;
+}

@@ -101,3 +101,8 @@ canvas {
 .microphone-off {
   border: 3px solid white !important;
 }
+
+#meme2,
+.gif-presentation > img {
+  max-height: 360px;
+}

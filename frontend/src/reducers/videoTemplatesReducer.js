@@ -120,9 +120,10 @@ const videoTemplatesReducer = (state = DefaultState, action) => {
       temp_5.data.videoTemplates.push(action.payload)
       return temp_5
 
-    case 'SET_ACTIVE_FRAME_GIF':
+    case 'SET_ACTIVE_FRAME_VIDEO':
       const temp_6 = { ...state }
       temp_6.data.activeFrame = action.payload
+      temp_6.action = 'SET_ACTIVE_FRAME_VIDEO'
       return temp_6
     default:
       return state

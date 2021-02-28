@@ -66,7 +66,6 @@ const generateVideoMeme = (meme) => (dispatch) => {
 }
 
 const addNewTemplate = (formData) => (dispatch) => {
-  console.log('the form data is', formData)
   axios
     .post(`${destination}/video/templates`, formData, {
       headers: {
@@ -74,7 +73,6 @@ const addNewTemplate = (formData) => (dispatch) => {
       },
     })
     .then(async (response) => {
-      console.log('response', response.data)
       dispatch({
         type: 'ADD_NEW_TEMPLATE',
         payload: response.data,
