@@ -38,7 +38,7 @@ class EditMemeDialog extends React.Component {
       imageUrl: url,
     }
     if (wipe) {
-      this.props.dispatch({type: 'WIPE_ELEMENTS'})
+      this.props.dispatch({ type: 'REMOVE_ALL_ELEMENTS' })
     }
 
     this.props.dispatch({ type: 'ADD_ELEMENT', element: element })

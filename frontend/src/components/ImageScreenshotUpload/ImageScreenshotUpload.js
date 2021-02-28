@@ -17,12 +17,14 @@ import IconButton from '@material-ui/core/IconButton'
 import MicIcon from '@material-ui/icons/Mic'
 import Chip from '@material-ui/core/Chip'
 import { VoiceControl } from '../VoiceControl'
+import { Redirect } from 'react-router-dom'
 
 class ImageScreenshotUpload extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       screenshotnameinput: 'Enter Name',
+      isUploaded: false,
     }
   }
   //check if url is legit, regex from https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
@@ -55,6 +57,7 @@ class ImageScreenshotUpload extends React.Component {
       con +
       '&token=OUDJTUY8KF6SXUK6ZBDOKHSA2U9NVYKA'
     console.log(container)
+
     console.log(containername)
 
     if (this.validURL(con)) {
@@ -80,6 +83,18 @@ class ImageScreenshotUpload extends React.Component {
               .post('http://localhost:2000/templates/', fd, {})
               .then((res) => {
                 console.log(res.statusText)
+                const element = {
+                  x: 0,
+                  y: 0,
+                  width: 400,
+                  bounds: '#meme-canvas',
+                  type: 'image',
+                  imageUrl:
+                    res.config.url.replace('templates/', '') +
+                    res.data.route.substring(1),
+                }
+                this.props.dispatch({ type: 'ADD_ELEMENT', element: element })
+                this.setState({ isUploaded: true })
               })
               .then((result) => {
                 this.onApiLoad()
@@ -92,69 +107,77 @@ class ImageScreenshotUpload extends React.Component {
     }
   }
   onApiLoad() {
-    this.props.getApi('api')
+    getApi('api')
   }
 
   render() {
     let trying = false
     return (
-      <div className="urlScreenShotUpload" id="urlScreenShotUpload">
-        {/*         <input type="text" id="urlinput" placeholder="Image Url" />
+      <>
+        {this.state.isUploaded ? (
+          <Redirect
+            to={{
+              pathname: '/imagememe',
+            }}
+          />
+        ) : (
+          <div className="urlScreenShotUpload" id="urlScreenShotUpload">
+            {/*         <input type="text" id="urlinput" placeholder="Image Url" />
         <input type="text" id="nameinput" placeholder="Image Name" /> */}
-        <TextField
-          required
-          id="screenurlinput"
-          label="Image Url"
-          variant="outlined"
-        />
-        <TextField
-          required
-          id="screennameinput"
-          label="Image Name"
-          variant="outlined"
-          defaultValue={this.state.screenshotnameinput}
-        />
-        {/*         <button
+            <TextField
+              required
+              id="screenurlinput"
+              label="Image Url"
+              variant="outlined"
+            />
+            <TextField
+              required
+              id="screennameinput"
+              label="Image Name"
+              variant="outlined"
+              defaultValue={this.state.screenshotnameinput}
+            />
+            {/*         <button
           id="uploadButtonFile"
           type="submit"
           onClick={this.uploadTemplate.bind(this)}
         >
           Upload File
         </button> */}
-        <IconButton
-          variant="contained"
-          color="primary"
-          onClick={() => {
-            //console.log(trying)
-            speechtotext('screennameinput', trying)
-            //console.log(trying)
-            trying = !trying
-            //let test
-            //test = speechtotextreturn(trying)
-            //console.log(test)
-            //const results = document.getElementById('results').innerHTML
-            //console.log(results)
-            //trying = !trying
-          }}
-        >
-          <MicIcon />
-        </IconButton>
+            <IconButton
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                //console.log(trying)
+                speechtotext('screennameinput', trying)
+                //console.log(trying)
+                trying = !trying
+                //let test
+                //test = speechtotextreturn(trying)
+                //console.log(test)
+                //const results = document.getElementById('results').innerHTML
+                //console.log(results)
+                //trying = !trying
+              }}
+            >
+              <MicIcon />
+            </IconButton>
 
-        <Button
-          variant="contained"
-          color="primary"
-          component="span"
-          id="uploadButtonScreenshot"
-          type="submit"
-          onClick={this.uploadTemplate.bind(this)}
-        >
-          Upload File
-        </Button>
-        <div id="loadback">
-          <div id="loading"></div>
-        </div>
+            <Button
+              variant="contained"
+              color="primary"
+              component="span"
+              id="uploadButtonScreenshot"
+              type="submit"
+              onClick={this.uploadTemplate.bind(this)}
+            >
+              Upload File
+            </Button>
+            <div id="loadback">
+              <div id="loading"></div>
+            </div>
 
-        {/* <IconButton
+            {/* <IconButton
           variant="contained"
           color="secondary"
           onClick={() => {
@@ -165,8 +188,10 @@ class ImageScreenshotUpload extends React.Component {
         </IconButton>
         <Chip icon={<MicIcon />} label="Upload" color="secondary" />
         <Chip icon={<MicIcon />} label="Cancel" color="secondary" /> */}
-        <VoiceControl tocontrol={'uploadButtonScreenshot'} />
-      </div>
+            <VoiceControl tocontrol={'uploadButtonScreenshot'} />
+          </div>
+        )}
+      </>
     )
   }
 }
@@ -175,4 +200,4 @@ const mapStateToProps = (state) => {
   return {}
 }
 
-export default connect(mapStateToProps, { getApi })(ImageScreenshotUpload)
+export default connect(mapStateToProps)(ImageScreenshotUpload)

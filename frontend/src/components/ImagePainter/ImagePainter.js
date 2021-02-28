@@ -14,11 +14,11 @@ class ImagePainter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      paintingUrl: null,
+      isUploaded: null,
     }
   }
   onApiLoad() {
-    this.props.getApi('api')
+    getApi('api')
   }
 
   render() {
@@ -41,11 +41,18 @@ class ImagePainter extends React.Component {
             axios
               .post('http://localhost:2000/templates/', fd, {})
               .then((res) => {
-                this.setState({
-                  paintingUrl:
+                const element = {
+                  x: 0,
+                  y: 0,
+                  width: 400,
+                  bounds: '#meme-canvas',
+                  type: 'image',
+                  imageUrl:
                     res.config.url.replace('templates/', '') +
                     res.data.route.substring(1),
-                })
+                }
+                this.props.dispatch({ type: 'ADD_ELEMENT', element: element })
+                this.setState({ isUploaded: true })
               })
               .then((result) => {
                 this.onApiLoad()
@@ -53,13 +60,10 @@ class ImagePainter extends React.Component {
           }}
           render={({ triggerSave, canvas }) => (
             <div>
-              {this.state.paintingUrl ? (
+              {this.state.isUploaded ? (
                 <Redirect
                   to={{
                     pathname: '/imagememe',
-                    state: {
-                      imageUrls: [this.state.paintingUrl],
-                    },
                   }}
                 />
               ) : (
@@ -88,4 +92,4 @@ const mapStateToProps = (state) => {
   return {}
 }
 
-export default connect(mapStateToProps, { getApi })(ImagePainter)
+export default connect(mapStateToProps)(ImagePainter)

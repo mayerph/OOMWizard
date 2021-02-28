@@ -22,6 +22,9 @@ const canvasElements = (state = [], action) => {
       return state.filter(function (element) {
         return element.id !== action.id
       })
+    case 'REMOVE_ALL_ELEMENTS':
+      console.log('remove all')
+      return []
     default:
       return state
   }

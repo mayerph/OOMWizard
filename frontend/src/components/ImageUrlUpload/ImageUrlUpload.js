@@ -21,7 +21,7 @@ class ImageUrlUpload extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      pictureUrl: null,
+      isUploaded: null,
       nameinput: 'Enter Name',
     }
   }
@@ -66,11 +66,18 @@ class ImageUrlUpload extends React.Component {
             .post('http://localhost:2000/templates/', fd, {})
             .then((res) => {
               console.log(res.statusText)
-              this.setState({
-                pictureUrl:
+              const element = {
+                x: 0,
+                y: 0,
+                width: 400,
+                bounds: '#meme-canvas',
+                type: 'image',
+                imageUrl:
                   res.config.url.replace('templates/', '') +
                   res.data.route.substring(1),
-              })
+              }
+              this.props.dispatch({ type: 'ADD_ELEMENT', element: element })
+              this.setState({ isUploaded: true })
             })
             .then((result) => {
               this.onApiLoad()
@@ -81,20 +88,17 @@ class ImageUrlUpload extends React.Component {
     }
   }
   onApiLoad() {
-    this.props.getApi('api')
+    getApi('api')
   }
 
   render() {
     let trying = false
     return (
       <div>
-        {this.state.pictureUrl ? (
+        {this.state.isUploaded ? (
           <Redirect
             to={{
               pathname: '/imagememe',
-              state: {
-                imageUrls: [this.state.pictureUrl],
-              },
             }}
           />
         ) : (
@@ -168,4 +172,4 @@ const mapStateToProps = (state) => {
   return {}
 }
 
-export default connect(mapStateToProps, { getApi })(ImageUrlUpload)
+export default connect(mapStateToProps)(ImageUrlUpload)

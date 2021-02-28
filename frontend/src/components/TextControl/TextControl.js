@@ -370,12 +370,6 @@ class TextControl extends React.Component {
   }
 
   render() {
-    if (this.props.initialImages && this.props.canvasElements.length < 1) {
-      this.props.initialImages.forEach((image) =>
-        this.handleAddElement('image', image),
-      )
-    }
-
     let controlVisibility = this.props.editorState ? 1 : 0.2
     let isDisabled = !this.props.editorState
     let trying = false

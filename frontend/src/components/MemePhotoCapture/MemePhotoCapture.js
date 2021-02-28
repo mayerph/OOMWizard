@@ -29,23 +29,20 @@ class MemePhotoCapture extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      pictureUrl: null,
+      isUploaded: null,
     }
   }
   onApiLoad() {
-    this.props.getApi('api')
+    getApi('api')
   }
 
   render() {
     return (
       <div>
-        {this.state.pictureUrl ? (
+        {this.state.isUploaded ? (
           <Redirect
             to={{
               pathname: '/imagememe',
-              state: {
-                imageUrls: [this.state.pictureUrl],
-              },
             }}
           />
         ) : (
@@ -76,11 +73,18 @@ class MemePhotoCapture extends React.Component {
                 .post('http://localhost:2000/templates/', fd, {})
                 .then((res) => {
                   console.log(res)
-                  this.setState({
-                    pictureUrl:
+                  const element = {
+                    x: 0,
+                    y: 0,
+                    width: 400,
+                    bounds: '#meme-canvas',
+                    type: 'image',
+                    imageUrl:
                       res.config.url.replace('templates/', '') +
                       res.data.route.substring(1),
-                  })
+                  }
+                  this.props.dispatch({ type: 'ADD_ELEMENT', element: element })
+                  this.setState({ isUploaded: true })
                 })
                 .then((result) => {
                   this.onApiLoad()
@@ -99,6 +103,4 @@ const mapStateToProps = (state) => {
   return {}
 }
 
-export default connect(mapStateToProps, {
-  getApi,
-})(MemePhotoCapture)
+export default connect(mapStateToProps)(MemePhotoCapture)

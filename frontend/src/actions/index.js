@@ -9,6 +9,10 @@ export const removeElement = (id) => ({
   id,
 })
 
+export const removeAllElements = () => ({
+  type: 'REMOVE_ALL_ELEMENTS',
+})
+
 export const updateElement = (element) => ({
   type: 'UPDATE_ELEMENT',
   element,
