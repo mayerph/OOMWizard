@@ -15,6 +15,14 @@ import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
+import TextField from '@material-ui/core/TextField'
+import Radio from '@material-ui/core/Radio'
+import RadioGroup from '@material-ui/core/RadioGroup'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormLabel from '@material-ui/core/FormLabel'
+import MenuItem from '@material-ui/core/MenuItem'
+import FormControl from '@material-ui/core/FormControl'
+import Select from '@material-ui/core/Select'
 import { ShareDialog } from '../ShareDialog'
 import html2canvas from 'html2canvas'
 import {
@@ -37,12 +45,18 @@ class TextControl extends React.Component {
       generatedImageUrl: null,
       generatedMeme: null,
       isShareDialogOpened: false,
+      isGenerateDialogOpened: false,
+      generateMethod: 'backend',
+      generateAccess: 'public',
+      generateMaxSize: 0,
+      foundBlob: false,
     }
   }
   handleClose() {
     this.setState({
       isDialogOpened: false,
       isImageGenerated: false,
+      isGenerateDialogOpened: false,
     })
   }
 
@@ -131,7 +145,7 @@ class TextControl extends React.Component {
           <Button onClick={() => this.downloadGeneratedImage()} color="primary">
             Download
           </Button>
-          {this.state.generatedMeme && (
+          {this.state.generateMethod === 'backend' && (
             <Button onClick={() => this.handleShare()} color="primary">
               Share
             </Button>
@@ -149,7 +163,172 @@ class TextControl extends React.Component {
     )
   }
 
-  browserGeneration() {
+  generateDialog() {
+    return (
+      <Dialog
+        onClose={() => this.handleClose()}
+        open={this.state.isGenerateDialogOpened}
+        aria-labelledby="login-form-title"
+        maxWidth={false}
+      >
+        <DialogTitle>Generate Meme</DialogTitle>
+
+        <DialogContent>
+          <FormControl>
+            <FormLabel className={'generate-form-label'} component="legend">
+              Generation Method
+            </FormLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={this.state.generateMethod}
+              onChange={(event) => {
+                this.setState({ generateMethod: event.target.value })
+              }}
+            >
+              <MenuItem value={'backend'}>Backend Generation</MenuItem>
+              <MenuItem value={'frontend'}>Frontend Generation</MenuItem>
+            </Select>
+            <FormLabel className={'generate-form-label'}>
+              Maximum Image Size (KB)
+            </FormLabel>
+            <TextField
+              id="max-size"
+              type="number"
+              disabled={this.state.generateMethod === 'backend'}
+              value={this.state.generateMaxSize}
+              onChange={(event) => {
+                if (Number.isInteger(parseInt(event.target.value))) {
+                  console.log(event.target.value)
+                  let newValue
+                  if (event.target.value.length !== 1) {
+                    newValue = event.target.value.replace(/^0+/, '')
+                  } else {
+                    newValue = event.target.value
+                  }
+                  this.setState({
+                    generateMaxSize: newValue,
+                  })
+                }
+              }}
+              helperText="0 to ignore Maximum Image Size"
+            />
+            <FormLabel className={'generate-form-label'} component="legend">
+              Access
+            </FormLabel>
+            <RadioGroup
+              aria-label="access-control"
+              style={{ display: 'inline' }}
+              name="Access"
+              value={this.state.generateAccess}
+              onChange={(event) => {
+                this.setState({ generateAccess: event.target.value })
+              }}
+            >
+              <FormControlLabel
+                value="public"
+                control={<Radio />}
+                label="Public"
+              />
+              <FormControlLabel
+                value="private"
+                control={<Radio />}
+                label="Private"
+              />
+              <FormControlLabel
+                value="unlisted"
+                control={<Radio />}
+                label="Unlisted"
+              />
+            </RadioGroup>
+          </FormControl>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => this.generateMeme()} color="primary">
+            Generate
+          </Button>
+          <Button
+            onClick={() => {
+              this.setState({ isGenerateDialogOpened: false })
+            }}
+            color="secondary"
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    )
+  }
+
+  generateMeme() {
+    if (this.state.generateMethod === 'backend') {
+      this.backendGeneration()
+    } else {
+      this.frontendGeneration()
+    }
+  }
+
+  createBlobWithMaxFileSize(canvas) {
+    let blobSize = 0
+    if (this.state.generateMaxSize !== 0) {
+      this.setState({
+        foundBlob: false,
+      })
+      for (let i = 10; i > -1; i--) {
+        canvas.toBlob(
+          (blob) => {
+            blobSize = Math.ceil(blob.size / 1024)
+            if (
+              !this.state.foundBlob &&
+              blobSize < this.state.generateMaxSize
+            ) {
+              this.setState({ foundBlob: blob })
+              console.log(blobSize)
+              console.log('found')
+              this.setState({
+                generatedImageUrl: URL.createObjectURL(blob),
+                isImageGenerated: true,
+                foundBlob: true,
+              })
+            }
+            if (i === 0 && this.state.foundBlob === false) {
+              canvas.toBlob(
+                (blob) => {
+                  this.setState({ foundBlob: blob })
+                  console.log(blobSize)
+                  console.log('found2')
+                  this.setState({
+                    generatedImageUrl: URL.createObjectURL(blob),
+                    isImageGenerated: true,
+                    foundBlob: true,
+                  })
+                },
+                'image/jpeg',
+                0,
+              )
+            }
+          },
+          'image/jpeg',
+          i * 0.1,
+        )
+      }
+    } else {
+      canvas.toBlob(
+        (blob) => {
+          console.log('found3')
+          this.setState({
+            generatedImageUrl: URL.createObjectURL(blob),
+            isImageGenerated: true,
+            foundBlob: true,
+          })
+        },
+        'image/jpeg',
+        1,
+      )
+    }
+  }
+
+  frontendGeneration() {
     // Don't include borders to image
     document.querySelectorAll('.resizeable-text-container').forEach((node) => {
       node.style.borderWidth = 0
@@ -172,12 +351,7 @@ class TextControl extends React.Component {
             html2canvas(document.querySelector('#meme-canvas-card'), {
               allowTaint: true,
             }).then((canvas) => {
-              canvas.toBlob((blob) => {
-                this.setState({
-                  generatedImageUrl: URL.createObjectURL(blob),
-                  isImageGenerated: true,
-                })
-              }, 'image/jpeg')
+              this.createBlobWithMaxFileSize(canvas)
             })
             img.src = imgSrc
             document
@@ -197,12 +371,7 @@ class TextControl extends React.Component {
       html2canvas(document.querySelector('#meme-canvas-card'), {
         allowTaint: true,
       }).then((canvas) => {
-        canvas.toBlob((blob) => {
-          this.setState({
-            generatedImageUrl: URL.createObjectURL(blob),
-            isImageGenerated: true,
-          })
-        }, 'image/jpeg')
+        this.createBlobWithMaxFileSize(canvas)
       })
       document
         .querySelectorAll('.resizeable-text-container')
@@ -224,7 +393,7 @@ class TextControl extends React.Component {
     this.props.dispatch({ type: 'ADD_ELEMENT', element: element })
   }
 
-  handleGenerate() {
+  backendGeneration() {
     const canvas = document
       .getElementById('meme-canvas')
       .getBoundingClientRect()
@@ -268,7 +437,6 @@ class TextControl extends React.Component {
         })
       }
     })
-
     const postData = {
       memes: {
         template: {
@@ -278,6 +446,7 @@ class TextControl extends React.Component {
         },
         captions: captions,
         images: images,
+        access: this.state.generateAccess,
         canvas: {
           width: document.getElementById('meme-canvas').offsetWidth,
           height: document.getElementById('meme-canvas').offsetHeight,
@@ -317,10 +486,7 @@ class TextControl extends React.Component {
             className="meme-canvas-templates"
             src={`${backend_uri}` + template.route}
             onClick={() => {
-              this.handleAddElement(
-                'image',
-                `${backend_uri}` + template.route,
-              )
+              this.handleAddElement('image', `${backend_uri}` + template.route)
               this.handleClose()
             }}
           />
@@ -385,6 +551,7 @@ class TextControl extends React.Component {
         {this.memeCanvasDialog()}
         {this.generatedImageDialog()}
         {this.shareDialog()}
+        {this.generateDialog()}
         <Card className="text-control-card">
           <div style={{ opacity: controlVisibility }}>
             <IconButton
@@ -481,24 +648,16 @@ class TextControl extends React.Component {
               Text
             </Button>
             <Button
-              style={{ margin: 5, marginLeft: 20 }}
-              variant="contained"
-              color="secondary"
-              startIcon={<SettingsIcon />}
-              onClick={() => this.handleGenerate()}
-              id="canvasgenback"
-            >
-              Generate (Backend)
-            </Button>
-            <Button
               style={{ margin: 5 }}
               variant="contained"
               color="secondary"
               startIcon={<SettingsIcon />}
-              onClick={() => this.browserGeneration()}
+              onClick={() => {
+                this.setState({ isGenerateDialogOpened: true })
+              }}
               id="canvasgenfront"
             >
-              Generate (Frontend)
+              Generate
             </Button>
             <IconButton
               variant="contained"

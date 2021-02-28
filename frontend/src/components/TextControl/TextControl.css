@@ -25,3 +25,11 @@
 .text-control-card .MuiChip-root {
   margin: 3px;
 }
+
+.generate-form-label:first-child{
+  margin-top: 0
+}
+
+.generate-form-label{
+  margin-top: 20px
+}
