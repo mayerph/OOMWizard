@@ -28,20 +28,18 @@ export const signIn = (form) => (dispatch) => {
     method: 'POST',
     body: formData,
     credentials: 'include',
-  }).then(
-    async (res) => {
-      var action
-      if (res.ok) {
-        action = { type: 'AUTH_SUCCESS', payload: { username: username } }
-      } else {
-        action = {
-          type: 'AUTH_FAILURE',
-          payload: { auth_err_msg: await res.text() },
-        }
+  }).then(async (res) => {
+    var action
+    if (res.ok) {
+      action = { type: 'AUTH_SUCCESS', payload: { username: username } }
+    } else {
+      action = {
+        type: 'AUTH_FAILURE',
+        payload: { auth_err_msg: await res.text() },
       }
-      dispatch(action)
-    },
-  )
+    }
+    dispatch(action)
+  })
 }
 
 export const signUp = (form) => (dispatch) => {

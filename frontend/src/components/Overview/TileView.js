@@ -90,14 +90,13 @@ class TileView extends React.Component {
   }
 
   upload_img_flip(tile) {
-    fetch(tile.url,)
+    fetch(tile.url)
       .then((res) => res.blob())
       .then((blob) => {
         var newfile = new File([blob], tile.name + '.jpg', { type: blob.type })
         var fd = new FormData()
         fd.append('template', newfile)
-        axios.post(`${destination}/templates/`, fd, {}).then((res) => {
-        })
+        axios.post(`${destination}/templates/`, fd, {}).then((res) => {})
       })
   }
   render_meta_info_subtitle(tile) {

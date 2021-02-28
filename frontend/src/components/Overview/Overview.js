@@ -133,7 +133,7 @@ class Overview extends React.Component {
         this.load_img_flip()
         break
       default:
-        break;
+        break
     }
   }
 

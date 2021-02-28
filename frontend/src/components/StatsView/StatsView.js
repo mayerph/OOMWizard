@@ -102,7 +102,7 @@ class StatsView extends React.Component {
         <>
           {/** refesh button */}
           <Box component="span" m={1} onClick={() => this.load_data()}>
-            <Button >
+            <Button>
               <RefreshIcon fontSize="small" />
             </Button>
           </Box>
