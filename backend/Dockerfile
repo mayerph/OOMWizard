@@ -15,6 +15,8 @@ RUN cargo --version
 RUN apt-get -y install ffmpeg
 RUN apt-get -y install git
 
+RUN wget http://ftp.de.debian.org/debian/pool/contrib/m/msttcorefonts/ttf-mscorefonts-installer_3.6_all.deb
+RUN apt-get -y install ./ttf-mscorefonts-installer_3.6_all.deb
 
 
 
