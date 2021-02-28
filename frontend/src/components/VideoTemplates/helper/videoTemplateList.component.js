@@ -79,8 +79,7 @@ const VideoTemplateList = (props) => {
     txtField.current.click()
   }
 
-  React.useEffect(() => {
-  }, [videoTemplateState])
+  React.useEffect(() => {}, [videoTemplateState])
 
   return (
     <div className={`${classes.root} test2`}>
@@ -91,6 +90,7 @@ const VideoTemplateList = (props) => {
         >
           <div className="template-upload">
             <input
+              accept="video/mp4"
               hidden
               onChange={onChangeHandler}
               ref={txtField}

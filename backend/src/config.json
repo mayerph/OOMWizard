@@ -2,7 +2,7 @@
     "database" : {
         "path_local" : "mongodb://localhost:27017/meme",
         "path" : "mongodb://mongo:27017/meme",
-        "local" : false
+        "local" : true
     },
     "server" : {
         "port" : 2000

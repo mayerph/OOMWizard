@@ -83,6 +83,7 @@ const GifTemplateList = (props) => {
         >
           <div className="template-upload">
             <input
+              accept="image/gif"
               hidden
               onChange={onChangeHandler}
               ref={txtField}
