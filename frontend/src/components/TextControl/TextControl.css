@@ -33,3 +33,7 @@
 .generate-form-label{
   margin-top: 20px
 }
+
+.text-control-chips > * {
+  margin: 5px;
+}

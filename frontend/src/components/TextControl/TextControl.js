@@ -24,6 +24,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Select from '@material-ui/core/Select'
 import { ShareDialog } from '../ShareDialog'
+import Tooltip from '@material-ui/core/Tooltip'
 import html2canvas from 'html2canvas'
 import {
   speechtocontrolmultiple,
@@ -33,6 +34,8 @@ import MicIcon from '@material-ui/icons/Mic'
 import Chip from '@material-ui/core/Chip'
 
 import * as config from '../../config.json'
+import Fade from '@material-ui/core/Fade'
+
 const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 
 class TextControl extends React.Component {
@@ -549,6 +552,24 @@ class TextControl extends React.Component {
       }
     }
   }
+  chipTooltip() {
+    return (
+      <div className={'text-control-chips'}>
+        <Chip icon={<MicIcon />} label="add image" color="secondary" />
+        <Chip icon={<MicIcon />} label="add text" color="secondary" />
+        <Chip icon={<MicIcon />} label="generate" color="secondary" />
+        <Chip icon={<MicIcon />} label="make text bigger" color="secondary" />
+        <Chip icon={<MicIcon />} label="make text smaller" color="secondary" />
+        <Chip icon={<MicIcon />} label="make text bold" color="secondary" />
+        <Chip icon={<MicIcon />} label="make text italic" color="secondary" />
+        <Chip icon={<MicIcon />} label="make text black" color="secondary" />
+        <Chip icon={<MicIcon />} label="make text white" color="secondary" />
+        <Chip icon={<MicIcon />} label="make text red" color="secondary" />
+        <Chip icon={<MicIcon />} label="make text green" color="secondary" />
+        <Chip icon={<MicIcon />} label="make text blue" color="secondary" />
+      </div>
+    )
+  }
 
   render() {
     let controlVisibility = this.props.editorState ? 1 : 0.2
@@ -673,87 +694,51 @@ class TextControl extends React.Component {
               color="primary"
               onClick={() => {
                 speechtotextcanvas(trying)
-
                 trying = !trying
               }}
             >
               <MicIcon />
             </IconButton>
-
-            <IconButton
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                speechtocontrolmultiple(
-                  [
-                    'canvasaddimage',
-                    'canvasaddtext',
-                    'canvasgenfront',
-                    'canvasincreasefont',
-                    'canvasdecreasefont',
-                    'canvasboldfont',
-                    'canvasitalicfont',
-                    'canvasblackfont',
-                    'canvaswhitefont',
-                    'canvasredfont',
-                    'canvasgreenfont',
-                    'canvasbluefont',
-                  ],
-                  [
-                    'add image',
-                    'add text',
-                    'generate',
-                    'make text bigger',
-                    'make text smaller',
-                    'make text bold',
-                    'make text italic',
-                    'make text black',
-                    'make text white',
-                    'make text red',
-                    'make text green',
-                    'make text blue',
-                  ],
-                )
-              }}
-            >
-              <MicIcon />
-            </IconButton>
-            <Chip icon={<MicIcon />} label="add image" color="secondary" />
-            <Chip icon={<MicIcon />} label="add text" color="secondary" />
-            <Chip icon={<MicIcon />} label="generate" color="secondary" />
-            <Chip
-              icon={<MicIcon />}
-              label="make text bigger"
-              color="secondary"
-            />
-            <Chip
-              icon={<MicIcon />}
-              label="make text smaller"
-              color="secondary"
-            />
-            <Chip icon={<MicIcon />} label="make text bold" color="secondary" />
-            <Chip
-              icon={<MicIcon />}
-              label="make text italic"
-              color="secondary"
-            />
-            <Chip
-              icon={<MicIcon />}
-              label="make text black"
-              color="secondary"
-            />
-            <Chip
-              icon={<MicIcon />}
-              label="make text white"
-              color="secondary"
-            />
-            <Chip icon={<MicIcon />} label="make text red" color="secondary" />
-            <Chip
-              icon={<MicIcon />}
-              label="make text green"
-              color="secondary"
-            />
-            <Chip icon={<MicIcon />} label="make text blue" color="secondary" />
+            <Tooltip TransitionComponent={Fade} title={this.chipTooltip()}>
+              <IconButton
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  speechtocontrolmultiple(
+                    [
+                      'canvasaddimage',
+                      'canvasaddtext',
+                      'canvasgenfront',
+                      'canvasincreasefont',
+                      'canvasdecreasefont',
+                      'canvasboldfont',
+                      'canvasitalicfont',
+                      'canvasblackfont',
+                      'canvaswhitefont',
+                      'canvasredfont',
+                      'canvasgreenfont',
+                      'canvasbluefont',
+                    ],
+                    [
+                      'add image',
+                      'add text',
+                      'generate',
+                      'make text bigger',
+                      'make text smaller',
+                      'make text bold',
+                      'make text italic',
+                      'make text black',
+                      'make text white',
+                      'make text red',
+                      'make text green',
+                      'make text blue',
+                    ],
+                  )
+                }}
+              >
+                <MicIcon />
+              </IconButton>
+            </Tooltip>
           </div>
         </Card>
       </div>
