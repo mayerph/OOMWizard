@@ -27,6 +27,15 @@ import GalleryView from './GalleryView'
 
 import { randomizeTD } from '../../reducers/apigetter'
 
+import {
+  speechtocontrolmultiplehome,
+  speechtotextreturn,
+} from '../speechtotext/speechtotext.js'
+import IconButton from '@material-ui/core/IconButton'
+import MicIcon from '@material-ui/icons/Mic'
+import Chip from '@material-ui/core/Chip'
+import './Overview.css'
+
 import * as config from '../../config.json'
 const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 
@@ -185,8 +194,10 @@ class Overview extends React.Component {
   }
 
   render() {
+    let trying = false
+    let tryingtwo = false
     return (
-      <Container style={{ marginTop: '10px' }}>
+      <Container style={{ marginTop: '10px' }} className="overview">
         <Card>
           <form>
             <Box display="flex" bgcolor="background.paper">
@@ -194,12 +205,38 @@ class Overview extends React.Component {
                 <InputBase
                   placeholder="Filter.."
                   onChange={(e) => this.setState({ filter: e.target.value })}
+                  id="filtertextfield"
                 ></InputBase>
+                <IconButton
+                  variant="contained"
+                  color="primary"
+                  id="filtertextfieldbutton"
+                  onClick={() => {
+                    speechtotextreturn(trying)
+                    const results = document.getElementById('results').innerHTML
+                    if (trying) {
+                      document.getElementById('filtertextfield').value = results
+                      this.setState({ filter: results })
+                      document.getElementById(
+                        'filtertextfieldbutton',
+                      ).style.backgroundColor = 'white'
+                    } else {
+                      document.getElementById(
+                        'filtertextfieldbutton',
+                      ).style.backgroundColor = 'red'
+                    }
+
+                    trying = !trying
+                  }}
+                >
+                  <MicIcon />
+                </IconButton>
+                <span id="results" hidden></span>
               </Box>
 
               {/** refesh button */}
               <Box component="span" m={1}>
-                <Button onClick={() => this.load_data()}>
+                <Button onClick={() => this.load_data()} id="overviewrefresh">
                   <RefreshIcon fontSize="small" />
                 </Button>
               </Box>
@@ -213,6 +250,7 @@ class Overview extends React.Component {
                       onChange={(e) => {
                         this.setState({ ownedOnly: e.target.checked })
                       }}
+                      id="overviewowned"
                     />
                   }
                   label="Owned"
@@ -228,6 +266,7 @@ class Overview extends React.Component {
                     this.setState({ sort_by: e.target.value })
                   }}
                   label="sort by"
+                  id="overviewsort"
                 >
                   <option value={'rating'}>Sorted by rating</option>
                   <option value={'views'}>Sorted by views</option>
@@ -244,6 +283,7 @@ class Overview extends React.Component {
                   onChange={(e) => {
                     this.setSource(e.target.value)
                   }}
+                  id="overviewselect"
                 >
                   <option value={'omm_memes'}>Wizard Memes</option>
                   <option value={'omm_templates'}>Wizard Templates</option>
@@ -268,16 +308,96 @@ class Overview extends React.Component {
                     this.setState({ mode: next })
                   }}
                 >
-                  <ToggleButton value="gallery">
+                  <ToggleButton value="gallery" id="overviewgallery">
                     <ViewCarouselIcon fontSize="small" />
                   </ToggleButton>
-                  <ToggleButton value="grid">
+                  <ToggleButton value="grid" id="overviewtile">
                     <ViewComfyIcon fontSize="small" />
                   </ToggleButton>
                 </ToogleButtonGroup>
               </Box>
             </Box>
           </form>
+          <IconButton
+            variant="contained"
+            color="secondary"
+            id="overviewcommandbutton"
+            onClick={() => {
+              speechtocontrolmultiplehome(
+                [
+                  'overviewrefresh',
+                  'overviewowned',
+                  'overviewgallery',
+                  'overviewtile',
+                  'overviewsort',
+                  'overviewsort',
+                  'overviewsort',
+                  'overviewsort',
+                  'overviewsort',
+                  'overviewselect',
+                  'overviewselect',
+                  'overviewselect',
+                  'overviewselect',
+                  'overviewselect',
+                  'overviewselect',
+                  'overviewselect',
+                ],
+                [
+                  'refresh',
+                  'show owned',
+                  'show gallery',
+                  'show tile',
+                  'sort by rating',
+                  'sort by views',
+                  'sort by date',
+                  'sort by comments',
+                  'sort by random',
+                  'show memes',
+                  'show templates',
+                  'show gif memes',
+                  'show gif templates',
+                  'show video memes',
+                  'show video templates',
+                  'show image flip',
+                ],
+              )
+              const results = document.getElementById('resultstwo').innerHTML
+              if (tryingtwo) {
+                console.log(results)
+                if (results.split(' ')[0] === 'sort') {
+                  console.log('made it into sort')
+                  this.setState({ sort_by: results.split(' ').pop() })
+                } else if (results.split(' ')[0] === 'showing') {
+                  this.setSource(results.split(' ')[1])
+                }
+                document.getElementById(
+                  'overviewcommandbutton',
+                ).style.backgroundColor = 'white'
+              } else {
+                document.getElementById(
+                  'overviewcommandbutton',
+                ).style.backgroundColor = 'red'
+              }
+              tryingtwo = !tryingtwo
+            }}
+          >
+            <MicIcon />
+          </IconButton>
+          <Chip icon={<MicIcon />} label="refresh" color="secondary" />
+          <Chip icon={<MicIcon />} label="show owned" color="secondary" />
+          <Chip icon={<MicIcon />} label="show gallery" color="secondary" />
+          <Chip icon={<MicIcon />} label="show tile" color="secondary" />
+          <Chip
+            icon={<MicIcon />}
+            label="sort by (rating/views/date/comments/random)"
+            color="secondary"
+          />
+          <Chip
+            icon={<MicIcon />}
+            label="show ((gif/video)memes/templates/image flip)"
+            color="secondary"
+          />
+          <span id="resultstwo" hidden></span>
           <Divider />
           {this.state.data ? (
             this.state.mode == 'grid' ? (

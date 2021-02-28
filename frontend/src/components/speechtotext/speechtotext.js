@@ -194,3 +194,80 @@ export function speechtocontrolmultiple(items, com) {
     speech.addEventListener('result', onResult)
   }
 }
+
+//speechcontrol just for the homepage
+export function speechtocontrolmultiplehome(items, com) {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition
+  const SpeechGrammarList =
+    window.SpeechGrammarList || window.webkitSpeechGrammarList
+  const SpeechRecognitionEvent =
+    window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent
+  let buttons = items
+  let commands = com
+  let grammar =
+    '#JSGF V1.0; grammar commands; public <command> = ' +
+    commands.join(' | ') +
+    ' ;'
+
+  if (typeof SpeechRecognition === 'undefined') {
+  } else {
+    const speech = new SpeechRecognition()
+    const recogList = new SpeechGrammarList()
+    recogList.addFromString(grammar, 1)
+    speech.continuous = false
+    speech.interimResults = false
+    speech.grammar = recogList
+
+    speech.start()
+
+    const onResult = (event) => {
+      let result = event.results[0][0].transcript.toLowerCase()
+      console.log(result)
+      let clicked = false
+      for (let i = 0; i < commands.length; i++) {
+        if (result === commands[i]) {
+          if (!document.getElementById(buttons[i]).disabled) {
+            if (buttons[i] === 'overviewsort') {
+              document.getElementById('resultstwo').innerHTML = commands[i]
+            } else if (buttons[i] === 'overviewselect') {
+              console.log('in overview select')
+              if (commands[i] === 'show memes') {
+                document.getElementById('resultstwo').innerHTML =
+                  'showing omm_memes'
+              } else if (commands[i] === 'show templates') {
+                document.getElementById('resultstwo').innerHTML =
+                  'showing omm_templates'
+              } else if (commands[i] === 'show gif memes') {
+                document.getElementById('resultstwo').innerHTML =
+                  'showing omm_gif_memes'
+              } else if (commands[i] === 'show gif templates') {
+                document.getElementById('resultstwo').innerHTML =
+                  'showing omm_gif_templates'
+              } else if (commands[i] === 'show video memes') {
+                document.getElementById('resultstwo').innerHTML =
+                  'showing omm_video_memes'
+              } else if (commands[i] === 'show video templates') {
+                document.getElementById('resultstwo').innerHTML =
+                  'showing omm_video_templates'
+              } else if (commands[i] === 'show image flip') {
+                document.getElementById('resultstwo').innerHTML =
+                  'showing ImgFlip'
+              }
+            } else {
+              document.getElementById(buttons[i]).click()
+            }
+          } else {
+            alert('please select a text field')
+          }
+          clicked = true
+        }
+      }
+      if (!clicked) {
+        alert('unknown command')
+      }
+    }
+
+    speech.addEventListener('result', onResult)
+  }
+}
