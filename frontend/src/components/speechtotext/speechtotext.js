@@ -8,6 +8,7 @@ export function speechtotext(fieldid, trying) {
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition
   if (typeof SpeechRecognition === 'undefined') {
+    alert('voice control feature works only in native chrome')
   } else {
     const testinput = document.getElementById(fieldid)
     console.log(testinput)
@@ -34,6 +35,7 @@ export function speechtotextreturn(trying) {
     window.SpeechRecognition || window.webkitSpeechRecognition
   const results = document.getElementById('results')
   if (typeof SpeechRecognition === 'undefined') {
+    alert('voice control feature works only in native chrome')
   } else {
     const speech = new SpeechRecognition()
     let result
@@ -67,6 +69,7 @@ export function speechtotextcanvas(trying) {
   if (textfields.length > 0) {
     const lasttextfield = textfields[textfields.length - 1]
     if (typeof SpeechRecognition === 'undefined') {
+      alert('voice control feature works only in native chrome')
     } else {
       const speech = new SpeechRecognition()
       let result
@@ -150,6 +153,7 @@ export function speechtocontrolmultiple(items, com) {
     ' ;'
 
   if (typeof SpeechRecognition === 'undefined') {
+    alert('voice control feature works only in native chrome')
   } else {
     const speech = new SpeechRecognition()
     const recogList = new SpeechGrammarList()
@@ -189,6 +193,108 @@ export function speechtocontrolmultiple(items, com) {
       } else {
         alert('unknown command')
       } */
+    }
+
+    speech.addEventListener('result', onResult)
+  }
+}
+
+//speechcontrol just for the homepage
+export function speechtocontrolmultiplehome(items, com) {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition
+  const SpeechGrammarList =
+    window.SpeechGrammarList || window.webkitSpeechGrammarList
+  const SpeechRecognitionEvent =
+    window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent
+  let buttons = items
+  let commands = com
+  let grammar =
+    '#JSGF V1.0; grammar commands; public <command> = ' +
+    commands.join(' | ') +
+    ' ;'
+
+  if (typeof SpeechRecognition === 'undefined') {
+    alert('voice control feature works only in native chrome')
+  } else {
+    const speech = new SpeechRecognition()
+    const recogList = new SpeechGrammarList()
+    recogList.addFromString(grammar, 1)
+    speech.continuous = false
+    speech.interimResults = false
+    speech.grammar = recogList
+
+    speech.start()
+
+    const onResult = (event) => {
+      let result = event.results[0][0].transcript.toLowerCase()
+      console.log(result)
+      let clicked = false
+      for (let i = 0; i < commands.length; i++) {
+        if (result === commands[i]) {
+          if (
+            buttons[i] === 'carouseldownloadbutton' ||
+            buttons[i] === 'gonext' ||
+            buttons[i] === 'gobefore'
+          ) {
+            const carol = document.querySelectorAll('div.CarouselItem')
+            if (carol.length > 0) {
+              if (buttons[i] === 'gonext' || buttons[i] === 'gobefore') {
+                if (buttons[i] === 'gonext') {
+                  document.querySelector('button[aria-label="Next"]').click()
+                } else {
+                  document
+                    .querySelector('button[aria-label="Previous"]')
+                    .click()
+                }
+              } else {
+                document.getElementById(buttons[i]).click()
+              }
+            } else {
+              alert('must be in carousel view to use this command')
+            }
+          } else {
+            if (!document.getElementById(buttons[i]).disabled) {
+              if (buttons[i] === 'overviewsort') {
+                document.getElementById('resultstwo').innerHTML = commands[i]
+              } else if (buttons[i] === 'overviewselect') {
+                console.log('in overview select')
+                if (commands[i] === 'show memes') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing omm_memes'
+                } else if (commands[i] === 'show templates') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing omm_templates'
+                } else if (commands[i] === 'show gif memes') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing omm_gif_memes'
+                } else if (commands[i] === 'show gif templates') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing omm_gif_templates'
+                } else if (commands[i] === 'show video memes') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing omm_video_memes'
+                } else if (commands[i] === 'show video templates') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing omm_video_templates'
+                } else if (commands[i] === 'show image flip') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing ImgFlip'
+                }
+              } else {
+                document.getElementById(buttons[i]).click()
+              }
+            } else {
+              alert('button is disabled')
+            }
+          }
+
+          clicked = true
+        }
+      }
+      if (!clicked) {
+        alert('unknown command')
+      }
     }
 
     speech.addEventListener('result', onResult)

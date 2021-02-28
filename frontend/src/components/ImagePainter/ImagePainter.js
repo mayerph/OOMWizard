@@ -8,6 +8,8 @@ import { Link, Redirect } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import { VoiceControl } from '../VoiceControl'
 
+import * as config from '../../config.json'
+const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 import './ImagePainter.css'
 
 class ImagePainter extends React.Component {
@@ -39,7 +41,7 @@ class ImagePainter extends React.Component {
             console.log(fd)
 
             axios
-              .post('http://localhost:2000/templates/', fd, {})
+              .post(`${backend_uri}/templates/`, fd, {})
               .then((res) => {
                 const element = {
                   x: 0,

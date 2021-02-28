@@ -9,6 +9,9 @@ import Input from '@material-ui/core/Input'
 import { Redirect } from 'react-router-dom'
 import { VoiceControl } from '../VoiceControl'
 
+import * as config from '../../config.json'
+const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
+
 class ImageUpload extends React.Component {
   constructor(props) {
     super(props)
@@ -22,7 +25,7 @@ class ImageUpload extends React.Component {
     const fd = new FormData()
     fd.append('template', file)
     axios
-      .post('http://localhost:2000/templates/', fd, {})
+      .post(`${backend_uri}/templates/`, fd, {})
       .then((res) => {
         console.log(res.statusText)
         const element = {

@@ -1,4 +1,6 @@
-import axios from 'axios'
+import * as config from '../config.json'
+const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
+
 export const addElement = (element) => ({
   type: 'ADD_ELEMENT',
   element,
@@ -33,14 +35,15 @@ export const getApi = (mode, apitype) => {
   let apiurl = null
   let atype = 'GET_API'
   if (apitype === 'template') {
-    apiurl = 'http://localhost:2000/templates/'
+    apiurl = `${backend_uri}/templates/`
   } else if (apitype === 'meme') {
-    apiurl = 'http://localhost:2000/memes/'
+    apiurl = `${backend_uri}/memes/`
     atype = 'GET_API_MEME'
   }
   return (dispatch) => {
     fetch(apiurl, {
       method: 'GET',
+      credentials: 'include',
     })
       .then((res) => res.json())
       .then((results) => {
@@ -48,7 +51,7 @@ export const getApi = (mode, apitype) => {
         //console.log(tileData)
         for (var i = 0; i < tileData.length; i++) {
           //console.log(tileData[i])
-          tileData[i].route = 'http://localhost:2000' + tileData[i].route
+          tileData[i].route = `${backend_uri}` + tileData[i].route
           tileData[i].url = tileData[i].route
         }
         //console.log(tileData)
@@ -66,6 +69,7 @@ export const getApiImgFlip = (mode, apitype) => {
   return (dispatch) => {
     fetch('https://api.imgflip.com/get_memes', {
       method: 'GET',
+      credentials: 'include',
     })
       .then((res) => res.json())
       .then((results) => {
@@ -92,6 +96,7 @@ export const randomize = () => {
   return (dispatch) => {
     fetch('https://api.imgflip.com/get_memes', {
       method: 'GET',
+      credentials: 'include',
     })
       .then((res) => res.json())
       .then((results) => {
@@ -109,6 +114,7 @@ export const sortByLikes = () => {
   return (dispatch) => {
     fetch('https://api.imgflip.com/get_memes', {
       method: 'GET',
+      credentials: 'include',
     })
       .then((res) => res.json())
       .then((results) => {
