@@ -112,7 +112,7 @@ const VideoTemplateList = (props) => {
                 upload
               </Button>
             </div>
-            <div>{file && file.name ? file.name : 'Select File'}</div>
+            <div>{file && file.name ? file.name : 'Select *.mp4'}</div>
           </div>
         </GridListTile>
         {videos.map((video, index) => (

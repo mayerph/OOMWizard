@@ -54,9 +54,13 @@
 
         https://docs.mongodb.com/manual/installation/
 
-#### II. Edit backend config 
-1. Open ./backend/src/config.json
-2. set database.local to false
+
+
+
+#### II. Backend preparation
+1. Go to ./backend
+2. Open ./src/config.json
+3. set database.local to false
 
         {
             "database" : {
@@ -66,11 +70,19 @@
             },
             ...    
         }
+4. Specify location of ffmpeg and ffprobe
+   
+        {
+            ...,
+            "ffmpeg" : {
+                "ffmpeg" : "ffmpeg",
+                "ffprobe" : "ffprobe"
+            },
+            ...
+        }
 
-#### III. Backend preparation
-1. Go to ./backend
-2. npm install
-3. npm run start
+5. npm install
+6. npm run start
 
 #### IV. Frontend preparation
 1. Go to ./frontend

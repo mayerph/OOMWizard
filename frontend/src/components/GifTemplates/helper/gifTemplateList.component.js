@@ -112,7 +112,7 @@ const GifTemplateList = (props) => {
                 upload
               </Button>
             </div>
-            <div>{file && file.name ? file.name : 'Select File'}</div>
+            <div>{file && file.name ? file.name : 'Select *.gif'}</div>
           </div>
         </GridListTile>
         {gifs.map((gif, index) => (
