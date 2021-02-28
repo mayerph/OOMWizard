@@ -667,19 +667,6 @@ const GifTemplates = (props) => {
                               <Palette />
                             </IconButton>
 
-                            <ColorPickerDialog
-                              open={colorpickerOpen}
-                              defaultColor={getCaptions()[index].color}
-                              handleClose={() => {
-                                setColorpickerOpen(false)
-                              }}
-                              handleOk={(color) => {
-                                const captionsVec = [...getCaptions()]
-                                captionsVec[index].color = color
-                                dispatch(updateCaptions(captionsVec))
-                                setColorpickerOpen(false)
-                              }}
-                            ></ColorPickerDialog>
                             <input
                               type="number"
                               id="tentacles"
@@ -705,7 +692,23 @@ const GifTemplates = (props) => {
             </div>
           </div>
         </div>
-        ;
+        <ColorPickerDialog
+          open={colorpickerOpen}
+          defaultColor={
+            getCaptions().length > 0
+              ? getCaptions()[activeCaption].color
+              : 'black'
+          }
+          handleClose={() => {
+            setColorpickerOpen(false)
+          }}
+          handleOk={(color) => {
+            const captionsVec = [...getCaptions()]
+            captionsVec[activeCaption].color = color
+            dispatch(updateCaptions(captionsVec))
+            setColorpickerOpen(false)
+          }}
+        ></ColorPickerDialog>
       </span>
     )
   } else {

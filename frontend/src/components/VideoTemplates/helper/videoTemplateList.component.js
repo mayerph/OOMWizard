@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 const VideoTemplateList = (props) => {
   const callback = props.callback
   const selectTemplate = (index) => {
+    console.log('hey ho')
     callback(index)
   }
 

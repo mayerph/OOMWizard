@@ -89,6 +89,7 @@ const videoTemplatesReducer = (state = DefaultState, action) => {
       temp_3.data.activeTemplate = temp_3.data.videoTemplates[action.payload]
       temp_3.data.captions = []
       temp_3.data.activeIndex = action.payload
+
       // delete captions from old active
       temp_3.data.videoTemplates[action.payload].frames.frames.map((e) => {
         delete e.captions
