@@ -42,7 +42,7 @@ export class LoginController {
           console.log(`Token for could not be validated (${err.name}: ${err.message})`)
         }
       }else{
-        console.log("No req.cookies.token available to verify, continue as normal user")
+        //console.log("No req.cookies.token available to verify, continue as normal user")
       }
       next()
     }
