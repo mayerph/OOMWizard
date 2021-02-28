@@ -679,7 +679,6 @@ class TextControl extends React.Component {
                   [
                     'canvasaddimage',
                     'canvasaddtext',
-                    'canvasgenback',
                     'canvasgenfront',
                     'canvasincreasefont',
                     'canvasdecreasefont',
@@ -694,8 +693,7 @@ class TextControl extends React.Component {
                   [
                     'add image',
                     'add text',
-                    'generate back',
-                    'generate front',
+                    'generate',
                     'make text bigger',
                     'make text smaller',
                     'make text bold',
@@ -713,8 +711,7 @@ class TextControl extends React.Component {
             </IconButton>
             <Chip icon={<MicIcon />} label="add image" color="secondary" />
             <Chip icon={<MicIcon />} label="add text" color="secondary" />
-            <Chip icon={<MicIcon />} label="generate back" color="secondary" />
-            <Chip icon={<MicIcon />} label="generate front" color="secondary" />
+            <Chip icon={<MicIcon />} label="generate" color="secondary" />
             <Chip
               icon={<MicIcon />}
               label="make text bigger"
