@@ -75,10 +75,6 @@ class StatsView extends React.Component {
             stats: result.timeline,
           },
         })
-      } else {
-        console.log(
-          `Response to fetch stats failed with ${res.status}:${res.statusText}.`,
-        )
       }
     })
   }
@@ -106,7 +102,7 @@ class StatsView extends React.Component {
         <>
           {/** refesh button */}
           <Box component="span" m={1} onClick={() => this.load_data()}>
-            <Button >
+            <Button>
               <RefreshIcon fontSize="small" />
             </Button>
           </Box>

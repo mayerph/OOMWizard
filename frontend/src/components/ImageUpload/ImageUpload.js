@@ -27,7 +27,6 @@ class ImageUpload extends React.Component {
     axios
       .post(`${backend_uri}/templates/`, fd, {})
       .then((res) => {
-        console.log(res.statusText)
         const element = {
           x: 0,
           y: 0,

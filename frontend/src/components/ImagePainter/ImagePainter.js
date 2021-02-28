@@ -30,7 +30,6 @@ class ImagePainter extends React.Component {
           width={500}
           height={500}
           onSave={(blob) => {
-            console.log(blob)
             var touse = blob
             var date = new Date().valueOf()
             var newfile = new File([touse], 'drawing' + date + '.png', {
@@ -38,7 +37,6 @@ class ImagePainter extends React.Component {
             })
             var fd = new FormData()
             fd.append('template', newfile)
-            console.log(fd)
 
             axios
               .post(`${backend_uri}/templates/`, fd, {})

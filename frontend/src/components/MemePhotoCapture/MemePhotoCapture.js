@@ -51,31 +51,24 @@ class MemePhotoCapture extends React.Component {
         ) : (
           <Camera
             onTakePhoto={(dataUri) => {
-              console.log(dataUri)
               var byteString = atob(dataUri.split(',')[1])
-              //console.log(byteString)
               var mimeString = dataUri.split(',')[0].split(':')[1].split(';')[0]
-              console.log(mimeString)
               var ia = new Uint8Array(byteString.length)
               for (var i = 0; i < byteString.length; i++) {
                 ia[i] = byteString.charCodeAt(i)
               }
-              console.log(ia)
               var blob = new Blob([ia], { type: mimeString })
-              console.log(blob)
               var date = new Date()
 
               var newfile = new File([blob], 'camera_' + 'test' + '.png', {
                 type: blob.type,
               })
-              console.log(newfile)
               var fd = new FormData()
               fd.append('template', newfile)
 
               axios
                 .post(`${backend_uri}/templates/`, fd, {})
                 .then((res) => {
-                  console.log(res)
                   const element = {
                     x: 0,
                     y: 0,

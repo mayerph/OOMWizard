@@ -4,7 +4,6 @@ import * as config from '../config.json'
 const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 
 const addCaptionToActiveTemplate = (caption) => (dispatch) => {
-  console.log('the fucking captions is', caption)
   dispatch({
     type: 'ADD_CAPTION_TO_GIF',
     payload: caption,
@@ -19,7 +18,6 @@ const updateFramesOfActiveTemplate = (frames) => (dispatch) => {
 }
 
 const updateCaptions = (captions) => (dispatch) => {
-  console.log('the fucking captions are', captions)
   dispatch({
     type: 'UPDATE_CAPTIONS_GIF',
     payload: captions,
@@ -45,7 +43,6 @@ const setActiveTemplate = (index) => (dispatch) => {
 
 const getGifTemplates = () => (dispatch) => {
   axios.get(`${destination}/gif/templates`).then(async (response) => {
-    console.log('the response is', response)
     dispatch({
       type: 'GET_GIF_TEMPLATES_SUCCESS',
       payload: response.data,

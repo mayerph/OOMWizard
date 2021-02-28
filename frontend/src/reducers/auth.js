@@ -7,7 +7,6 @@ const INITIAL_STATE = {
 const auth = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'AUTH_SUCCESS':
-      console.log('Welcome user:', action.payload.username)
       var new_state = {
         ...state,
         prompt: false,

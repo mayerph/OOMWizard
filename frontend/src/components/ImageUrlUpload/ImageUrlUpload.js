@@ -46,8 +46,6 @@ class ImageUrlUpload extends React.Component {
   uploadTemplate() {
     const container = document.getElementById('urlinput').value
     const containername = document.getElementById('nameinput').value
-    console.log(container)
-    console.log(containername)
     if (this.validURL(container)) {
       fetch(container)
         .then((res) => res.blob())
@@ -59,7 +57,6 @@ class ImageUrlUpload extends React.Component {
           } else {
             nameofmeme = container.split('/').pop()
           }
-          console.log(nameofmeme)
           var newfile = new File([blob], nameofmeme, {
             type: blob.type,
           })
@@ -68,7 +65,6 @@ class ImageUrlUpload extends React.Component {
           axios
             .post(`${backend_uri}/templates/`, fd, {})
             .then((res) => {
-              console.log(res.statusText)
               const element = {
                 x: 0,
                 y: 0,
@@ -132,7 +128,6 @@ class ImageUrlUpload extends React.Component {
               variant="contained"
               color="primary"
               onClick={() => {
-                console.log(trying)
                 speechtotext('nameinput', trying)
                 trying = !trying
               }}

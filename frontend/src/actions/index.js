@@ -48,13 +48,10 @@ export const getApi = (mode, apitype) => {
       .then((res) => res.json())
       .then((results) => {
         var tileData = results
-        //console.log(tileData)
         for (var i = 0; i < tileData.length; i++) {
-          //console.log(tileData[i])
           tileData[i].route = `${backend_uri}` + tileData[i].route
           tileData[i].url = tileData[i].route
         }
-        //console.log(tileData)
         dispatch({
           type: atype,
           payload: tileData,
@@ -74,7 +71,6 @@ export const getApiImgFlip = (mode, apitype) => {
       .then((res) => res.json())
       .then((results) => {
         var tileData = results.data.memes
-        //console.log(tileData)
         dispatch({
           type: 'GET_API',
           payload: tileData,
@@ -87,9 +83,7 @@ export const getApiImgFlip = (mode, apitype) => {
 export const uploadUrl = (url) => {
   fetch(url)
     .then((res) => res.blob())
-    .then((blob) => {
-      //console.log(blob)
-    })
+    .then((blob) => {})
 }
 
 export const randomize = () => {
@@ -101,7 +95,6 @@ export const randomize = () => {
       .then((res) => res.json())
       .then((results) => {
         var tileData = results.data.memes
-        //console.log(tileData);
         dispatch({ type: 'RANDOMIZE', payload: tileData })
       })
   }
@@ -119,7 +112,6 @@ export const sortByLikes = () => {
       .then((res) => res.json())
       .then((results) => {
         var tileData = results.data.memes
-        //console.log(tileData);
         dispatch({ type: 'SORTBYLIKES', payload: tileData })
       })
   }
@@ -131,7 +123,6 @@ export const autoplay = (state) => ({
 })
 
 export const changeActive = (state, index) => {
-  console.log(state)
   return (dispatch) => {
     dispatch({ type: 'ACTIVE', index: index, state })
   }

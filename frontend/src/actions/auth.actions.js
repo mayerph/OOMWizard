@@ -12,7 +12,10 @@ export const close_prompt = () => (dispatch) => {
 }
 
 export const logout = () => (dispatch) => {
-  fetch(`${backend_uri}/auth/logout`, { method: 'POST' }).then(
+  fetch(`${backend_uri}/auth/logout`, {
+    method: 'POST',
+    credentials: 'include',
+  }).then(
     async (res) => dispatch({ type: 'LOGGED_OUT' }),
     async (error) => dispatch({ type: 'LOGGED_OUT' }),
   )
@@ -25,22 +28,18 @@ export const signIn = (form) => (dispatch) => {
     method: 'POST',
     body: formData,
     credentials: 'include',
-  }).then(
-    async (res) => {
-      console.log('executed sigin callback')
-      var action
-      if (res.ok) {
-        action = { type: 'AUTH_SUCCESS', payload: { username: username } }
-      } else {
-        action = {
-          type: 'AUTH_FAILURE',
-          payload: { auth_err_msg: await res.text() },
-        }
+  }).then(async (res) => {
+    var action
+    if (res.ok) {
+      action = { type: 'AUTH_SUCCESS', payload: { username: username } }
+    } else {
+      action = {
+        type: 'AUTH_FAILURE',
+        payload: { auth_err_msg: await res.text() },
       }
-      dispatch(action)
-    },
-    (error) => console.log(error),
-  )
+    }
+    dispatch(action)
+  })
 }
 
 export const signUp = (form) => (dispatch) => {

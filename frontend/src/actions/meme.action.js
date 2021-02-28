@@ -60,7 +60,6 @@ const getMemes = () => (dispatch) => {
  */
 const generateMeme = (meme) => {
   return new Promise(async (resolve, reject) => {
-    console.log({ template: meme.template, captions: meme.captions })
     fetch(`${destination}/memes/file`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Filename: '' },
@@ -73,7 +72,6 @@ const generateMeme = (meme) => {
         const filename = res.headers.get('filename')
         const mimeType = res.headers.get('content-type')
         const meme = await res.blob()
-        console.log(meme)
         download(meme, filename, mimeType)
         resolve('meme')
         return

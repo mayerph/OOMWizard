@@ -59,13 +59,9 @@ class ImageScreenshotUpload extends React.Component {
       'https://screenshotapi.net/api/v1/screenshot?url=' +
       con +
       '&token=OUDJTUY8KF6SXUK6ZBDOKHSA2U9NVYKA'
-    console.log(container)
-
-    console.log(containername)
 
     if (this.validURL(con)) {
       axios.get(container).then((res) => {
-        console.log(res.data)
         let screen = res.data.screenshot
         fetch(screen)
           .then((res) => res.blob())
@@ -85,7 +81,6 @@ class ImageScreenshotUpload extends React.Component {
             axios
               .post(`${backend_uri}/templates/`, fd, {})
               .then((res) => {
-                console.log(res.statusText)
                 const element = {
                   x: 0,
                   y: 0,
@@ -151,16 +146,8 @@ class ImageScreenshotUpload extends React.Component {
               variant="contained"
               color="primary"
               onClick={() => {
-                //console.log(trying)
                 speechtotext('screennameinput', trying)
-                //console.log(trying)
                 trying = !trying
-                //let test
-                //test = speechtotextreturn(trying)
-                //console.log(test)
-                //const results = document.getElementById('results').innerHTML
-                //console.log(results)
-                //trying = !trying
               }}
             >
               <MicIcon />

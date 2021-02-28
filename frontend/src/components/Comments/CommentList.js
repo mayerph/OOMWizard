@@ -38,19 +38,12 @@ class CommentSection extends React.Component {
 
     fetch(url, {
       method: 'GET',
-    }).then(
-      async (res) => {
-        if (res.ok) {
-          let json = await res.json()
-          this.setState({ comments: json.comments })
-        } else {
-          console.log(
-            `Response to fetch comments failed with ${res.status}:${res.statusText}.`,
-          )
-        }
-      },
-      (reason) => console.log(reason),
-    )
+    }).then(async (res) => {
+      if (res.ok) {
+        let json = await res.json()
+        this.setState({ comments: json.comments })
+      }
+    })
   }
 
   post_comment(comment) {
@@ -63,19 +56,12 @@ class CommentSection extends React.Component {
       method: 'POST',
       body: formData,
       credentials: 'include',
-    }).then(
-      async (res) => {
-        if (res.ok) {
-          let json = await res.json()
-          this.setState({ comments: json.comments })
-        } else {
-          console.log(
-            `Response to post comments failed with ${res.status}:${res.statusText}.`,
-          )
-        }
-      },
-      (reason) => console.log(reason),
-    )
+    }).then(async (res) => {
+      if (res.ok) {
+        let json = await res.json()
+        this.setState({ comments: json.comments })
+      }
+    })
   }
 
   render_comments() {

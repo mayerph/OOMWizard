@@ -80,7 +80,6 @@ class ResizableText extends React.Component {
     const canvas = document
       .getElementById('meme-canvas')
       .getBoundingClientRect()
-    console.log(ref)
     text.width = ref.getBoundingClientRect().width
     text.height = ref.getBoundingClientRect().height
     text.x = ref.getBoundingClientRect().left - canvas.left
@@ -116,7 +115,6 @@ class ResizableText extends React.Component {
     let focusedTextBorderColor = this.state.disableDragging
       ? 'blue'
       : 'rgba(0,0,0,0)'
-    console.log(cursor)
     return (
       <Rnd
         style={{

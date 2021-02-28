@@ -35,6 +35,8 @@ import IconButton from '@material-ui/core/IconButton'
 import MicIcon from '@material-ui/icons/Mic'
 import Chip from '@material-ui/core/Chip'
 import './Overview.css'
+import Tooltip from '@material-ui/core/Tooltip'
+import Fade from '@material-ui/core/Fade'
 
 import * as config from '../../config.json'
 const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
@@ -63,7 +65,6 @@ class Overview extends React.Component {
     })
       .then((res) => res.json())
       .then((meta_infos) => {
-        console.log('wizard:', data)
         let result = data.map((e, i) => {
           return {
             ...e,
@@ -71,7 +72,6 @@ class Overview extends React.Component {
             fileending: '.' + e.url.split('.').slice(-1)[0],
           }
         })
-        console.log('Loaded:', result)
         this.setState({
           source: source,
           data: result,
@@ -120,10 +120,10 @@ class Overview extends React.Component {
         this.load_omm_wizard(source, '', false, 'img')
         break
       case 'omm_gif_templates':
-        this.load_omm_wizard(source, '/gif', true, 'gif')
+        this.load_omm_wizard(source, '/gif', false, 'gif')
         break
       case 'omm_gif_memes':
-        this.load_omm_wizard(source, '/gif', false, 'gif')
+        this.load_omm_wizard(source, '/gif', true, 'gif')
         break
       case 'omm_video_memes':
         this.load_omm_wizard(source, '/video', true, 'video')
@@ -135,7 +135,7 @@ class Overview extends React.Component {
         this.load_img_flip()
         break
       default:
-        console.log('No valid load data specifier')
+        break
     }
   }
 
@@ -168,7 +168,6 @@ class Overview extends React.Component {
   }
 
   setSource(source) {
-    console.log('setting source: ', source)
     this.setState({ data: undefined, source: source })
     this.load_data(source)
   }
@@ -191,6 +190,30 @@ class Overview extends React.Component {
     }
     result = this.sort(result)
     return result
+  }
+
+  chipTooltip() {
+    return (
+      <div className={'text-control-chips'}>
+        <Chip icon={<MicIcon />} label="refresh" color="secondary" />
+        <Chip icon={<MicIcon />} label="show owned" color="secondary" />
+        <Chip icon={<MicIcon />} label="show gallery" color="secondary" />
+        <Chip icon={<MicIcon />} label="show tile" color="secondary" />
+        <Chip
+          icon={<MicIcon />}
+          label="sort by (rating/views/date/comments/random)"
+          color="secondary"
+        />
+        <Chip
+          icon={<MicIcon />}
+          label="show ((gif/video)memes/templates/image flip)"
+          color="secondary"
+        />
+        <Chip icon={<MicIcon />} label="next image" color="secondary" />
+        <Chip icon={<MicIcon />} label="previous image" color="secondary" />
+        <Chip icon={<MicIcon />} label="download image" color="secondary" />
+      </div>
+    )
   }
 
   render() {
@@ -318,94 +341,83 @@ class Overview extends React.Component {
               </Box>
             </Box>
           </form>
-          <IconButton
-            variant="contained"
-            color="secondary"
-            id="overviewcommandbutton"
-            onClick={() => {
-              speechtocontrolmultiplehome(
-                [
-                  'overviewrefresh',
-                  'overviewowned',
-                  'overviewgallery',
-                  'overviewtile',
-                  'overviewsort',
-                  'overviewsort',
-                  'overviewsort',
-                  'overviewsort',
-                  'overviewsort',
-                  'overviewselect',
-                  'overviewselect',
-                  'overviewselect',
-                  'overviewselect',
-                  'overviewselect',
-                  'overviewselect',
-                  'overviewselect',
-                  'carouseldownloadbutton',
-                  'gonext',
-                  'gobefore',
-                ],
-                [
-                  'refresh',
-                  'show owned',
-                  'show gallery',
-                  'show tile',
-                  'sort by rating',
-                  'sort by views',
-                  'sort by date',
-                  'sort by comments',
-                  'sort by random',
-                  'show memes',
-                  'show templates',
-                  'show gif memes',
-                  'show gif templates',
-                  'show video memes',
-                  'show video templates',
-                  'show image flip',
-                  'download image',
-                  'next image',
-                  'previous image',
-                ],
-              )
-              const results = document.getElementById('resultstwo').innerHTML
-              if (tryingtwo) {
-                console.log(results)
-                if (results.split(' ')[0] === 'sort') {
-                  console.log('made it into sort')
-                  this.setState({ sort_by: results.split(' ').pop() })
-                } else if (results.split(' ')[0] === 'showing') {
-                  this.setSource(results.split(' ')[1])
-                }
-                document.getElementById(
-                  'overviewcommandbutton',
-                ).style.backgroundColor = 'white'
-              } else {
-                document.getElementById(
-                  'overviewcommandbutton',
-                ).style.backgroundColor = 'red'
+          <Tooltip TransitionComponent={Fade} title={this.chipTooltip()}>
+            <Chip
+              avatar={
+                <IconButton variant="contained" color="secondary">
+                  <MicIcon />
+                </IconButton>
               }
-              tryingtwo = !tryingtwo
-            }}
-          >
-            <MicIcon />
-          </IconButton>
-          <Chip icon={<MicIcon />} label="refresh" color="secondary" />
-          <Chip icon={<MicIcon />} label="show owned" color="secondary" />
-          <Chip icon={<MicIcon />} label="show gallery" color="secondary" />
-          <Chip icon={<MicIcon />} label="show tile" color="secondary" />
-          <Chip
-            icon={<MicIcon />}
-            label="sort by (rating/views/date/comments/random)"
-            color="secondary"
-          />
-          <Chip
-            icon={<MicIcon />}
-            label="show ((gif/video)memes/templates/image flip)"
-            color="secondary"
-          />
-          <Chip icon={<MicIcon />} label="next image" color="secondary" />
-          <Chip icon={<MicIcon />} label="previous image" color="secondary" />
-          <Chip icon={<MicIcon />} label="download image" color="secondary" />
+              label="Dictate Action"
+              clickable
+              color="secondary"
+              id="overviewcommandbutton"
+              onClick={() => {
+                speechtocontrolmultiplehome(
+                  [
+                    'overviewrefresh',
+                    'overviewowned',
+                    'overviewgallery',
+                    'overviewtile',
+                    'overviewsort',
+                    'overviewsort',
+                    'overviewsort',
+                    'overviewsort',
+                    'overviewsort',
+                    'overviewselect',
+                    'overviewselect',
+                    'overviewselect',
+                    'overviewselect',
+                    'overviewselect',
+                    'overviewselect',
+                    'overviewselect',
+                    'carouseldownloadbutton',
+                    'gonext',
+                    'gobefore',
+                  ],
+                  [
+                    'refresh',
+                    'show owned',
+                    'show gallery',
+                    'show tile',
+                    'sort by rating',
+                    'sort by views',
+                    'sort by date',
+                    'sort by comments',
+                    'sort by random',
+                    'show memes',
+                    'show templates',
+                    'show gif memes',
+                    'show gif templates',
+                    'show video memes',
+                    'show video templates',
+                    'show image flip',
+                    'download image',
+                    'next image',
+                    'previous image',
+                  ],
+                )
+                const results = document.getElementById('resultstwo').innerHTML
+                if (tryingtwo) {
+                  console.log(results)
+                  if (results.split(' ')[0] === 'sort') {
+                    console.log('made it into sort')
+                    this.setState({ sort_by: results.split(' ').pop() })
+                  } else if (results.split(' ')[0] === 'showing') {
+                    this.setSource(results.split(' ')[1])
+                  }
+                  document.getElementById(
+                    'overviewcommandbutton',
+                  ).style.backgroundColor = '#C51162'
+                } else {
+                  document.getElementById(
+                    'overviewcommandbutton',
+                  ).style.backgroundColor = 'green'
+                }
+                tryingtwo = !tryingtwo
+              }}
+            ></Chip>
+          </Tooltip>
           <span id="resultstwo" hidden></span>
           <Divider />
           {this.state.data ? (
