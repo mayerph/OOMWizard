@@ -120,10 +120,10 @@ class Overview extends React.Component {
         this.load_omm_wizard(source, '', false, 'img')
         break
       case 'omm_gif_templates':
-        this.load_omm_wizard(source, '/gif', true, 'gif')
+        this.load_omm_wizard(source, '/gif', false, 'gif')
         break
       case 'omm_gif_memes':
-        this.load_omm_wizard(source, '/gif', false, 'gif')
+        this.load_omm_wizard(source, '/gif', true, 'gif')
         break
       case 'omm_video_memes':
         this.load_omm_wizard(source, '/video', true, 'video')
