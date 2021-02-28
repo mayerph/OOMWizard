@@ -8,6 +8,7 @@ export function speechtotext(fieldid, trying) {
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition
   if (typeof SpeechRecognition === 'undefined') {
+    alert('voice control feature works only in native chrome')
   } else {
     const testinput = document.getElementById(fieldid)
     console.log(testinput)
@@ -34,6 +35,7 @@ export function speechtotextreturn(trying) {
     window.SpeechRecognition || window.webkitSpeechRecognition
   const results = document.getElementById('results')
   if (typeof SpeechRecognition === 'undefined') {
+    alert('voice control feature works only in native chrome')
   } else {
     const speech = new SpeechRecognition()
     let result
@@ -67,6 +69,7 @@ export function speechtotextcanvas(trying) {
   if (textfields.length > 0) {
     const lasttextfield = textfields[textfields.length - 1]
     if (typeof SpeechRecognition === 'undefined') {
+      alert('voice control feature works only in native chrome')
     } else {
       const speech = new SpeechRecognition()
       let result
@@ -150,6 +153,7 @@ export function speechtocontrolmultiple(items, com) {
     ' ;'
 
   if (typeof SpeechRecognition === 'undefined') {
+    alert('voice control feature works only in native chrome')
   } else {
     const speech = new SpeechRecognition()
     const recogList = new SpeechGrammarList()
@@ -211,6 +215,7 @@ export function speechtocontrolmultiplehome(items, com) {
     ' ;'
 
   if (typeof SpeechRecognition === 'undefined') {
+    alert('voice control feature works only in native chrome')
   } else {
     const speech = new SpeechRecognition()
     const recogList = new SpeechGrammarList()
