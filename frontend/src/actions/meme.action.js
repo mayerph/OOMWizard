@@ -9,6 +9,7 @@ const destination = `${config.backend.protocol}://${config.backend.server}:${con
 const getMeme = (id) => (dispatch) => {
   fetch(`${destination}/memes/${id}`, {
     method: 'GET',
+    credentials: 'include',
   }).then(async (response) => {
     dispatch({
       type: 'GET_MEME_LOADING',
@@ -34,6 +35,7 @@ const getMeme = (id) => (dispatch) => {
 const getMemes = () => (dispatch) => {
   fetch(`${destination}/memes/`, {
     method: 'GET',
+    credentials: 'include',
   }).then(async (response) => {
     dispatch({
       type: 'GET_MEMES_LOADING',
@@ -62,6 +64,7 @@ const generateMeme = (meme) => {
     fetch(`${destination}/memes/file`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Filename: '' },
+      credentials: 'include',
       body: JSON.stringify({
         memes: [{ template: meme.template, captions: meme.captions }],
       }),

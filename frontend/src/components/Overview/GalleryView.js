@@ -50,7 +50,7 @@ class GalleryView extends React.Component {
     switch (tile.file_type) {
       case 'video':
         return (
-          <video autoPlay loop controls height="400vh">
+          <video autoPlay loop controls height="400">
             <source src={tile.route} type="video/mp4" />
           </video>
         )

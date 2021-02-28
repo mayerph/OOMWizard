@@ -37,6 +37,7 @@ export const getApi = (mode, apitype) => {
   return (dispatch) => {
     fetch(apiurl, {
       method: 'GET',
+      credentials: 'include',
     })
       .then((res) => res.json())
       .then((results) => {
@@ -62,6 +63,7 @@ export const getApiImgFlip = (mode, apitype) => {
   return (dispatch) => {
     fetch('https://api.imgflip.com/get_memes', {
       method: 'GET',
+      credentials: 'include',
     })
       .then((res) => res.json())
       .then((results) => {
@@ -88,6 +90,7 @@ export const randomize = () => {
   return (dispatch) => {
     fetch('https://api.imgflip.com/get_memes', {
       method: 'GET',
+      credentials: 'include',
     })
       .then((res) => res.json())
       .then((results) => {
@@ -105,6 +108,7 @@ export const sortByLikes = () => {
   return (dispatch) => {
     fetch('https://api.imgflip.com/get_memes', {
       method: 'GET',
+      credentials: 'include',
     })
       .then((res) => res.json())
       .then((results) => {

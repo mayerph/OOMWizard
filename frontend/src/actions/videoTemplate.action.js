@@ -36,6 +36,7 @@ const setActiveTemplate = (index) => (dispatch) => {
 const getVideoTemplates = () => (dispatch) => {
   fetch(`${destination}/video/templates`, {
     method: 'GET',
+    credentials: 'include',
   }).then(async (response) => {
     dispatch({
       type: 'GET_VIDEO_TEMPLATES_LOADING',

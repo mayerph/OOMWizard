@@ -44,7 +44,9 @@ class TextControl extends React.Component {
   }
 
   handleMemeCanvasDialogOpen() {
-    fetch('http://localhost:2000/templates/')
+    fetch('http://localhost:2000/templates/', {
+      credentials: 'include',
+    })
       .then((response) => response.json())
       .then((data) => {
         this.setState({
@@ -283,6 +285,7 @@ class TextControl extends React.Component {
 
     fetch('http://localhost:2000/memes/', {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
