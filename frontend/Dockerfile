@@ -1,15 +1,16 @@
-FROM node:alpine
+FROM node:lts-alpine
 
 WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
 
 COPY package*.json /app/
+RUN npm install 
+RUN npm install react-scripts -g
 
-RUN npm install
+COPY . /app/
 
-COPY . /opt/app/
-
-RUN npm run build
+RUN npm run build 
 
 EXPOSE 3000
 
-CMD [ "node", "dist/server.js" ]
+CMD ["npm", "start"]
