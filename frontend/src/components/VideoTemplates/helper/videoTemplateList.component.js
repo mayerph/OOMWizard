@@ -1,20 +1,12 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useRef,
-  useCallback,
-  useState,
-  useLayoutEffect,
-} from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
 import GridListTileBar from '@material-ui/core/GridListTileBar'
-import IconButton from '@material-ui/core/IconButton'
-import StarBorderIcon from '@material-ui/icons/StarBorder'
+
 import Button from '@material-ui/core/Button'
 import * as config from '../../../config.json'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import './videoTemplateList.style.css'
 import { addNewTemplate } from '../../../actions/videoTemplate.action'
 const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
