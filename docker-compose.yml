@@ -1,0 +1,36 @@
+version: "3"
+services:
+  frontend:
+    container_name: omm-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+        - '3000:3000'
+    depends_on:
+        - backend
+    networks:
+        - be
+
+  backend:
+    container_name: omm-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "2000:2000"
+    depends_on:
+      - mongo
+    networks:
+      - be
+      - db
+
+  mongo:
+    image: mongo
+    networks:
+      - db
+    volumes:
+      - ./data:/data/db
+networks:
+  be:
+  db:

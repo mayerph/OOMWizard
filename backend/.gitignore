@@ -10,5 +10,5 @@ dist/
 key.pem
 certificate.pem
 .idea/
-
+data
 storage/gifs/templates/*/frames/*.png

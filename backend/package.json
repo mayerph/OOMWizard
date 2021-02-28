@@ -29,7 +29,7 @@
     "gifshot": "^0.4.5",
     "jest-html-reporters": "^2.1.1",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.10.17",
+    "mongoose": "~5.10.1",
     "png-file-stream": "^1.2.1",
     "uuid": "^8.3.1",
     "xss": "^1.0.8"
@@ -40,7 +40,7 @@
     "@types/express-fileupload": "^1.1.6",
     "@types/gifencoder": "^2.0.0",
     "@types/jest": "^26.0.15",
-    "@types/mongoose": "^5.10.1",
+    "@types/mongoose": "~5.10.1",
     "@types/typescript": "^2.0.0",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.8.2",

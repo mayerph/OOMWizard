@@ -1,0 +1,16 @@
+example-data/
+node_modules
+.git
+.gitignore
+Dockerfile
+.dockerignore
+build
+bin
+.vscode
+.idea
+.gradle
+.gitlab-ci.yml
+.classpath
+.settings
+.project
+package-lock.json

@@ -12,7 +12,7 @@ var crypto = require("crypto")
 // it will change every time we start
 const jwtKey = uuidv4().toString()
 // logout users automatically after 300 seconds
-const jwtExpirySeconds = 300
+const jwtExpirySeconds = 300000
 
 const createAndSetJwtToken = (res: Response, username: String) => {
   const token = jwt.sign({ username: username }, jwtKey, {
@@ -42,7 +42,7 @@ export class LoginController {
           console.log(`Token for could not be validated (${err.name}: ${err.message})`)
         }
       }else{
-        console.log("No req.cookies.token available to verify, continue as normal user")
+        //console.log("No req.cookies.token available to verify, continue as normal user")
       }
       next()
     }

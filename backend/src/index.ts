@@ -39,7 +39,7 @@ app.use(
 )
 
 mongoose.connect(
-  config.database.path,
+  config.database.local ? config.database.path_local : config.database.path,
   {
     useCreateIndex: true,
     useNewUrlParser: true,
