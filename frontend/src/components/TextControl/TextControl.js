@@ -24,6 +24,9 @@ import {
 import MicIcon from '@material-ui/icons/Mic'
 import Chip from '@material-ui/core/Chip'
 
+import * as config from '../../config.json'
+const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
+
 class TextControl extends React.Component {
   constructor(props) {
     super(props)
@@ -44,7 +47,7 @@ class TextControl extends React.Component {
   }
 
   handleMemeCanvasDialogOpen() {
-    fetch('http://localhost:2000/templates/', {
+    fetch(`${backend_uri}/templates/`, {
       credentials: 'include',
     })
       .then((response) => response.json())
@@ -283,7 +286,7 @@ class TextControl extends React.Component {
     }
     console.log(postData)
 
-    fetch('http://localhost:2000/memes/', {
+    fetch(`${backend_uri}/memes/`, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -295,7 +298,7 @@ class TextControl extends React.Component {
       .then((data) => {
         console.log('Success:', data)
         this.setState({
-          generatedImageUrl: 'http://localhost:2000' + data.route,
+          generatedImageUrl: `${backend_uri}` + data.route,
           generatedMeme: data,
           isImageGenerated: true,
         })
@@ -312,11 +315,11 @@ class TextControl extends React.Component {
           <img
             key={template.id}
             className="meme-canvas-templates"
-            src={'http://localhost:2000' + template.route}
+            src={`${backend_uri}` + template.route}
             onClick={() => {
               this.handleAddElement(
                 'image',
-                'http://localhost:2000' + template.route,
+                `${backend_uri}` + template.route,
               )
               this.handleClose()
             }}

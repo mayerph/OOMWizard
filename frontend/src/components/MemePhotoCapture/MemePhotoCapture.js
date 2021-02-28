@@ -9,6 +9,9 @@ import 'react-html5-camera-photo/build/css/index.css'
 import { Redirect } from 'react-router-dom'
 import { VoiceControl } from '../VoiceControl'
 
+import * as config from '../../config.json'
+const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
+
 //https://stackoverflow.com/questions/4998908/convert-data-uri-to-file-then-append-to-formdata
 //got partially stuck when understanding how javascript handles datauri, here how I understanded the code snippet in the onTakePhoto function
 //dataURI = the data for the image, in format [data details],[actual data] whereas data details in in format "data:image/png;base64"
@@ -73,7 +76,7 @@ class MemePhotoCapture extends React.Component {
               fd.append('template', newfile)
 
               axios
-                .post('http://localhost:2000/templates/', fd, {})
+                .post(`${backend_uri}/templates/`, fd, {})
                 .then((res) => {
                   console.log(res)
                   this.setState({

@@ -17,6 +17,9 @@ import MicIcon from '@material-ui/icons/Mic'
 import Chip from '@material-ui/core/Chip'
 import { VoiceControl } from '../VoiceControl'
 
+import * as config from '../../config.json'
+const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
+
 class ImageUrlUpload extends React.Component {
   constructor(props) {
     super(props)
@@ -63,7 +66,7 @@ class ImageUrlUpload extends React.Component {
           var fd = new FormData()
           fd.append('template', newfile)
           axios
-            .post('http://localhost:2000/templates/', fd, {})
+            .post(`${backend_uri}/templates/`, fd, {})
             .then((res) => {
               console.log(res.statusText)
               this.setState({
