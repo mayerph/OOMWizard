@@ -148,11 +148,16 @@ export class MemeController {
       // create filename
       const filename = this.createFilename()
 
-      // create canvas
-      const canvas = await this.createMemeCanvas(
-        meme.captions,
-        meme.template.name
-      )
+      let canvas
+      if (meme.images) {
+        canvas = await this.createMultiImageMemeCanvas(
+          meme.captions,
+          meme.images,
+          meme.canvas
+        )
+      } else {
+        canvas = await this.createMemeCanvas(meme.captions, meme.template.name)
+      }
 
       // write meme to filesystem
       const filepath = await this.writeMemeToFile(canvas.toBuffer(), filename)

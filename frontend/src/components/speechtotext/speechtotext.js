@@ -1,6 +1,9 @@
 //speech to text only works in chrome!
+//speech implementation idea from
+//https://www.twilio.com/blog/speech-recognition-browser-web-speech-api and https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API/Using_the_Web_Speech_API
 // this function takes the id of the field we want to chage and a variable telling it if we start or stop voice input
 // once voice input is taken, it replaces the text inside of the text field
+// this one is continuous, so it will keep on updating as long as there is continuous text input
 export function speechtotext(fieldid, trying) {
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition
@@ -56,6 +59,9 @@ export function speechtotextreturn(trying) {
   }
 }
 
+//the following functions are to do certain commands (click on a button) using voice control
+// These are non continuous, so they only listen for a phrase and we predefine some in the SpeechGrammarList
+// once the user says the command, the action (button being pressed) is fired
 export function speechtocontrol(fieldid) {
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition

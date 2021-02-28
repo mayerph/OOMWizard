@@ -65,8 +65,6 @@ class MainApp extends React.Component {
               <Tab label="Add Image Template" icon={<CloudUpload />} />
               <Tab label="Create Gif Meme" icon={<Gif />} />
               <Tab label="Create Video Meme" icon={<Movie />} />
-              <Tab label="REMOVE?? Video Memes" icon={<VideoLibrary />} />
-              <Tab label="REMOVE?? Gif Memes" icon={<CollectionsBookmark />} />
             </Tabs>
           </Paper>
           <div hidden={this.state.newValue !== 0}>
@@ -142,10 +140,6 @@ class MainApp extends React.Component {
           <div hidden={this.state.newValue !== 3}>
             <VideoTemplates></VideoTemplates>
           </div>
-          <div hidden={this.state.newValue !== 4}>
-            <VideoMemes></VideoMemes>
-          </div>
-          <div hidden={this.state.newValue !== 5}>Gif Memes</div>
         </div>
       </div>
     )

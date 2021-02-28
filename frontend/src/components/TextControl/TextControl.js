@@ -29,7 +29,8 @@ class TextControl extends React.Component {
       memeTemplates: null,
       isImageGenerated: false,
       generatedImageUrl: null,
-      promptShare: false,
+      generatedMeme: null,
+      isShareDialogOpened: false,
     }
   }
   handleClose() {
@@ -81,6 +82,7 @@ class TextControl extends React.Component {
     const saveImg = document.createElement('a')
     saveImg.href = image.src
     saveImg.download = 'meme.jpg'
+    saveImg.target = '_blank'
     document.body.appendChild(saveImg)
     saveImg.click()
     document.body.removeChild(saveImg)
@@ -89,15 +91,20 @@ class TextControl extends React.Component {
   shareDialog() {
     return (
       <ShareDialog
-        open={this.state.promptShare ? this.state.promptShare : false}
+        open={
+          this.state.isShareDialogOpened
+            ? this.state.isShareDialogOpened
+            : false
+        }
+        meme={this.state.generatedMeme}
         onClose={() => {
-          this.setState({ promptShare: false })
+          this.setState({ isShareDialogOpened: false })
         }}
       />
     )
   }
   handleShare() {
-    this.setState({ promptShare: true })
+    this.setState({ isShareDialogOpened: true })
   }
 
   generatedImageDialog() {
@@ -116,9 +123,11 @@ class TextControl extends React.Component {
           <Button onClick={() => this.downloadGeneratedImage()} color="primary">
             Download
           </Button>
-          <Button onClick={() => this.handleShare()} color="primary">
-            Share
-          </Button>
+          {this.state.generatedMeme && (
+            <Button onClick={() => this.handleShare()} color="primary">
+              Share
+            </Button>
+          )}
           <Button
             onClick={() => {
               this.setState({ isImageGenerated: false })
@@ -197,8 +206,6 @@ class TextControl extends React.Component {
 
   handleAddElement(type, url) {
     const element = {
-      x: 0,
-      y: 0,
       width: 400,
       bounds: '#meme-canvas',
       type: type,
@@ -253,36 +260,35 @@ class TextControl extends React.Component {
     })
 
     const postData = {
-      memes: [
-        {
-          template: {
-            name: 'Drake-Hotline-Bling.jpg',
-            route: '/images/templates/Drake-Hotline-Bling.jpg',
-            id: '5ff446fa4de819687770bfac',
-          },
-          captions: captions,
-          images: images,
-          canvas: {
-            width: document.getElementById('meme-canvas').offsetWidth,
-            height: document.getElementById('meme-canvas').offsetHeight,
-          },
+      memes: {
+        template: {
+          name: 'Drake-Hotline-Bling.jpg',
+          route: '/images/templates/Drake-Hotline-Bling.jpg',
+          id: '5ff446fa4de819687770bfac',
         },
-      ],
+        captions: captions,
+        images: images,
+        canvas: {
+          width: document.getElementById('meme-canvas').offsetWidth,
+          height: document.getElementById('meme-canvas').offsetHeight,
+        },
+      },
     }
     console.log(postData)
 
-    fetch('http://localhost:2000/memes/file', {
+    fetch('http://localhost:2000/memes/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(postData),
     })
-      .then((response) => response.blob())
+      .then((response) => response.json())
       .then((data) => {
-        console.log('Success:', URL.createObjectURL(data))
+        console.log('Success:', data)
         this.setState({
-          generatedImageUrl: URL.createObjectURL(data),
+          generatedImageUrl: 'http://localhost:2000' + data.route,
+          generatedMeme: data,
           isImageGenerated: true,
         })
       })
