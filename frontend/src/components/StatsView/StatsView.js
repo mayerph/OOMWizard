@@ -84,9 +84,6 @@ class StatsView extends React.Component {
       let views = this.state.data.stats.views.map((e) => {
         return { x: e.timestamp, y: e.views }
       })
-      let generated_memes = this.state.data.stats.generated_memes.map((e) => {
-        return { x: e.timestamp, y: e.generated_memes }
-      })
       let ratings = this.state.data.stats.rating.map((e) => {
         return { x: e.timestamp, y: e.rating }
       })
@@ -136,21 +133,6 @@ class StatsView extends React.Component {
               {
                 name: 'comments',
                 data: nr_comments,
-              },
-            ]}
-          />
-          <Divider />
-          <ReactApexChart
-            type="line"
-            height={200}
-            options={{
-              ...chart_base_options,
-              title: { text: 'Generated memes over time', align: 'left' },
-            }}
-            series={[
-              {
-                name: 'generated_memes',
-                data: generated_memes,
               },
             ]}
           />
