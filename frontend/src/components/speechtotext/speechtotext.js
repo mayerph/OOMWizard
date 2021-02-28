@@ -11,14 +11,12 @@ export function speechtotext(fieldid, trying) {
     alert('voice control feature works only in native chrome')
   } else {
     const testinput = document.getElementById(fieldid)
-    console.log(testinput)
     const speech = new SpeechRecognition()
     trying ? speech.stop() : speech.start()
 
     const onResult = (event) => {
       for (const res of event.results) {
         let result = res[0].transcript
-        console.log(result)
         testinput.value = result
       }
     }
@@ -41,8 +39,6 @@ export function speechtotextreturn(trying) {
     let result
     const stop = () => {
       speech.stop()
-      console.log(result)
-      console.log(results.value)
       return results.value
     }
     trying ? stop() : speech.start()
@@ -50,9 +46,7 @@ export function speechtotextreturn(trying) {
     const onResult = (event) => {
       for (const res of event.results) {
         result = res[0].transcript
-        console.log(result)
         results.innerHTML = result
-        console.log(results.innerHTML)
       }
     }
     speech.continuous = true
@@ -78,9 +72,7 @@ export function speechtotextcanvas(trying) {
       const onResult = (event) => {
         for (const res of event.results) {
           result = res[0].transcript
-          console.log(result)
           lasttextfield.innerHTML = result
-          console.log(lasttextfield.innerHTML)
         }
       }
       speech.continuous = true
@@ -112,7 +104,6 @@ export function speechtocontrol(fieldid) {
   if (typeof SpeechRecognition === 'undefined') {
   } else {
     const testinput = document.getElementById(fieldid)
-    console.log(testinput)
     const speech = new SpeechRecognition()
     const recogList = new SpeechGrammarList()
     recogList.addFromString(grammar, 1)
@@ -124,7 +115,6 @@ export function speechtocontrol(fieldid) {
 
     const onResult = (event) => {
       let result = event.results[0][0].transcript
-      console.log(result)
       if (result === 'upload') {
         testinput.click()
       } else if (result === 'cancel') {
@@ -166,7 +156,6 @@ export function speechtocontrolmultiple(items, com) {
 
     const onResult = (event) => {
       let result = event.results[0][0].transcript.toLowerCase()
-      console.log(result)
       let clicked = false
       for (let i = 0; i < commands.length; i++) {
         if (result === commands[i]) {
@@ -228,7 +217,6 @@ export function speechtocontrolmultiplehome(items, com) {
 
     const onResult = (event) => {
       let result = event.results[0][0].transcript.toLowerCase()
-      console.log(result)
       let clicked = false
       for (let i = 0; i < commands.length; i++) {
         if (result === commands[i]) {
@@ -258,7 +246,6 @@ export function speechtocontrolmultiplehome(items, com) {
               if (buttons[i] === 'overviewsort') {
                 document.getElementById('resultstwo').innerHTML = commands[i]
               } else if (buttons[i] === 'overviewselect') {
-                console.log('in overview select')
                 if (commands[i] === 'show memes') {
                   document.getElementById('resultstwo').innerHTML =
                     'showing omm_memes'

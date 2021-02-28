@@ -18,7 +18,6 @@ const RangeSlider = (props) => {
   }
 
   const handleChange = (event, newValue) => {
-    console.log('new value is', newValue)
     setValue(newValue)
     callback({ old: value, new: newValue })
   }

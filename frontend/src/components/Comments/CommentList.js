@@ -43,13 +43,8 @@ class CommentSection extends React.Component {
         if (res.ok) {
           let json = await res.json()
           this.setState({ comments: json.comments })
-        } else {
-          console.log(
-            `Response to fetch comments failed with ${res.status}:${res.statusText}.`,
-          )
         }
       },
-      (reason) => console.log(reason),
     )
   }
 
@@ -68,13 +63,8 @@ class CommentSection extends React.Component {
         if (res.ok) {
           let json = await res.json()
           this.setState({ comments: json.comments })
-        } else {
-          console.log(
-            `Response to post comments failed with ${res.status}:${res.statusText}.`,
-          )
         }
       },
-      (reason) => console.log(reason),
     )
   }
 

@@ -97,7 +97,6 @@ class TileView extends React.Component {
         var fd = new FormData()
         fd.append('template', newfile)
         axios.post(`${destination}/templates/`, fd, {}).then((res) => {
-          console.log(res.statusText)
         })
       })
   }
@@ -272,7 +271,6 @@ class TileView extends React.Component {
       case 'template':
         return this.render_img_template(tile, index)
       default:
-        console.log('unsupported meme type', tile)
         return null
     }
   }

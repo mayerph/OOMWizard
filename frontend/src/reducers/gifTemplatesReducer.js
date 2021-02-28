@@ -19,7 +19,6 @@ const DefaultState = {
 const gifTemplatesReducer = (state = DefaultState, action) => {
   switch (action.type) {
     case 'GET_GIF_TEMPLATES_SUCCESS':
-      console.log('gifffffffff', action.payload)
       const newState = {
         ...state,
         action: 'GET_GIF_TEMPLATES_SUCCESS',
@@ -34,7 +33,6 @@ const gifTemplatesReducer = (state = DefaultState, action) => {
         newState.data.gifTemplates.length > 0
       ) {
         newState.data.activeTemplate = { ...newState.data.gifTemplates[0] }
-        console.log('the active one is', newState.data.activeTemplate)
         newState.data.activeTemplate.frames.map((e) => {
           e['captions'] = []
           const newImage = new Image()

@@ -25,8 +25,6 @@ function sortTD(td) {
 const apiGetter = (state = [], action) => {
   switch (action.type) {
     case 'GET_API':
-      console.log(action.apitype)
-      console.log(action.mode)
       if (action.mode === 'api') {
         return { ...state, tileData: action.payload }
       } else if (action.mode === 'random') {
@@ -37,9 +35,6 @@ const apiGetter = (state = [], action) => {
         return { ...state, tileData: action.payload }
       }
     case 'GET_API_MEME':
-      console.log(action.apitype)
-      console.log(action.mode)
-      console.log(action.payload)
       if (action.mode === 'api') {
         return { ...state, tileDataMeme: action.payload }
       } else if (action.mode === 'random') {
@@ -60,8 +55,6 @@ const apiGetter = (state = [], action) => {
       return { ...state, active: action.index }
 
     default:
-      //console.log(state)
-      //console.log('in here')
       if (state.length !== 0) {
         return { ...state }
       }

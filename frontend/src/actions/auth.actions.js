@@ -30,7 +30,6 @@ export const signIn = (form) => (dispatch) => {
     credentials: 'include',
   }).then(
     async (res) => {
-      console.log('executed sigin callback')
       var action
       if (res.ok) {
         action = { type: 'AUTH_SUCCESS', payload: { username: username } }
@@ -42,7 +41,6 @@ export const signIn = (form) => (dispatch) => {
       }
       dispatch(action)
     },
-    (error) => console.log(error),
   )
 }
 

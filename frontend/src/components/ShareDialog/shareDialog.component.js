@@ -153,12 +153,10 @@ const ShareDialog = (props) => {
    */
   const openSnackbar = () => {
     if (urlRef.current) {
-      console.log('url ref is', urlRef.current)
       urlRef.current.select()
     }
 
     document.execCommand('copy')
-    console.log('copied')
     setOpenedSnack(true)
   }
 
@@ -166,7 +164,6 @@ const ShareDialog = (props) => {
    * closes the snackbar which indicates that the url has been copied
    */
   const closeSnackbar = () => {
-    console.log('closeSnackbar')
     setOpenedSnack(false)
   }
 
@@ -207,8 +204,6 @@ const ShareDialog = (props) => {
             },
           ],
         }
-
-  console.log('meme', meme.id)
 
   const { open, onClose } = props
 

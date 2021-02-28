@@ -75,10 +75,6 @@ class StatsView extends React.Component {
             stats: result.timeline,
           },
         })
-      } else {
-        console.log(
-          `Response to fetch stats failed with ${res.status}:${res.statusText}.`,
-        )
       }
     })
   }

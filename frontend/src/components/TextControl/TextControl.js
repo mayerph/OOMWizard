@@ -202,7 +202,6 @@ class TextControl extends React.Component {
               value={this.state.generateMaxSize}
               onChange={(event) => {
                 if (Number.isInteger(parseInt(event.target.value))) {
-                  console.log(event.target.value)
                   let newValue
                   if (event.target.value.length !== 1) {
                     newValue = event.target.value.replace(/^0+/, '')
@@ -286,8 +285,6 @@ class TextControl extends React.Component {
               blobSize < this.state.generateMaxSize
             ) {
               this.setState({ foundBlob: blob })
-              console.log(blobSize)
-              console.log('found')
               this.setState({
                 generatedImageUrl: URL.createObjectURL(blob),
                 isImageGenerated: true,
@@ -298,8 +295,6 @@ class TextControl extends React.Component {
               canvas.toBlob(
                 (blob) => {
                   this.setState({ foundBlob: blob })
-                  console.log(blobSize)
-                  console.log('found2')
                   this.setState({
                     generatedImageUrl: URL.createObjectURL(blob),
                     isImageGenerated: true,
@@ -318,7 +313,6 @@ class TextControl extends React.Component {
     } else {
       canvas.toBlob(
         (blob) => {
-          console.log('found3')
           this.setState({
             generatedImageUrl: URL.createObjectURL(blob),
             isImageGenerated: true,
@@ -465,7 +459,6 @@ class TextControl extends React.Component {
       },
       access: this.state.generateAccess,
     }
-    console.log(postData)
 
     fetch(`${backend_uri}/memes/`, {
       method: 'POST',
@@ -477,7 +470,6 @@ class TextControl extends React.Component {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('Success:', data)
         this.setState({
           generatedImageUrl: `${backend_uri}` + data.route,
           generatedMeme: data,

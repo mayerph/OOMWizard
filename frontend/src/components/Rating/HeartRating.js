@@ -61,10 +61,6 @@ class HeartRating extends React.Component {
           meta: json.meta_info,
           meta_user: json.user_meta,
         })
-      } else {
-        console.log(
-          `Response to post ratings failed with ${res.status}:${res.statusText}.`,
-        )
       }
     })
   }

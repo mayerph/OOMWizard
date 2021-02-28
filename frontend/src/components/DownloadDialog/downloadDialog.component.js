@@ -121,12 +121,10 @@ const DownloadDialog = (props) => {
    */
   const openSnackbar = () => {
     if (urlRef.current) {
-      console.log('url ref is', urlRef.current)
       urlRef.current.select()
     }
 
     document.execCommand('copy')
-    console.log('copied')
     setOpenedSnack(true)
   }
 
@@ -134,7 +132,6 @@ const DownloadDialog = (props) => {
    * closes the snackbar which indicates that the url has been copied
    */
   const closeSnackbar = () => {
-    console.log('closeSnackbar')
     setOpenedSnack(false)
   }
 
@@ -150,15 +147,12 @@ const DownloadDialog = (props) => {
 
   const serverSideGeneration = (meme) => {
     generateMeme(meme).then((data) => {
-      console.log('es hat evtl funktioniert')
     })
   }
 
   /**
    * meme which should be shared
    */
-  console.log(props)
-  console.log(props.meme)
   const meme =
     props.meme && props.meme.id
       ? props.meme
@@ -184,7 +178,6 @@ const DownloadDialog = (props) => {
           ],
         }
 
-  console.log('meme', meme.id)
 
   const { open, onClose } = props
 

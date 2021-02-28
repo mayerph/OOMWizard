@@ -63,7 +63,6 @@ class Overview extends React.Component {
     })
       .then((res) => res.json())
       .then((meta_infos) => {
-        console.log('wizard:', data)
         let result = data.map((e, i) => {
           return {
             ...e,
@@ -71,7 +70,6 @@ class Overview extends React.Component {
             fileending: '.' + e.url.split('.').slice(-1)[0],
           }
         })
-        console.log('Loaded:', result)
         this.setState({
           source: source,
           data: result,
@@ -135,7 +133,7 @@ class Overview extends React.Component {
         this.load_img_flip()
         break
       default:
-        console.log('No valid load data specifier')
+        break;
     }
   }
 
@@ -168,7 +166,6 @@ class Overview extends React.Component {
   }
 
   setSource(source) {
-    console.log('setting source: ', source)
     this.setState({ data: undefined, source: source })
     this.load_data(source)
   }
@@ -369,9 +366,7 @@ class Overview extends React.Component {
               )
               const results = document.getElementById('resultstwo').innerHTML
               if (tryingtwo) {
-                console.log(results)
                 if (results.split(' ')[0] === 'sort') {
-                  console.log('made it into sort')
                   this.setState({ sort_by: results.split(' ').pop() })
                 } else if (results.split(' ')[0] === 'showing') {
                   this.setSource(results.split(' ')[1])

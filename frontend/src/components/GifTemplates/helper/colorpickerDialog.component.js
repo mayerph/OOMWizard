@@ -11,7 +11,6 @@ const ColorPickerDialog = (props) => {
   const { open, defaultColor, handleClose, handleOk } = props
   let choosenColor = defaultColor
   const clickHandler = () => {
-    console.log('clicked ok')
     handleOk(choosenColor)
   }
   const changeHandler = (color, event) => {

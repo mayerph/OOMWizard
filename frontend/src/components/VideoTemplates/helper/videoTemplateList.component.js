@@ -53,16 +53,13 @@ const VideoTemplateList = (props) => {
 
   const onClickHandler = (e) => {
     e.stopPropagation()
-    console.log('onClickHandler', file)
     const data = new FormData()
     data.append('template', file)
-    console.log('data is', data)
 
     dispatch(addNewTemplate(data))
   }
 
   const onChangeHandler = (event) => {
-    console.log('kann man damit was anfangen?', event.target.files[0])
     setFile(event.target.files[0])
   }
 
@@ -78,13 +75,11 @@ const VideoTemplateList = (props) => {
   let txtField = React.useRef(null)
 
   const choose = (event) => {
-    console.log(txtField)
     if (!txtField) return
     txtField.current.click()
   }
 
   React.useEffect(() => {
-    console.log('der state hat sich geändert')
   }, [videoTemplateState])
 
   return (
