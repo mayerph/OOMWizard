@@ -1,20 +1,12 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useRef,
-  useCallback,
-  useState,
-  useLayoutEffect,
-} from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import GridList from '@material-ui/core/GridList'
 import GridListTile from '@material-ui/core/GridListTile'
 import GridListTileBar from '@material-ui/core/GridListTileBar'
-import IconButton from '@material-ui/core/IconButton'
-import StarBorderIcon from '@material-ui/icons/StarBorder'
+
 import Button from '@material-ui/core/Button'
 import * as config from '../../../config.json'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import './gifTemplateList.style.css'
 import { addNewTemplate } from '../../../actions/gifTemplate.action'
 const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
@@ -53,16 +45,14 @@ const GifTemplateList = (props) => {
 
   const onClickHandler = (e) => {
     e.stopPropagation()
-    console.log('onClickHandler', file)
+
     const data = new FormData()
     data.append('template', file)
-    console.log('data is', data)
 
     dispatch(addNewTemplate(data))
   }
 
   const onChangeHandler = (event) => {
-    console.log('kann man damit was anfangen?', event.target.files[0])
     setFile(event.target.files[0])
   }
 
@@ -78,14 +68,11 @@ const GifTemplateList = (props) => {
   let txtField = React.useRef(null)
 
   const choose = (event) => {
-    console.log(txtField)
     if (!txtField) return
     txtField.current.click()
   }
 
-  React.useEffect(() => {
-    console.log('der state hat sich geändert')
-  }, [gifTemplateState])
+  React.useEffect(() => {}, [gifTemplateState])
 
   return (
     <div className={`${classes.root} test2`}>

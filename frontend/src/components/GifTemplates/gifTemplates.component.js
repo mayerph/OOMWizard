@@ -1,29 +1,14 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useMemo,
-  useRef,
-  useCallback,
-  useState,
-  useLayoutEffect,
-} from 'react'
-import { connect } from 'react-redux'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
-import Paper from '@material-ui/core/Paper'
-import Grid from '@material-ui/core/Grid'
-import { makeStyles } from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
 import './gifTemplates.style.css'
-import { MemeCanvas } from '../MemeCanvas'
 import Typography from '@material-ui/core/Typography'
-import Slider from '@material-ui/core/Slider'
 import TextField from '@material-ui/core/TextField'
 import Card from '@material-ui/core/Card'
-import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import IconButton from '@material-ui/core/IconButton'
 import CloseButton from '@material-ui/icons/Close'
-import { HuePicker, SketchPicker, ChromePicker } from 'react-color'
 
 import Button from '@material-ui/core/Button'
 
@@ -34,7 +19,6 @@ import {
   ArrowForward,
   ArrowBack,
   CloudDownload,
-  PlayCircleFilled,
   Palette,
 } from '@material-ui/icons/'
 import {
@@ -61,62 +45,93 @@ import { get } from 'lodash'
 
 const destination = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: 300,
-  },
-}))
-
+/**
+ * component containing all the gif functionality
+ * @param {*} props properties of the component
+ */
 const GifTemplates = (props) => {
+  /**
+   * step size for moving the caption
+   */
   const [stepSize, setStepSize] = useState(10)
+
+  /**
+   * index of the currently active caption
+   */
   const [activeCaption, setActiveCaption] = useState(0)
+
+  /**
+   * information if the speech-to-text is active
+   */
   const [trying, setTrying] = useState(false)
+
+  /**
+   * enables debug functionality
+   */
   const debug = false
+
+  /**
+   * information if the colorpicker-dialog is currently active
+   */
   const [colorpickerOpen, setColorpickerOpen] = useState(false)
-  let templateGif = React.useRef(null)
-  let templateGifSource = React.useRef(null)
-  const gifplayerRef = useRef()
-  const gifsrcRef = useRef()
+
+  /**
+   * the media player / editor for the gif meme
+   */
   let gifplayer
 
+  /**
+   * enables redux
+   */
   const dispatch = useDispatch()
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
-  }))
 
+  /**
+   * currently active image / frame in gif player / editor
+   */
   let baseImage = new Image()
 
+  /**
+   * returns all captions
+   */
   const getCaptions = () => {
     return gifTemplateState.data.captions
   }
 
+  /**
+   * returns the generated meme
+   */
   const getMeme = () => {
     return gifTemplateState.data.meme
   }
+
+  /**
+   * returns the selected template
+   */
   const getActiveTemplate = () => {
     return gifTemplateState.data.activeTemplate
   }
 
+  /**
+   * returns the index of the active frame
+   */
   const getActiveFrameIndex = () => {
     return gifTemplateState.data.activeFrame
   }
 
+  /**
+   * returns the active frame
+   */
   const getActiveFrame = () => {
     return getActiveTemplate().frames[getActiveFrameIndex()]
   }
+
+  /**
+   * draws the canvas each time the states changes
+   */
   const drawImage = () => {
     if (gifTemplateState.data.activeTemplate) {
-      console.log('nun sind wir hier richtig')
       baseImage = getActiveFrame().image
-      //baseImage.src = `${destination}/${getActiveFrame().route}`
-      console.log('the baseimage is', baseImage)
+
       const canvas = document.getElementById('meme2')
       const context = canvas.getContext('2d')
 
@@ -130,11 +145,12 @@ const GifTemplates = (props) => {
         context.fillStyle = e.color
         context.fillText(e.text, e.x, e.y)
       })
-
-      //setDrawing(!drawing)
     }
   }
 
+  /**
+   * adds a new caption the meme
+   */
   const add = () => {
     const newCaption = {
       id: uuidv4(),
@@ -154,12 +170,18 @@ const GifTemplates = (props) => {
     )
   }
 
+  /**
+   * moves the active caption upwards
+   */
   const up = () => {
     const captionsTemp = [...getCaptions()]
     captionsTemp[activeCaption].y = captionsTemp[activeCaption].y - stepSize
     dispatch(updateCaptions(captionsTemp))
   }
 
+  /**
+   * moves the active caption downwards
+   */
   const down = () => {
     const captionsTemp = [...getCaptions()]
     captionsTemp[activeCaption].y = captionsTemp[activeCaption].y + stepSize
@@ -167,12 +189,18 @@ const GifTemplates = (props) => {
     dispatch(updateCaptions(captionsTemp))
   }
 
+  /**
+   * moves the caption to the right
+   */
   const right = () => {
     const captionsTemp = [...getCaptions()]
     captionsTemp[activeCaption].x = captionsTemp[activeCaption].x + stepSize
     dispatch(updateCaptions(captionsTemp))
   }
 
+  /**
+   * moves the caption to the left
+   */
   const left = () => {
     const captionsTemp = [...getCaptions()]
     captionsTemp[activeCaption].x = captionsTemp[activeCaption].x - stepSize
@@ -180,10 +208,19 @@ const GifTemplates = (props) => {
     dispatch(updateCaptions(captionsTemp))
   }
 
+  /**
+   * sets a new active caption
+   * @param {*} index index of the clicked caption
+   */
   const setActive = (index) => {
     setActiveCaption(index)
   }
 
+  /**
+   * updates the captions in all frames. deletes captions and adds captions
+   * @param {*} frames contains the old and new frame range of the caption
+   * @param {*} itemToDelete the caption which should be deleted
+   */
   const updateCaptionsInFrames = (frames, itemToDelete) => {
     const frameVector = [...getActiveTemplate().frames]
     if (frames.new != frames.old) {
@@ -220,6 +257,11 @@ const GifTemplates = (props) => {
     }
   }
 
+  /**
+   * gets called when the textfield changes. updates the caption with new text.
+   * @param {*} e html element / textfield
+   * @param {*} index index of the caption
+   */
   const handleChange = (e, index) => {
     const captionVec = [...getCaptions()]
     const { value } = e.target
@@ -227,7 +269,11 @@ const GifTemplates = (props) => {
     dispatch(updateCaptions(captionVec))
   }
 
-  // update captions in frameList (only for rendering)
+  /**
+   * gets called if the frame range of the caption changes
+   * @param {*} e consinsts of the new and old frame range of the caption
+   * @param {*} index index of the caption
+   */
   const redefineFrameRange = (e, index) => {
     const captionVec = [...getCaptions()]
     captionVec[index].frames = e.new
@@ -235,6 +281,11 @@ const GifTemplates = (props) => {
     dispatch(updateCaptions(captionVec))
   }
 
+  /**
+   * deletes caption
+   * @param {*} index of the caption
+   * @param {*} id of the caption
+   */
   const deleteCaption = (index, id) => {
     const newList = [...getCaptions()]
     const itemToDelete = { ...newList[index] }
@@ -248,11 +299,17 @@ const GifTemplates = (props) => {
     )
   }
 
+  /**
+   * sets the visible frame in the gif player / editor
+   * @param {*} index of the frame
+   */
   const setVisibleFrame = (index) => {
     dispatch(setActiveFrame(index))
   }
 
-  // Allows you to extract data from the Redux store state, using a selector function.
+  /**
+   * redux store with all gif template information
+   */
   const gifTemplateState = useSelector((state) => {
     if (
       !state.gifTemplatesReducer.error &&
@@ -262,8 +319,9 @@ const GifTemplates = (props) => {
     }
   })
 
-  //setFrameList(templates[0].frames.frames)
-
+  /**
+   * gets called when the gifTemplateState of the redux store changes
+   */
   React.useEffect(() => {
     if (gifTemplateState.data.gifTemplates.length > 0) {
       if (gifTemplateState.data.captions.length > 0) {
@@ -282,11 +340,16 @@ const GifTemplates = (props) => {
     //drawImage()
   }, [gifTemplateState])
 
-  // enables side effects like http requests
+  /**
+   * when the redux is successful imported the gif templates are requested from the server
+   */
   React.useEffect(() => {
     dispatch(getGifTemplates())
   }, [dispatch])
 
+  /**
+   * gets called when an other caption is clicked. Updates the captions
+   */
   useEffect(() => {
     const captionVec = [...getCaptions()]
     captionVec.map((item) => {
@@ -298,12 +361,17 @@ const GifTemplates = (props) => {
     dispatch(updateCaptions(captionVec))
   }, [activeCaption])
 
-  const classes = useStyles()
-
+  /**
+   * gets called when the user clicks another template
+   * @param {} index index of the template
+   */
   const setActiveTemplate_ = (index) => {
     dispatch(setActiveTemplate(index))
   }
 
+  /**
+   * prepares the template data for the generation of the meme
+   */
   const prepare = () => {
     const memeTemplate = _.cloneDeep({ ...getActiveTemplate() })
     const frames_temp = []
@@ -329,11 +397,16 @@ const GifTemplates = (props) => {
       meme: memeTemplate,
     }
   }
-
+  /**
+   * generates the meme
+   */
   const generateMeme = () => {
     dispatch(generateGifMeme(prepare()))
   }
 
+  /**
+   * html data for debugging
+   */
   const Debug = () => {
     if (debug) {
       return (
@@ -373,7 +446,9 @@ const GifTemplates = (props) => {
       return <span></span>
     }
   }
-
+  /**
+   * html data for the gif player / editor
+   */
   if (getMeme()) {
     gifplayer = (
       <>
@@ -385,6 +460,10 @@ const GifTemplates = (props) => {
     gifplayer = ''
   }
 
+  /**
+   * html for the meme part (gif editor, result, template)
+   * only visible when a template is selected
+   */
   let memePart
   if (gifTemplateState.data.activeTemplate != undefined) {
     memePart = (
@@ -525,7 +604,6 @@ const GifTemplates = (props) => {
                       <CardContent>
                         <Typography
                           component={'span'}
-                          className={classes.title}
                           color="textSecondary"
                           gutterBottom
                         >
@@ -633,7 +711,9 @@ const GifTemplates = (props) => {
   } else {
     memePart = <span></span>
   }
-
+  /**
+   * returns the whole html
+   */
   return (
     <div className="meme-generator-body">
       <Debug></Debug>

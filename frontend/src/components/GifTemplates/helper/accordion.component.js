@@ -1,12 +1,5 @@
 import Typography from '@material-ui/core/Typography'
-import React, {
-  forwardRef,
-  useEffect,
-  useRef,
-  useCallback,
-  useState,
-  useLayoutEffect,
-} from 'react'
+import React from 'react'
 
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
