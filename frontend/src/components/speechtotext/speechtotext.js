@@ -59,6 +59,36 @@ export function speechtotextreturn(trying) {
   }
 }
 
+//speech to text for the canvas, always grabs the last used text field for input
+export function speechtotextcanvas(trying) {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition
+  const textfields = document.querySelectorAll("span[data-text='true']")
+  if (textfields.length > 0) {
+    const lasttextfield = textfields[textfields.length - 1]
+    if (typeof SpeechRecognition === 'undefined') {
+    } else {
+      const speech = new SpeechRecognition()
+      let result
+      trying ? speech.stop() : speech.start()
+
+      const onResult = (event) => {
+        for (const res of event.results) {
+          result = res[0].transcript
+          console.log(result)
+          lasttextfield.innerHTML = result
+          console.log(lasttextfield.innerHTML)
+        }
+      }
+      speech.continuous = true
+      speech.interimResults = true
+      speech.addEventListener('result', onResult)
+    }
+  } else {
+    alert('please create a text field first')
+  }
+}
+
 //the following functions are to do certain commands (click on a button) using voice control
 // These are non continuous, so they only listen for a phrase and we predefine some in the SpeechGrammarList
 // once the user says the command, the action (button being pressed) is fired
@@ -105,14 +135,14 @@ export function speechtocontrol(fieldid) {
   }
 }
 
-export function speechtocontrolfour(one, two, three, four, com) {
+export function speechtocontrolmultiple(items, com) {
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition
   const SpeechGrammarList =
     window.SpeechGrammarList || window.webkitSpeechGrammarList
   const SpeechRecognitionEvent =
     window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent
-
+  let buttons = items
   let commands = com
   let grammar =
     '#JSGF V1.0; grammar commands; public <command> = ' +
@@ -131,23 +161,34 @@ export function speechtocontrolfour(one, two, three, four, com) {
     speech.start()
 
     const onResult = (event) => {
-      let result = event.results[0][0].transcript
+      let result = event.results[0][0].transcript.toLowerCase()
       console.log(result)
-      if (result === commands[0]) {
-        console.log(one)
-        document.getElementById(one).click()
-      } else if (result === commands[1]) {
-        console.log(two)
-        document.getElementById(two).click()
-      } else if (result === commands[2] || result === commands[3]) {
-        console.log(three)
-        document.getElementById(three).click()
-      } else if (result === commands[4] || result === commands[5]) {
-        console.log(four)
-        document.getElementById(four).click()
-      } else {
+      let clicked = false
+      for (let i = 0; i < commands.length; i++) {
+        if (result === commands[i]) {
+          if (!document.getElementById(buttons[i]).disabled) {
+            document.getElementById(buttons[i]).click()
+          } else {
+            alert('please select a text field')
+          }
+          clicked = true
+        }
+      }
+      if (!clicked) {
         alert('unknown command')
       }
+
+      /* if (result === commands[0]) {
+        document.getElementById(buttons[0]).click()
+      } else if (result === commands[1]) {
+        document.getElementById(buttons[1]).click()
+      } else if (result === commands[2]) {
+        document.getElementById(buttons[2]).click()
+      } else if (result === commands[3]) {
+        document.getElementById(buttons[3]).click()
+      } else {
+        alert('unknown command')
+      } */
     }
 
     speech.addEventListener('result', onResult)

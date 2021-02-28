@@ -132,6 +132,7 @@ class ResizableText extends React.Component {
             style={{
               cursor: cursor,
             }}
+            id="editortextfield"
           />
         </div>
         <IconButton
