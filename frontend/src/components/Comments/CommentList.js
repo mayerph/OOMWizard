@@ -7,6 +7,9 @@ import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import SendIcon from '@material-ui/icons/Send'
+import RefreshIcon from '@material-ui/icons/Refresh'
+
+import { Box, Typography } from '@material-ui/core'
 
 import React from 'react'
 import { connect } from 'react-redux'
@@ -92,52 +95,68 @@ class CommentSection extends React.Component {
       </>
     )
   }
+  render_comment_form() {
+    return (
+      <>
+        <form style={{ width: '100%' }} noValidate autoComplete="off">
+          <TextField
+            fullWidth
+            label={`Comment as ${this.props.username}`}
+            multiline
+            rows={4}
+            placeholder={`Press enter to comment here`}
+            name="comment"
+            variant="outlined"
+          />
+          <Button
+            style={{ marginTop: '2px' }}
+            variant="contained"
+            color="primary"
+            onClick={(event) => {
+              let form = new FormData(event.currentTarget.form)
+              this.post_comment(form.get('comment'))
+              event.currentTarget.form.reset()
+            }}
+          >
+            <SendIcon />
+          </Button>
+        </form>
+      </>
+    )
+  }
 
   render() {
     return (
-      <List style={{ width: '100%' }}>
-        {this.state.comments ? (
-          this.render_comments()
-        ) : (
-          // display some placeholder skeleton while comments are being loaded
-          <>
-            <Skeleton animation="wave" />
-            <Skeleton animation="wave" />
-            <Skeleton animation="wave" />
-          </>
-        )}
-        <Divider />
-        {this.props.username ? (
+      <>
+        {/** refesh button */}
+        <Box component="span" m={1}>
+          <Button onClick={() => this.load_comments()}>
+            <RefreshIcon fontSize="small" />
+          </Button>
+        </Box>
+        <Divider></Divider>
+        <List style={{ width: '100%' }}>
+          {this.state.comments ? (
+            this.render_comments()
+          ) : (
+            // display some placeholder skeleton while comments are being loaded
+            <>
+              <Skeleton animation="wave" />
+              <Skeleton animation="wave" />
+              <Skeleton animation="wave" />
+            </>
+          )}
+          <Divider />
           <ListItem style={{ width: '100%' }}>
-            <form style={{ width: '100%' }} noValidate autoComplete="off">
-              <TextField
-                fullWidth
-                label={`Comment as ${this.props.username}`}
-                multiline
-                rows={4}
-                placeholder={`Press enter to comment here`}
-                name="comment"
-                variant="outlined"
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={(event) => {
-                  let form = new FormData(event.currentTarget.form)
-                  this.post_comment(form.get('comment'))
-                  event.currentTarget.form.reset()
-                }}
-              >
-                <SendIcon />
-              </Button>
-            </form>
+            {this.props.username ? (
+              this.render_comment_form()
+            ) : (
+              <Typography> Login to comment :)</Typography>
+            )}
           </ListItem>
-        ) : (
-          <ListItem>
-            <ListItemText primary="Login to comment ;)" />
-          </ListItem>
-        )}
-      </List>
+        </List>
+        <div></div>
+      </>
     )
   }
 }

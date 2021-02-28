@@ -2,8 +2,16 @@ import React from 'react'
 import { connect } from 'react-redux'
 import ReactApexChart from 'react-apexcharts'
 
-import { Divider, CardContent, Box, Card, Typography } from '@material-ui/core'
+import {
+  Divider,
+  CardContent,
+  Box,
+  Card,
+  Typography,
+  Button,
+} from '@material-ui/core'
 import Skeleton from '@material-ui/lab/Skeleton'
+import RefreshIcon from '@material-ui/icons/Refresh'
 
 import * as config from '../../config.json'
 const backend_uri = `${config.backend.protocol}://${config.backend.server}:${config.backend.port}`
@@ -46,6 +54,10 @@ class StatsView extends React.Component {
   }
 
   componentDidMount() {
+    this.load_data()
+  }
+
+  load_data() {
     fetch(
       `${backend_uri}/meta/stats?` +
         new URLSearchParams({
@@ -91,52 +103,61 @@ class StatsView extends React.Component {
         return { x: e.timestamp, y: e.comments }
       })
       return (
-        <Card>
-          <ReactApexChart
-            type="line"
-            height={200}
-            options={{
-              ...chart_base_options,
-              title: { text: 'Avg rating over time', align: 'left' },
-            }}
-            series={[
-              {
-                name: 'rating',
-                data: ratings,
-              },
-            ]}
-          />
-          <Divider />
-          <ReactApexChart
-            type="line"
-            height={200}
-            options={{
-              ...chart_base_options,
-              title: { text: 'Views over time', align: 'left' },
-            }}
-            series={[
-              {
-                name: 'views',
-                data: views,
-              },
-            ]}
-          />
-          <Divider />
-          <ReactApexChart
-            type="line"
-            height={200}
-            options={{
-              ...chart_base_options,
-              title: { text: 'Comments over time', align: 'left' },
-            }}
-            series={[
-              {
-                name: 'comments',
-                data: nr_comments,
-              },
-            ]}
-          />
-        </Card>
+        <>
+          {/** refesh button */}
+          <Box component="span" m={1} onClick={() => this.load_data()}>
+            <Button >
+              <RefreshIcon fontSize="small" />
+            </Button>
+          </Box>
+
+          <Card>
+            <ReactApexChart
+              type="line"
+              height={200}
+              options={{
+                ...chart_base_options,
+                title: { text: 'Avg rating over time', align: 'left' },
+              }}
+              series={[
+                {
+                  name: 'rating',
+                  data: ratings,
+                },
+              ]}
+            />
+            <Divider />
+            <ReactApexChart
+              type="line"
+              height={200}
+              options={{
+                ...chart_base_options,
+                title: { text: 'Views over time', align: 'left' },
+              }}
+              series={[
+                {
+                  name: 'views',
+                  data: views,
+                },
+              ]}
+            />
+            <Divider />
+            <ReactApexChart
+              type="line"
+              height={200}
+              options={{
+                ...chart_base_options,
+                title: { text: 'Comments over time', align: 'left' },
+              }}
+              series={[
+                {
+                  name: 'comments',
+                  data: nr_comments,
+                },
+              ]}
+            />
+          </Card>
+        </>
       )
     }
   }
