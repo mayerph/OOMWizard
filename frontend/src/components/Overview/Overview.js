@@ -341,6 +341,9 @@ class Overview extends React.Component {
                   'overviewselect',
                   'overviewselect',
                   'overviewselect',
+                  'carouseldownloadbutton',
+                  'gonext',
+                  'gobefore',
                 ],
                 [
                   'refresh',
@@ -359,6 +362,9 @@ class Overview extends React.Component {
                   'show video memes',
                   'show video templates',
                   'show image flip',
+                  'download image',
+                  'next image',
+                  'previous image',
                 ],
               )
               const results = document.getElementById('resultstwo').innerHTML
@@ -397,6 +403,9 @@ class Overview extends React.Component {
             label="show ((gif/video)memes/templates/image flip)"
             color="secondary"
           />
+          <Chip icon={<MicIcon />} label="next image" color="secondary" />
+          <Chip icon={<MicIcon />} label="previous image" color="secondary" />
+          <Chip icon={<MicIcon />} label="download image" color="secondary" />
           <span id="resultstwo" hidden></span>
           <Divider />
           {this.state.data ? (

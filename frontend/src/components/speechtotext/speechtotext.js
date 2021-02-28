@@ -227,39 +227,63 @@ export function speechtocontrolmultiplehome(items, com) {
       let clicked = false
       for (let i = 0; i < commands.length; i++) {
         if (result === commands[i]) {
-          if (!document.getElementById(buttons[i]).disabled) {
-            if (buttons[i] === 'overviewsort') {
-              document.getElementById('resultstwo').innerHTML = commands[i]
-            } else if (buttons[i] === 'overviewselect') {
-              console.log('in overview select')
-              if (commands[i] === 'show memes') {
-                document.getElementById('resultstwo').innerHTML =
-                  'showing omm_memes'
-              } else if (commands[i] === 'show templates') {
-                document.getElementById('resultstwo').innerHTML =
-                  'showing omm_templates'
-              } else if (commands[i] === 'show gif memes') {
-                document.getElementById('resultstwo').innerHTML =
-                  'showing omm_gif_memes'
-              } else if (commands[i] === 'show gif templates') {
-                document.getElementById('resultstwo').innerHTML =
-                  'showing omm_gif_templates'
-              } else if (commands[i] === 'show video memes') {
-                document.getElementById('resultstwo').innerHTML =
-                  'showing omm_video_memes'
-              } else if (commands[i] === 'show video templates') {
-                document.getElementById('resultstwo').innerHTML =
-                  'showing omm_video_templates'
-              } else if (commands[i] === 'show image flip') {
-                document.getElementById('resultstwo').innerHTML =
-                  'showing ImgFlip'
+          if (
+            buttons[i] === 'carouseldownloadbutton' ||
+            buttons[i] === 'gonext' ||
+            buttons[i] === 'gobefore'
+          ) {
+            const carol = document.querySelectorAll('div.CarouselItem')
+            if (carol.length > 0) {
+              if (buttons[i] === 'gonext' || buttons[i] === 'gobefore') {
+                if (buttons[i] === 'gonext') {
+                  document.querySelector('button[aria-label="Next"]').click()
+                } else {
+                  document
+                    .querySelector('button[aria-label="Previous"]')
+                    .click()
+                }
+              } else {
+                document.getElementById(buttons[i]).click()
               }
             } else {
-              document.getElementById(buttons[i]).click()
+              alert('must be in carousel view to use this command')
             }
           } else {
-            alert('please select a text field')
+            if (!document.getElementById(buttons[i]).disabled) {
+              if (buttons[i] === 'overviewsort') {
+                document.getElementById('resultstwo').innerHTML = commands[i]
+              } else if (buttons[i] === 'overviewselect') {
+                console.log('in overview select')
+                if (commands[i] === 'show memes') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing omm_memes'
+                } else if (commands[i] === 'show templates') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing omm_templates'
+                } else if (commands[i] === 'show gif memes') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing omm_gif_memes'
+                } else if (commands[i] === 'show gif templates') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing omm_gif_templates'
+                } else if (commands[i] === 'show video memes') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing omm_video_memes'
+                } else if (commands[i] === 'show video templates') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing omm_video_templates'
+                } else if (commands[i] === 'show image flip') {
+                  document.getElementById('resultstwo').innerHTML =
+                    'showing ImgFlip'
+                }
+              } else {
+                document.getElementById(buttons[i]).click()
+              }
+            } else {
+              alert('button is disabled')
+            }
           }
+
           clicked = true
         }
       }

@@ -108,6 +108,7 @@ class GalleryView extends React.Component {
                 aria-label="download"
                 onClick={() => this.downloadGeneratedImage(tile)}
                 download
+                id="carouseldownloadbutton"
               >
                 <GetAppIcon
                   style={{
