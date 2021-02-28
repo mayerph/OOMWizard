@@ -206,7 +206,9 @@ class TextControl extends React.Component {
 
   handleAddElement(type, url) {
     const element = {
-      width: 400,
+      x: 0,
+      y: 0,
+      width: type === 'image' ? 400 : 200,
       bounds: '#meme-canvas',
       type: type,
       imageUrl: url,
@@ -474,6 +476,16 @@ class TextControl extends React.Component {
               id="canvasgenback"
             >
               Generate (Backend)
+            </Button>
+            <Button
+              style={{ margin: 5 }}
+              variant="contained"
+              color="secondary"
+              startIcon={<SettingsIcon />}
+              onClick={() => this.browserGeneration()}
+              id="canvasgenfront"
+            >
+              Generate (Frontend)
             </Button>
             <Button
               style={{ margin: 5 }}

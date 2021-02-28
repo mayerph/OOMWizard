@@ -76,6 +76,22 @@ class ResizableText extends React.Component {
     this.props.dispatch({ type: 'UNFOCUS_EDITOR_STATE' })
   }
 
+  handleUpdateText(text, ref) {
+    const canvas = document
+      .getElementById('meme-canvas')
+      .getBoundingClientRect()
+    console.log(ref)
+    text.width = ref.getBoundingClientRect().width
+    text.height = ref.getBoundingClientRect().height
+    text.x = ref.getBoundingClientRect().left - canvas.left
+    text.y = ref.getBoundingClientRect().top - canvas.top
+    this.props.dispatch({
+      type: 'UPDATE_ELEMENT',
+      element: text,
+      id: text.props.id,
+    })
+  }
+
   changeFocus(e, editorState) {
     // && convertToRaw(editorState.getCurrentContent()).blocks[0].text === "Enter Text"
     if (e.target.tagName === 'SPAN') {
@@ -111,10 +127,18 @@ class ResizableText extends React.Component {
         default={{
           x: this.props.x,
           y: this.props.y,
+          width: this.props.width,
+          height: this.props.height,
         }}
         bounds={this.props.bounds}
         onClick={(e) => this.changeFocus(e, this.state.editorState)}
         disableDragging={this.state.disableDragging}
+        onResizeStop={(e, direction, ref, delta, position) => {
+          this.handleUpdateText(this, ref)
+        }}
+        onDragStop={(e, d) => {
+          this.handleUpdateText(this, d.node)
+        }}
       >
         <div
           style={{

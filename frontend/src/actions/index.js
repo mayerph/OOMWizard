@@ -9,6 +9,11 @@ export const removeElement = (id) => ({
   id,
 })
 
+export const updateElement = (element) => ({
+  type: 'UPDATE_ELEMENT',
+  element,
+})
+
 export const focusEditorState = (editorStateId, editorState, inlineStyles) => ({
   type: 'FOCUS_EDITOR_STATE',
   editorStateId,

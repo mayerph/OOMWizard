@@ -19,6 +19,21 @@ class ResizableImage extends React.Component {
     this.props.dispatch({ type: 'REMOVE_ELEMENT', id: image.props.id })
   }
 
+  handleUpdateImage(image, ref) {
+    const canvas = document
+      .getElementById('meme-canvas')
+      .getBoundingClientRect()
+    image.width = ref.offsetWidth
+    image.height = ref.offsetHeight
+    image.x = ref.getBoundingClientRect().left - canvas.left
+    image.y = ref.getBoundingClientRect().top - canvas.top
+    this.props.dispatch({
+      type: 'UPDATE_ELEMENT',
+      element: image,
+      id: image.props.id,
+    })
+  }
+
   render() {
     return (
       <Rnd
@@ -34,6 +49,12 @@ class ResizableImage extends React.Component {
             imageWidth: ref.offsetWidth,
             imageHeight: ref.offsetHeight,
           })
+        }}
+        onResizeStop={(e, direction, ref, delta, position) => {
+          this.handleUpdateImage(this, ref)
+        }}
+        onDragStop={(e, d) => {
+          this.handleUpdateImage(this, d.node)
         }}
       >
         <IconButton
