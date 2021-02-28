@@ -340,32 +340,41 @@ class TextControl extends React.Component {
     // Convert images to blobs to make html2canvas work
     const canvasImages = document.querySelectorAll('img')
     if (canvasImages.length > 0) {
+      const imgSrcs = []
+      let imgProccesed = 0
       canvasImages.forEach((img) => {
         let imgSrc = img.src
+        imgSrcs.push(imgSrc)
         fetch(img.src)
           .then((response) => {
             return response.blob()
           })
           .then((blob) => {
             img.src = URL.createObjectURL(blob)
-            html2canvas(document.querySelector('#meme-canvas-card'), {
-              allowTaint: true,
-            }).then((canvas) => {
-              this.createBlobWithMaxFileSize(canvas)
-            })
-            img.src = imgSrc
-            document
-              .querySelectorAll('.resizeable-text-container')
-              .forEach((node) => {
-                node.style.borderWidth = '1px'
+            imgProccesed = imgProccesed + 1
+            if (imgProccesed === canvasImages.length) {
+              html2canvas(document.querySelector('#meme-canvas-card'), {
+                allowTaint: true,
+              }).then((canvas) => {
+                canvasImages.forEach((img, i) => {
+                  img.src = imgSrcs[i]
+                })
+                this.createBlobWithMaxFileSize(canvas)
               })
-            document
-              .querySelectorAll('.resizeable-image-container')
-              .forEach((node) => {
-                node.style.borderWidth = '1px'
-              })
+              document
+                .querySelectorAll('.resizeable-text-container')
+                .forEach((node) => {
+                  node.style.borderWidth = '1px'
+                })
+              document
+                .querySelectorAll('.resizeable-image-container')
+                .forEach((node) => {
+                  node.style.borderWidth = '1px'
+                })
+            }
           })
       })
+
       // Text only memes
     } else {
       html2canvas(document.querySelector('#meme-canvas-card'), {
