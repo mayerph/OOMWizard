@@ -559,7 +559,6 @@ class TextControl extends React.Component {
         <Chip icon={<MicIcon />} label="add text" color="secondary" />
         <Chip icon={<MicIcon />} label="generate" color="secondary" />
         <Chip icon={<MicIcon />} label="make text bigger" color="secondary" />
-        <Chip icon={<MicIcon />} label="make text smaller" color="secondary" />
         <Chip icon={<MicIcon />} label="make text bold" color="secondary" />
         <Chip icon={<MicIcon />} label="make text italic" color="secondary" />
         <Chip icon={<MicIcon />} label="make text black" color="secondary" />
@@ -567,6 +566,7 @@ class TextControl extends React.Component {
         <Chip icon={<MicIcon />} label="make text red" color="secondary" />
         <Chip icon={<MicIcon />} label="make text green" color="secondary" />
         <Chip icon={<MicIcon />} label="make text blue" color="secondary" />
+        <Chip icon={<MicIcon />} label="make text smaller" color="secondary" />
       </div>
     )
   }
@@ -689,19 +689,29 @@ class TextControl extends React.Component {
             >
               Generate
             </Button>
-            <IconButton
-              variant="contained"
+            <Chip
+              avatar={
+                <IconButton variant="contained" color="primary">
+                  <MicIcon />
+                </IconButton>
+              }
+              label="Dictate Caption"
+              clickable
               color="primary"
               onClick={() => {
                 speechtotextcanvas(trying)
                 trying = !trying
               }}
-            >
-              <MicIcon />
-            </IconButton>
+            />
             <Tooltip TransitionComponent={Fade} title={this.chipTooltip()}>
-              <IconButton
-                variant="contained"
+              <Chip
+                avatar={
+                  <IconButton variant="contained" color="secondary">
+                    <MicIcon />
+                  </IconButton>
+                }
+                label="Dictate Action"
+                clickable
                 color="secondary"
                 onClick={() => {
                   speechtocontrolmultiple(
@@ -735,9 +745,7 @@ class TextControl extends React.Component {
                     ],
                   )
                 }}
-              >
-                <MicIcon />
-              </IconButton>
+              />
             </Tooltip>
           </div>
         </Card>
