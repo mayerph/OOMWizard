@@ -9,6 +9,7 @@ const memeController = new MemeController(true)
  */
 router.get("", async (req: Request, res: Response, next: NextFunction) => {
   const memes = await memeController.memes(req.user)
+
   res.json(memes)
 })
 /**
