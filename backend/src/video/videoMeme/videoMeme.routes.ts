@@ -49,8 +49,6 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
  */
 router.post("", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("Kommt heir was an")
-    console.log(req.body)
     const result = await videoMemeController.addVideoMeme(
       req.body.meme,
       req.user,

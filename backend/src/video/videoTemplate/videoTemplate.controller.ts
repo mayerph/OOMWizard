@@ -252,11 +252,7 @@ export class VideoTemplateController {
         videoTemplate.file = video.name
         videoTemplate.route = `${config.storage.videos.templates.route}/${videoTemplate.id}/${video.name}`
         videoTemplate.thumbnail = frames.frames[0].route
-        console.log(
-          "videoTemplate.audio",
-          videoTemplate.audio,
-          config.storage.videos.templates.path
-        )
+
         await videoTemplate.save()
         resolve(videoTemplate)
       } catch (err) {

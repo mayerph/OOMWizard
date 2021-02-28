@@ -192,7 +192,6 @@ export class GifTemplateController {
         reject(new Error("no image data"))
       }
 
-      console.log("halli hallo wie gehts denn so")
       const gifTemplateDoc: IGifTemplate = {
         file: "",
         route: "",

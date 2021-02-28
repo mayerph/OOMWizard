@@ -371,7 +371,6 @@ export class MemeController {
 
       // for each caption write to file
       captions.forEach((caption) => {
-        console.log("the caption size is", caption.size)
         ctx.font = `bold ${caption.size}pt Arial`
 
         ctx.fillStyle = caption.color
