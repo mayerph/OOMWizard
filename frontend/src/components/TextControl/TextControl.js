@@ -17,7 +17,10 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
 import { ShareDialog } from '../ShareDialog'
 import html2canvas from 'html2canvas'
-import { speechtocontrolfour } from '../speechtotext/speechtotext.js'
+import {
+  speechtocontrolmultiple,
+  speechtotextcanvas,
+} from '../speechtotext/speechtotext.js'
 import MicIcon from '@material-ui/icons/Mic'
 import Chip from '@material-ui/core/Chip'
 
@@ -375,6 +378,7 @@ class TextControl extends React.Component {
 
     let controlVisibility = this.props.editorState ? 1 : 0.2
     let isDisabled = !this.props.editorState
+    let trying = false
 
     return (
       <div>
@@ -386,30 +390,35 @@ class TextControl extends React.Component {
             <IconButton
               disabled={isDisabled}
               onClick={() => this.setFontSize('INCREASE_FONT')}
+              id="canvasincreasefont"
             >
               <AddIcon />
             </IconButton>
             <IconButton
               disabled={isDisabled}
               onClick={() => this.setFontSize('DECREASE_FONT')}
+              id="canvasdecreasefont"
             >
               <RemoveIcon />
             </IconButton>
             <IconButton
               disabled={isDisabled}
               onClick={() => this.applyStyle('BOLD')}
+              id="canvasboldfont"
             >
               <FormatBoldIcon />
             </IconButton>
             <IconButton
               disabled={isDisabled}
               onClick={() => this.applyStyle('ITALIC')}
+              id="canvasitalicfont"
             >
               <FormatItalicIcon />
             </IconButton>
             <IconButton
               disabled={isDisabled}
               onClick={() => this.applyStyle('black')}
+              id="canvasblackfont"
             >
               <ColorizeIcon
                 style={{ color: ResizableText.customStyleMap.black.color }}
@@ -418,12 +427,14 @@ class TextControl extends React.Component {
             <IconButton
               disabled={isDisabled}
               onClick={() => this.applyStyle('white')}
+              id="canvaswhitefont"
             >
               <ColorizeIcon style={{ color: 'rgba(0, 0, 0, 0.2)' }} />
             </IconButton>
             <IconButton
               disabled={isDisabled}
               onClick={() => this.applyStyle('red')}
+              id="canvasredfont"
             >
               <ColorizeIcon
                 style={{ color: ResizableText.customStyleMap.red.color }}
@@ -432,6 +443,7 @@ class TextControl extends React.Component {
             <IconButton
               disabled={isDisabled}
               onClick={() => this.applyStyle('green')}
+              id="canvasgreenfont"
             >
               <ColorizeIcon
                 style={{ color: ResizableText.customStyleMap.green.color }}
@@ -440,6 +452,7 @@ class TextControl extends React.Component {
             <IconButton
               disabled={isDisabled}
               onClick={() => this.applyStyle('blue')}
+              id="canvasbluefont"
             >
               <ColorizeIcon
                 style={{ color: ResizableText.customStyleMap.blue.color }}
@@ -487,33 +500,52 @@ class TextControl extends React.Component {
             >
               Generate (Frontend)
             </Button>
-            <Button
-              style={{ margin: 5 }}
+            <IconButton
               variant="contained"
-              color="secondary"
-              startIcon={<SettingsIcon />}
-              onClick={() => this.browserGeneration()}
-              id="canvasgenfront"
+              color="primary"
+              onClick={() => {
+                speechtotextcanvas(trying)
+
+                trying = !trying
+              }}
             >
-              Generate (Frontend)
-            </Button>
+              <MicIcon />
+            </IconButton>
 
             <IconButton
               variant="contained"
               color="secondary"
               onClick={() => {
-                speechtocontrolfour(
-                  'canvasaddimage',
-                  'canvasaddtext',
-                  'canvasgenback',
-                  'canvasgenfront',
+                speechtocontrolmultiple(
+                  [
+                    'canvasaddimage',
+                    'canvasaddtext',
+                    'canvasgenback',
+                    'canvasgenfront',
+                    'canvasincreasefont',
+                    'canvasdecreasefont',
+                    'canvasboldfont',
+                    'canvasitalicfont',
+                    'canvasblackfont',
+                    'canvaswhitefont',
+                    'canvasredfont',
+                    'canvasgreenfont',
+                    'canvasbluefont',
+                  ],
                   [
                     'add image',
                     'add text',
-                    'generate back-end',
-                    'generate backend',
-                    'generate front-end',
-                    'generate frontend',
+                    'generate back',
+                    'generate front',
+                    'make text bigger',
+                    'make text smaller',
+                    'make text bold',
+                    'make text italic',
+                    'make text black',
+                    'make text white',
+                    'make text red',
+                    'make text green',
+                    'make text blue',
                   ],
                 )
               }}
@@ -522,16 +554,41 @@ class TextControl extends React.Component {
             </IconButton>
             <Chip icon={<MicIcon />} label="add image" color="secondary" />
             <Chip icon={<MicIcon />} label="add text" color="secondary" />
+            <Chip icon={<MicIcon />} label="generate back" color="secondary" />
+            <Chip icon={<MicIcon />} label="generate front" color="secondary" />
             <Chip
               icon={<MicIcon />}
-              label="generate backend"
+              label="make text bigger"
               color="secondary"
             />
             <Chip
               icon={<MicIcon />}
-              label="generate frontend"
+              label="make text smaller"
               color="secondary"
             />
+            <Chip icon={<MicIcon />} label="make text bold" color="secondary" />
+            <Chip
+              icon={<MicIcon />}
+              label="make text italic"
+              color="secondary"
+            />
+            <Chip
+              icon={<MicIcon />}
+              label="make text black"
+              color="secondary"
+            />
+            <Chip
+              icon={<MicIcon />}
+              label="make text white"
+              color="secondary"
+            />
+            <Chip icon={<MicIcon />} label="make text red" color="secondary" />
+            <Chip
+              icon={<MicIcon />}
+              label="make text green"
+              color="secondary"
+            />
+            <Chip icon={<MicIcon />} label="make text blue" color="secondary" />
           </div>
         </Card>
       </div>

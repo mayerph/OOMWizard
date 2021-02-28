@@ -77,6 +77,7 @@ const VideoTemplates = (props) => {
   let templateVideoSource = React.useRef(null)
   const videoplayerRef = useRef()
   const videosrcRef = useRef()
+  const hiddenSpeechRef = useRef()
   let videoplayer
 
   const dispatch = useDispatch()
@@ -313,7 +314,7 @@ const VideoTemplates = (props) => {
   }, [activeCaption])
 
   const classes = useStyles()
-  let trying = false
+  const [trying, setTrying] = useState(false)
 
   const setActiveTemplate_ = (index) => {
     dispatch(setActiveTemplate(index))
@@ -555,26 +556,38 @@ const VideoTemplates = (props) => {
                           color="textSecondary"
                           gutterBottom
                         >
-                          <div className="caption-option">
-                            <TextField
-                              className="caption-input"
-                              label="Caption"
-                              defaultValue={getCaptions()[index].text}
-                              onChange={(e) => {
-                                handleChange(e, index)
-                              }}
-                              variant="outlined"
-                            />
+                          <div className="caption-option textfield-container-parent">
+                            <div className="textfield-container">
+                              <TextField
+                                className="caption-input"
+                                label="Caption"
+                                value={getCaptions()[index].text}
+                                onChange={(e) => {
+                                  handleChange(e, index)
+                                }}
+                                variant="outlined"
+                              />
+                            </div>
                             <div>
+                              <span id="results" hidden></span>
                               <IconButton
                                 variant="contained"
-                                color="primary"
+                                className={`${
+                                  trying ? 'microphone-on' : 'microphone-off '
+                                }`}
                                 onClick={() => {
                                   speechtotextreturn(trying)
                                   const results = document.getElementById(
                                     'results',
                                   ).innerHTML
-                                  trying = !trying
+                                  if (trying) {
+                                    const tempCaptions = [...getCaptions()]
+                                    tempCaptions[index].text = results
+
+                                    dispatch(updateCaptions(tempCaptions))
+                                  }
+
+                                  setTrying(!trying)
                                 }}
                               >
                                 <MicIcon />
